@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Threading;
 
 namespace Instagram_Bot
 {
@@ -54,7 +55,7 @@ namespace Instagram_Bot
             driver.FindElementByName("username").SendKeys(username);
             driver.FindElementByName("password").SendKeys(password);
             driver.FindElementByTagName("form").Submit();
-            System.Threading.Thread.Sleep(secondsBetweenActions * 1000);// wait for page to change
+            Thread.Sleep(secondsBetweenActions * 1000);// wait for page to change
             // end Log in to Instagram
 
 
@@ -73,7 +74,7 @@ namespace Instagram_Bot
 
             /* MAIN LOOP */
 
-            // loop forever, performing a new search and them following everyone.
+            // loop forever, performing a new search and then following, liking and spamming the hell out of everyone.
             while (true)
             {
 
@@ -81,7 +82,7 @@ namespace Instagram_Bot
 
                 // just navigate to search
                 driver.Navigate().GoToUrl($"https://www.instagram.com/explore/tags/{mySearch}");
-                System.Threading.Thread.Sleep(secondsBetweenActions * 1000);// wait for page to change
+                Thread.Sleep(secondsBetweenActions * 1000);// wait for page to change
 
                 // save results
                 List<string> postsToLike = new List<string>();
@@ -106,7 +107,7 @@ namespace Instagram_Bot
                         driver.Navigate().GoToUrl("https://www.instagram.com/" + glink);
                     }
 
-                    System.Threading.Thread.Sleep(secondsBetweenActions * 1000);// wait for page to change
+                    Thread.Sleep(secondsBetweenActions * 1000);// wait for page to change
 
 
                     // FOLLOW
@@ -115,7 +116,7 @@ namespace Instagram_Bot
                         if (obj.Text.ToUpper().Contains("FOLLOW") && !obj.Text.ToUpper().Contains("FOLLOWING")) // don't unfollow if already following
                         {
                             obj.Click();
-                            System.Threading.Thread.Sleep(secondsBetweenActions * 1000);// wait for page to change
+                            Thread.Sleep(secondsBetweenActions * 1000);// wait for page to change
                             break;
                         }
                     }
@@ -132,7 +133,7 @@ namespace Instagram_Bot
                         if (obj.Text.ToUpper().Contains("COMMENT"))
                         {
                             obj.Click(); // click comment icon
-                            System.Threading.Thread.Sleep(secondsBetweenActions * 1000);// wait for page to change
+                            Thread.Sleep(secondsBetweenActions * 1000);// wait for page to change
                             break;
                         }
                     }
@@ -142,9 +143,9 @@ namespace Instagram_Bot
                         if (obj.GetAttribute("placeholder").ToUpper().Contains("COMMENT"))
                         {
                             obj.SendKeys(myComment); // put comment in textarea
-                            System.Threading.Thread.Sleep(secondsBetweenActions * 1000);// wait for page to change
+                            Thread.Sleep(secondsBetweenActions * 1000);// wait for page to change
                             driver.FindElementByTagName("form").Submit(); // Only one form on page, so submit it to comment.
-                            System.Threading.Thread.Sleep(secondsBetweenActions * 1000);// wait for page to change
+                            Thread.Sleep(secondsBetweenActions * 1000);// wait for page to change
                             break;
                         }
                     }
@@ -158,20 +159,20 @@ namespace Instagram_Bot
                         if (obj.Text.ToUpper().Contains("LIKE"))
                         {
                             obj.Click();
-                            System.Threading.Thread.Sleep(secondsBetweenActions * 1000);// wait for page to change
+                            Thread.Sleep(secondsBetweenActions * 1000);// wait for page to change
                             break;
                         }
                     }
                     // end LIKE
 
-                    System.Threading.Thread.Sleep(secondsBetweenActions * 1000);// wait a while
+                    Thread.Sleep(secondsBetweenActions * 1000);// wait a while
                 }
 
 
                 // Return to users profile page so they can see their stats while we wait for next search to start
                 driver.Navigate().GoToUrl($"https://www.instagram.com/{username}");
 
-                System.Threading.Thread.Sleep(minutesBetweenBulkActions * 60000);// wait between each bulk action
+                Thread.Sleep(minutesBetweenBulkActions * 60000);// wait between each bulk action
             }
 
 
