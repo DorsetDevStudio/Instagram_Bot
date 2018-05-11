@@ -50,6 +50,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="bot_core.cs" />
     <Compile Include="Form1.cs">
       <SubType>Form</SubType>
     </Compile>
