@@ -1,8 +1,5 @@
 ﻿using System;
 using System.Windows.Forms;
-using OpenQA.Selenium.Chrome;
-using System.Collections.Generic;
-using System.IO;
 
 namespace Instagram_Bot
 {
@@ -16,11 +13,24 @@ namespace Instagram_Bot
 
         private void button1_Click(object sender, EventArgs e)
         {
-            var botCore = new bot_core(textBoxUsername.Text.Trim(), textBoxPassword.Text.Trim());
+            var botCore =
+                new bot_core
+                (
+                textBoxUsername.Text.Trim(),
+                textBoxPassword.Text.Trim()
+                );
+        }
+
+        private void Form1_Load(object sender, EventArgs e)
+        {
+        }
+
+        private void textBoxPassword_KeyUp(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.Enter || e.KeyCode == Keys.Return)
+                buttonStartBot.PerformClick();
         }
 
     }
-
-
 
 }
