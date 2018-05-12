@@ -20,10 +20,12 @@ namespace Instagram_Bot
         {
             if (ApplicationDeployment.IsNetworkDeployed) // running as clickone application
             {
-                var t = new Task(() => { // Prevent main GUI locking up by running service in seperate threat via a task
+                // Prevent main GUI locking up by running service in seperate threat via a task (not sure if this works as intended)
+                var t = new Task(() => { 
                     var botCore = new c_bot_core(textBoxUsername.Text.Trim(), textBoxPassword.Text.Trim());
                 });
                 t.Start();
+                t.Wait();
             }
             else
             {
