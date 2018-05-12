@@ -8,8 +8,13 @@ namespace Instagram_Bot
         {
             using (SpeechSynthesizer synth = new SpeechSynthesizer())
             {
-                synth.SetOutputToDefaultAudioDevice();
-                synth.Speak(phrase);
+                try
+                {
+                    synth.SetOutputToDefaultAudioDevice();
+                    synth.Speak(phrase);
+                }
+                catch { }
+                //TODO: log audio errors, these can occur when the sound card blips (when disconnecting an RDP session for example).
             }
         }
     }
