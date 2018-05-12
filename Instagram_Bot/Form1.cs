@@ -14,11 +14,11 @@ namespace Instagram_Bot
 
         private void button1_Click(object sender, EventArgs e)
         {
-            var t = new Task(() => {
-                var botCore = new bot_core(textBoxUsername.Text.Trim(), 
-                    textBoxPassword.Text.Trim()); });
-            t.Start();
-            t.Wait();
+            //var t = new Task(() => {
+                var botCore = new bot_core(textBoxUsername.Text.Trim(), textBoxPassword.Text.Trim());
+            //});
+            //t.Start();
+            //t.Wait();
         }
 
         private void Form1_Load(object sender, EventArgs e)

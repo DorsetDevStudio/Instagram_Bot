@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Threading;
+using System.Windows.Forms;
 
 namespace Instagram_Bot
 {
@@ -21,10 +22,10 @@ namespace Instagram_Bot
 
             // Instagram throttling & bot detection avoidance - we randomise the time between actions (clicks) to `look` more `human`)
             
-            int secondsBetweenActions_min   = 1;    // rand min, e.g Thread.Sleep(new Random().Next(secondsBetweenActions_min, secondsBetweenActions_max) * 1000)
-            int secondsBetweenActions_max   = 3;    // rand max
+            int secondsBetweenActions_min   = 2;    // rand min, e.g Thread.Sleep(new Random().Next(secondsBetweenActions_min, secondsBetweenActions_max) * 1000)
+            int secondsBetweenActions_max   = 5;    // rand max
 
-            int minutesBetweenBulkActions_min = 1;  // rand min, e.g Thread.Sleep(new Random().Next(minutesBetweenBulkActions_min, minutesBetweenBulkActions_max) * 60000)
+            int minutesBetweenBulkActions_min = 5;  // rand min, e.g Thread.Sleep(new Random().Next(minutesBetweenBulkActions_min, minutesBetweenBulkActions_max) * 60000)
             int minutesBetweenBulkActions_max = 30; // rand max
 
             int maxLikesIn24Hours           = 700;  // Not yet Implemented
@@ -55,9 +56,6 @@ namespace Instagram_Bot
                 "Perfection, you should be a photographer!",
                 "Wish I could take photos like yours!",
                 "haha",
-                "hubba bubba",
-                "ooh matron",
-                "The A team",
                 "👌","❤️","🙆","🍟","👁","💙","🌌","🛰","✔️","👩‍","♟","♾","👁‍🗨" /* people love emojis! */
             };
             
@@ -92,6 +90,8 @@ namespace Instagram_Bot
             while (true)
             {
 
+                Application.DoEvents(); // Prevent warnings during debugging.
+
                 var mySearch = thingsToSearch[new Random().Next(0, thingsToSearch.Count - 1)];
 
                 // just navigate to search
@@ -102,7 +102,7 @@ namespace Instagram_Bot
                 var postsToLike = new List<string>();
                 foreach (var link in IwebDriver.FindElements(By.TagName("a")))
                 {
-                    if (link.GetAttribute("href").ToUpper().Contains($"TAGGED={mySearch.ToUpper()}"))
+                    if (link.GetAttribute("href").ToUpper().Contains($"TAGGED={mySearch}".ToUpper()))
                     {
                         postsToLike.Add(link.GetAttribute("href"));
                     }
@@ -127,7 +127,7 @@ namespace Instagram_Bot
                     // FOLLOW
                     foreach (var obj in IwebDriver.FindElements(By.TagName("button")))
                     {
-                        if (obj.Text.ToUpper().Contains("FOLLOW") && !obj.Text.ToUpper().Contains("FOLLOWING")) // don't unfollow if already following
+                        if (obj.Text.ToUpper().Contains("FOLLOW".ToUpper()) && !obj.Text.ToUpper().Contains("FOLLOWING".ToUpper())) // don't unfollow if already following
                         {
                             obj.Click();
                             Thread.Sleep(new Random().Next(secondsBetweenActions_min, secondsBetweenActions_max) * 1000); // wait a short(random) amount of time for page to change
@@ -136,50 +136,64 @@ namespace Instagram_Bot
                     }
                     // end FOLLOW
 
-
-                    // COMMENT
-                    // pick a random comment
-                    var myComment = phrasesToComment[new Random().Next(0, phrasesToComment.Count - 1)];
-
-                    // click the comment icon so the comment textarea will work (REQUIRED)
-                    foreach (var obj in IwebDriver.FindElements(By.TagName("a")))
+                    if (phrasesToComment.Count > 0) // don't try and comment if we have nothing to say, this may happen when commenting starts failing everytime and we've removed all coments from our comments list
                     {
-                        if (obj.Text.ToUpper().Contains("COMMENT"))
-                        {
-                            obj.Click(); // click comment icon
-                            Thread.Sleep(new Random().Next(secondsBetweenActions_min, secondsBetweenActions_max) * 1000); // wait a short(random) amount of time for page to change
-                            break;
-                        }
-                    }
-                    // make the comment
-                    foreach (var obj in IwebDriver.FindElements(By.TagName("textarea")))
-                    {
-                        if (obj.GetAttribute("placeholder").ToUpper().Contains("COMMENT"))
-                        {
+                        // COMMENT - this is usually the first thing to be blocked if you reduce time delays, you will see "posting fialed" at bottom of screen.
+                        // pick a random comment
+                        var myComment = phrasesToComment[new Random().Next(0, phrasesToComment.Count - 1)];
 
-                            bool sendKeysFailed = true;// must start as true
-                            while (sendKeysFailed)
+                        // click the comment icon so the comment textarea will work (REQUIRED)
+                        foreach (var obj in IwebDriver.FindElements(By.TagName("a")))
+                        {
+                            if (obj.Text.ToUpper().Contains("COMMENT".ToUpper()))
                             {
-                                try
-                                {
-                                    obj.SendKeys(myComment); // put comment in textarea
-                                    break;
-                                }
-                                catch
-                                {
-                                    sendKeysFailed = true; // some characters are not supported by chrome driver (some emojis for example)
-                                    phrasesToComment.Remove(myComment); // remove offending comment
-                                    myComment = phrasesToComment[new Random().Next(0, phrasesToComment.Count - 1)]; // select another comments and try again
-                                }
+                                obj.Click(); // click comment icon
+                                Thread.Sleep(new Random().Next(secondsBetweenActions_min, secondsBetweenActions_max) * 1000); // wait a short(random) amount of time for page to change
+                                break;
                             }
-
-                            Thread.Sleep(new Random().Next(secondsBetweenActions_min, secondsBetweenActions_max) * 1000); // wait a short(random) amount of time for page to change
-                            IwebDriver.FindElement(By.TagName("form")).Submit(); // Only one form on page, so submit it to comment.
-                            Thread.Sleep(new Random().Next(secondsBetweenActions_min, secondsBetweenActions_max) * 1000); // wait a short(random) amount of time for page to change
-                            break;
                         }
+                        // make the comment
+                        foreach (var obj in IwebDriver.FindElements(By.TagName("textarea")))
+                        {
+                            if (obj.GetAttribute("placeholder").ToUpper().Contains("COMMENT".ToUpper()))
+                            {
+
+                                bool sendKeysFailed = true;// must start as true
+                                while (sendKeysFailed)
+                                {
+                                    try
+                                    {
+                                        obj.SendKeys(myComment); // put comment in textarea
+                                        break;
+                                    }
+                                    catch
+                                    {
+                                        sendKeysFailed = true; // some characters are not supported by chrome driver (some emojis for example)
+                                        phrasesToComment.Remove(myComment); // remove offending comment
+                                        if (phrasesToComment.Count == 0)
+                                        {
+                                            break;
+                                        }
+                                        myComment = phrasesToComment[new Random().Next(0, phrasesToComment.Count - 1)]; // select another comments and try again
+                                    }
+                                }
+
+                                Thread.Sleep(new Random().Next(secondsBetweenActions_min, secondsBetweenActions_max) * 1000); // wait a short(random) amount of time for page to change
+                                IwebDriver.FindElement(By.TagName("form")).Submit(); // Only one form on page, so submit it to comment.
+                                Thread.Sleep(new Random().Next(secondsBetweenActions_min, secondsBetweenActions_max) * 1000); // wait a short(random) amount of time for page to change
+                                break;
+                            }
+                        }
+
+                        // check if comment failed, if yes remove that comment from our comments list
+                        if (IwebDriver.PageSource.ToUpper().Contains("couldn't post comment".ToUpper()))
+                        {
+                            phrasesToComment.Remove(myComment);
+                            Thread.Sleep(10 * 1000); // wait a short(random) amount of time after a rejection
+                        }
+
+                        // end COMMENT
                     }
-                    // end COMMENT
 
 
                     // LIKE (do last as it opens a popup that stops us seeing the commenting in action)
