@@ -8,7 +8,7 @@ namespace Instagram_Bot
 {
     public partial class Form1 : Form
     {
-
+        
         // hosting click once on github so we can push out updates automatically
         // https://developers.de/2018/02/10/clickonce-on-github/
 
@@ -24,9 +24,8 @@ namespace Instagram_Bot
 
         private void Form1_Load(object sender, EventArgs e)
         {
-
-
-
+            // fix TLS file download issues on win 7 machines
+            ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12;
             if (!System.IO.File.Exists("chromedriver.exe"))
             {
                 WebClient webClient = new WebClient();
