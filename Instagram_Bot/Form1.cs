@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace Instagram_Bot
@@ -13,12 +14,11 @@ namespace Instagram_Bot
 
         private void button1_Click(object sender, EventArgs e)
         {
-            var botCore =
-                new bot_core
-                (
-                textBoxUsername.Text.Trim(),
-                textBoxPassword.Text.Trim()
-                );
+            var t = new Task(() => {
+                var botCore = new bot_core(textBoxUsername.Text.Trim(), 
+                    textBoxPassword.Text.Trim()); });
+            t.Start();
+            t.Wait();
         }
 
         private void Form1_Load(object sender, EventArgs e)

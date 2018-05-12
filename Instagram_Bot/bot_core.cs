@@ -1,4 +1,5 @@
-﻿using OpenQA.Selenium.Chrome;
+﻿using OpenQA.Selenium;
+using OpenQA.Selenium.Chrome;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -9,15 +10,18 @@ namespace Instagram_Bot
 
     public class bot_core
     {
-        ChromeDriver driver = new ChromeDriver();
+        IWebDriver IwebDriver = new ChromeDriver();
         public bot_core(string username, string password)
         {
-           
-            
+
+            // Go full screen
+            IwebDriver.Manage().Window.Maximize();
+
+
             /* CONFIG  */
 
             // Instagram throttling
-            int secondsBetweenActions       = 5;    // suggest minimum = 5 maximum = 30. Reduce below 5 and follows, comments or likes just wont work.
+            int secondsBetweenActions       = 1;    // suggest minimum = 5 maximum = 30. Reduce below 5 and follows, comments or likes just wont work.
             int minutesBetweenBulkActions   = 15;   // suggest minimum = 15, maginus = 60. Make it too long and the session may timeout.
             int maxLikesIn24Hours           = 700;  // Not yet Implemented
             int maxFollowsIn24Hours         = 100;  // Not yet Implemented
@@ -25,7 +29,7 @@ namespace Instagram_Bot
 
 
             // General interests to target, values from hashtags.txt also loaded at startup.
-            List<string> thingsToSearch = new List<string>()
+            var thingsToSearch = new List<string>()
             {
                 "summer", "web developer", "weekend", "friday", "netflix",
                 "chill", "bournemouth", "poole", "dorset", "vsafety"
@@ -34,7 +38,7 @@ namespace Instagram_Bot
 
 
             // Random generic comments to posts, we need hundreds of these so not to be spammy, or hook up to a random comment / phrase generator API
-            List<string> phrasesToComment = new List<string>()
+            var phrasesToComment = new List<string>()
             {
                 "I like it!",
                 "nice :)",
@@ -51,19 +55,19 @@ namespace Instagram_Bot
 
 
             // Log in to Instagram
-            driver.Navigate().GoToUrl("https://www.instagram.com/accounts/login/");
-            driver.FindElementByName("username").SendKeys(username);
-            driver.FindElementByName("password").SendKeys(password);
-            driver.FindElementByTagName("form").Submit();
+            IwebDriver.Navigate().GoToUrl("https://www.instagram.com/accounts/login/");
+            IwebDriver.FindElement(By.Name("username")).SendKeys(username);
+            IwebDriver.FindElement(By.Name("password")).SendKeys(password);
+            IwebDriver.FindElement(By.TagName("form")).Submit();
             Thread.Sleep(secondsBetweenActions * 1000);// wait for page to change
             // end Log in to Instagram
 
 
             // check we are logged in, if not return to main form UI
-            if (driver.PageSource.Contains("your password was incorrect"))
+            if (IwebDriver.PageSource.Contains("your password was incorrect"))
             {
-                driver.Close();
-                driver.Quit();
+                IwebDriver.Close();
+                IwebDriver.Quit();
                 System.Windows.Forms.MessageBox.Show(
                     "Invalid username or password, please try again.",
                     "Login Failed",
@@ -81,12 +85,12 @@ namespace Instagram_Bot
                 var mySearch = thingsToSearch[new Random().Next(0, thingsToSearch.Count - 1)];
 
                 // just navigate to search
-                driver.Navigate().GoToUrl($"https://www.instagram.com/explore/tags/{mySearch}");
+                IwebDriver.Navigate().GoToUrl($"https://www.instagram.com/explore/tags/{mySearch}");
                 Thread.Sleep(secondsBetweenActions * 1000);// wait for page to change
 
                 // save results
-                List<string> postsToLike = new List<string>();
-                foreach (var link in driver.FindElementsByTagName("a"))
+                var postsToLike = new List<string>();
+                foreach (var link in IwebDriver.FindElements(By.TagName("a")))
                 {
                     if (link.GetAttribute("href").ToUpper().Contains($"TAGGED={mySearch.ToUpper()}"))
                     {
@@ -95,23 +99,23 @@ namespace Instagram_Bot
                 }
 
                 // load results in turn and like/follow them
-                foreach (string glink in postsToLike)
+                foreach (var link in postsToLike)
                 {
 
-                    if (glink.Contains("https://www.instagram.com/"))
+                    if (link.Contains("https://www.instagram.com/"))
                     {
-                        driver.Navigate().GoToUrl(glink);
+                        IwebDriver.Navigate().GoToUrl(link);
                     }
                     else
                     {
-                        driver.Navigate().GoToUrl("https://www.instagram.com/" + glink);
+                        IwebDriver.Navigate().GoToUrl("https://www.instagram.com/" + link);
                     }
 
                     Thread.Sleep(secondsBetweenActions * 1000);// wait for page to change
 
 
                     // FOLLOW
-                    foreach (var obj in driver.FindElementsByTagName("button"))
+                    foreach (var obj in IwebDriver.FindElements(By.TagName("button")))
                     {
                         if (obj.Text.ToUpper().Contains("FOLLOW") && !obj.Text.ToUpper().Contains("FOLLOWING")) // don't unfollow if already following
                         {
@@ -128,7 +132,7 @@ namespace Instagram_Bot
                     var myComment = phrasesToComment[new Random().Next(0, phrasesToComment.Count - 1)];
 
                     // click the comment icon so the comment textarea will work (REQUIRED)
-                    foreach (var obj in driver.FindElementsByTagName("a"))
+                    foreach (var obj in IwebDriver.FindElements(By.TagName("a")))
                     {
                         if (obj.Text.ToUpper().Contains("COMMENT"))
                         {
@@ -138,13 +142,13 @@ namespace Instagram_Bot
                         }
                     }
                     // make the comment
-                    foreach (var obj in driver.FindElementsByTagName("textarea"))
+                    foreach (var obj in IwebDriver.FindElements(By.TagName("textarea")))
                     {
                         if (obj.GetAttribute("placeholder").ToUpper().Contains("COMMENT"))
                         {
                             obj.SendKeys(myComment); // put comment in textarea
                             Thread.Sleep(secondsBetweenActions * 1000);// wait for page to change
-                            driver.FindElementByTagName("form").Submit(); // Only one form on page, so submit it to comment.
+                            IwebDriver.FindElement(By.TagName("form")).Submit(); // Only one form on page, so submit it to comment.
                             Thread.Sleep(secondsBetweenActions * 1000);// wait for page to change
                             break;
                         }
@@ -154,7 +158,7 @@ namespace Instagram_Bot
 
 
                     // LIKE (do last as it opens a popup that stops us seeing the commenting in action)
-                    foreach (var obj in driver.FindElementsByTagName("a"))
+                    foreach (var obj in IwebDriver.FindElements(By.TagName("a")))
                     {
                         if (obj.Text.ToUpper().Contains("LIKE"))
                         {
@@ -170,7 +174,7 @@ namespace Instagram_Bot
 
 
                 // Return to users profile page so they can see their stats while we wait for next search to start
-                driver.Navigate().GoToUrl($"https://www.instagram.com/{username}");
+                IwebDriver.Navigate().GoToUrl($"https://www.instagram.com/{username}");
 
                 Thread.Sleep(minutesBetweenBulkActions * 60000);// wait between each bulk action
             }
