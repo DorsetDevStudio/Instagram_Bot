@@ -58,9 +58,18 @@ namespace Instagram_Bot
                  DateTime.Now.ToString("dddd"), // today
                  DateTime.Now.AddDays(-1).ToString("dddd") // yesterday
             };
-            thingsToSearch.AddRange(File.ReadLines("hashtags.txt"));
 
+            if(File.Exists(@"c:\hashtags.txt"))
+                thingsToSearch.AddRange(File.ReadLines(@"c:\hashtags.txt"));
 
+            if (File.Exists(@"c:\ignore_hashtags.txt"))
+            {
+                foreach (var line in File.ReadLines(@"c:\ignore_hashtags.txt"))
+                {
+                    thingsToSearch.Remove(line);
+                }
+            }
+              
             // Random generic comments to posts, we need hundreds of these so not to be spammy, or hook up to a random comment / phrase generator API
             var phrasesToComment = new List<string>()
             {
@@ -83,6 +92,17 @@ namespace Instagram_Bot
                 "✔️",
                 "✔️👩‍✔️",
             };
+
+            if (File.Exists(@"c:\comments.txt"))
+                phrasesToComment.AddRange(File.ReadLines(@"c:\comments.txt"));
+
+            if (File.Exists(@"c:\ignore_comments.txt"))
+            {
+                foreach (var line in File.ReadLines(@"c:\ignore_comments.txt"))
+                {
+                    phrasesToComment.Remove(line);
+                }
+            }
 
             /* END CONFIG */
 
