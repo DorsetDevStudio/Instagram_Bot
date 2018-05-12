@@ -18,20 +18,7 @@ namespace Instagram_Bot
 
         private void button1_Click(object sender, EventArgs e)
         {
-            if (ApplicationDeployment.IsNetworkDeployed) // running as clickone application
-            {
-                // Prevent main GUI locking up by running service in seperate threat via a task (not sure if this works as intended)
-                var t = new Task(() => { 
-                    var botCore = new c_bot_core(textBoxUsername.Text.Trim(), textBoxPassword.Text.Trim());
-                });
-                t.Start();
-                t.Wait();
-            }
-            else
-            {
-                // run in same thread when debugging so we can step through code.
-                var botCore = new c_bot_core(textBoxUsername.Text.Trim(), textBoxPassword.Text.Trim());
-            }
+            var botCore = new c_bot_core(textBoxUsername.Text.Trim(), textBoxPassword.Text.Trim());         
         }
 
         private void Form1_Load(object sender, EventArgs e)
