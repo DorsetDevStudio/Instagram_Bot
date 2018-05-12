@@ -35,6 +35,13 @@
 #*.sqlproj   merge=binary
 #*.wwaproj   merge=binary
 
+
+# stuart, allow hosting of clickone in github
+*.manifest binary
+*.application binary
+*.deploy binary
+
+
 ###############################################################################
 # behavior for image files
 #

@@ -11,44 +11,52 @@ namespace Instagram_Bot
 
     public class c_bot_core
     {
+
         IWebDriver IwebDriver = new ChromeDriver();
-        public c_bot_core(string username, string password)
+        string user = Environment.UserName.Replace(".", " ").Replace(@"\", "");
+
+        public c_bot_core(string username, string password, bool stealthMode = false, bool enableVoices = true)
         {
 
-            string user = Environment.UserName.Replace(".", " ").Replace(@"\", "");
+            if (user.Contains("")) // use just the first name of pc username to be more personable
+                user = user.Split(' ')[0];
 
-            // Go full screen
-            IwebDriver.Manage().Window.Maximize();
-            
-            c_voice_core.speak($"hi {user}, just getting warmed up");
+            if (stealthMode)
+            {
+                IwebDriver.Manage().Window.Minimize();
+            }
+            else
+            {
+                IwebDriver.Manage().Window.Maximize();
+            }
 
             /* CONFIG  */
 
             // Instagram throttling & bot detection avoidance - we randomise the time between actions (clicks) to `look` more `human`)
             
             int secondsBetweenActions_min   = 2;    // rand min, e.g Thread.Sleep(new Random().Next(secondsBetweenActions_min, secondsBetweenActions_max) * 1000)
-            int secondsBetweenActions_max   = 5;    // rand max
+            int secondsBetweenActions_max   = 3;    // rand max
 
             int minutesBetweenBulkActions_min = 1;  // rand min, e.g Thread.Sleep(new Random().Next(minutesBetweenBulkActions_min, minutesBetweenBulkActions_max) * 60000)
-            int minutesBetweenBulkActions_max = 3;  // rand max
+            int minutesBetweenBulkActions_max = 2;  // rand max
 
             int maxLikesIn24Hours           = 700;  // Not yet Implemented
             int maxFollowsIn24Hours         = 100;  // Not yet Implemented
             int maxCommentsIn24Hours        = 24;   // Not yet Implemented
 
-            int maxPostsPerSearch           = 10;    // Any value will do, keep low for more variety in 
+            int maxPostsPerSearch           = 50;    // Any value will do, keep low for more variety in 
 
 
             // General interests to target, values from hashtags.txt also loaded at startup.
             var thingsToSearch = new List<string>()
             {
-                "summer", "weekend", "friday", "netflix","chill", "hangover",
-                "bournemouth", "poole", "dorset",
-                "learningtocode", "neverstoplearning",
-                "dirtyfridayuk", "justgloves",
+                "summer","chill","hangover",
+                "bournemouth", "poole",
                 "mandelaeffect", "thegreatawakening",
                 "followme", "follow4follow", "followforfollow", "followback", "follow4Like", "like4follow",
-                "footballsucks", "formula1", "f1", "lewishamilton", "redbullracing", "ferrari", 
+                "formula1", "f1", "lewishamilton", "redbullracing", "ferrari",
+                 DateTime.Now.ToString("dddd"), // today
+                 DateTime.Now.AddDays(-1).ToString("dddd") // yesterday
             };
             thingsToSearch.AddRange(File.ReadLines("hashtags.txt"));
 
@@ -56,18 +64,29 @@ namespace Instagram_Bot
             // Random generic comments to posts, we need hundreds of these so not to be spammy, or hook up to a random comment / phrase generator API
             var phrasesToComment = new List<string>()
             {
-                "I like it!",
-                "nice :)",
-                "interesting, where is it taken?",
-                "Perfection, you should be a photographer!",
-                "Wish I could take photos like yours!",
-                "haha",
-                "👌","❤️","🙆","🍟","👁","💙","🌌","🛰","✔️","👩‍","♟","♾","👁‍🗨" /* people love emojis! */
+                "I #like it! @" + username,
+                "#nice :)",
+                "#interesting, where is that? @" + username,
+                "#Perfection, you should be a #photographer! @" + username,
+                "#haha, interesting approach me thinks 👌",
+                "Wish I could take #photos like yours!",
+                "#lol",
+                "#Perfection, that put a #smile on face and made my " + DateTime.Now.ToString("dddd") + " :) @" + username,
+                "#haha",
+                "It's #" + DateTime.Now.ToString("dddd") + " people 👌💙✔️ ",
+                "#Happy " + DateTime.Now.ToString("dddd") + " everybody :) from @" + username + " ✔️💙👌",
+                "✔️👌✔️",
+                "❤️✔️✔️",
+                "✔️🙆",
+                "🍟✔️",
+                "💙💙👌",
+                "✔️",
+                "✔️👩‍✔️",
             };
 
             /* END CONFIG */
 
-            c_voice_core.speak($"ok, let's connect to Instagram as {username}");
+            if (enableVoices) c_voice_core.speak($"ok {user}, let's connect to Instagram");
 
             // Log in to Instagram
             IwebDriver.Navigate().GoToUrl("https://www.instagram.com/accounts/login/");
@@ -79,21 +98,34 @@ namespace Instagram_Bot
             // end Log in to Instagram
 
 
-            // check we are logged in, if not return to main form UI
-            if (IwebDriver.PageSource.Contains("your password was incorrect"))
-            {
-                c_voice_core.speak($"It didn't work, either the username {username} or password you provided were incorrect, please enter the correct login details and try again. Take your time {user}, no rush");
-                IwebDriver.Close();
-                IwebDriver.Quit();
-                System.Windows.Forms.MessageBox.Show(
-                    "Invalid username or password, please try again.",
-                    "Login Failed",
-                    System.Windows.Forms.MessageBoxButtons.OK,
-                    System.Windows.Forms.MessageBoxIcon.Error);
-                return; // exit this instance of bot
-            }
+            //// check we are logged in, if not return to main form UI
+            //if (IwebDriver.PageSource.Contains("your password was incorrect"))
+            //{
+            //    if (enableVoices) c_voice_core.speak($"It didn't work, either the username {username} or password you provided were incorrect, please enter the correct login details and try again. Take your time {user}, no rush");
+            //    IwebDriver.Close();
+            //    IwebDriver.Quit();
+            //    MessageBox.Show(
+            //        "Invalid username or password, please try again.",
+            //        "Login Failed",
+            //        MessageBoxButtons.OK,
+            //        MessageBoxIcon.Error);
+            //    return; // exit this instance of bot
+            //}
 
-            c_voice_core.speak($"We are in, awesome, let's get you some new followers");
+            if (enableVoices) c_voice_core.speak($"You have one minute to finish logging in before we begin");
+
+            Thread.Sleep(60 * 1000); // wait for page to change
+                                    
+            //// Thread.Sleep(5 * 1000); // wait for page to change
+
+            // // has the user been asked to enter a passcode, if yes wait 2 minutes then assume we are in.
+            // if (IwebDriver.PageSource.Contains("We Detected An Unusual Login Attempt"))
+            // {
+            //     if (enableVoices) c_voice_core.speak($"Instagram needs to validate your identity, please follow instructions and then wait up to 2 minutes.");
+            //     Thread.Sleep(2 * 60000);
+            // }
+
+            // if (enableVoices) c_voice_core.speak($"We are in, awesome, let's get you some new followers");
 
             /* MAIN LOOP */
 
@@ -103,7 +135,7 @@ namespace Instagram_Bot
 
                 Application.DoEvents(); // Prevent warnings during debugging.
                 var mySearch = thingsToSearch[new Random().Next(0, thingsToSearch.Count - 1)];
-                c_voice_core.speak($"Ok, time to find some more followers. Searching for {mySearch}");
+                if (enableVoices) c_voice_core.speak($"Ok, time to find some more followers. Searching for {mySearch}");
 
                 // just navigate to search
                 IwebDriver.Navigate().GoToUrl($"https://www.instagram.com/explore/tags/{mySearch}");
@@ -120,7 +152,7 @@ namespace Instagram_Bot
                     if (postsToLike.Count >= maxPostsPerSearch) // limit per search
                         break;
                 }
-                c_voice_core.speak($"Ok we have {postsToLike.Count} posts to work with");
+                if (enableVoices) c_voice_core.speak($"Ok we have {postsToLike.Count} posts to work with");
 
                 int postCounter = 0;
 
@@ -151,16 +183,15 @@ namespace Instagram_Bot
                         }
                     }
 
-                    c_voice_core.speak($"This is post {postCounter} out of {postsToLike.Count} by instagram user {instagram_post_user}");
+                    if (enableVoices) c_voice_core.speak($"This is post {postCounter} of {postsToLike.Count} by user {instagram_post_user}");
 
                     bool alreadyFollowing = false;
                     // FOLLOW
                     foreach (var obj in IwebDriver.FindElements(By.TagName("button")))
                     {
-
                         if (obj.Text.ToUpper().Contains("FOLLOWING".ToUpper()))
                         {
-                            c_voice_core.speak($"you are already following this user, skipping");
+                            if (enableVoices) c_voice_core.speak($"already following");
                             alreadyFollowing = true;
                             break;
                         }
@@ -168,7 +199,7 @@ namespace Instagram_Bot
                         {
                             if (obj.Text.ToUpper().Contains("FOLLOW".ToUpper()))
                             {
-                                c_voice_core.speak($"following");
+                                if (enableVoices) c_voice_core.speak($"following");
                                 obj.Click();
                                 Thread.Sleep(new Random().Next(secondsBetweenActions_min, secondsBetweenActions_max) * 1000); // wait a short(random) amount of time for page to change
                                 break;
@@ -199,7 +230,7 @@ namespace Instagram_Bot
                         {
                             if (obj.GetAttribute("placeholder").ToUpper().Contains("COMMENT".ToUpper()))
                             {
-                                c_voice_core.speak($"commenting");
+                                if (enableVoices) c_voice_core.speak($"commenting");
                                 bool sendKeysFailed = true;// must start as true
                                 while (sendKeysFailed)
                                 {
@@ -230,7 +261,7 @@ namespace Instagram_Bot
                         // check if comment failed, if yes remove that comment from our comments list
                         if (IwebDriver.PageSource.ToUpper().Contains("couldn't post comment".ToUpper()))
                         {
-                            c_voice_core.speak($"Oh dear {user}, that comment was rejected, I will remove it from the list so we don't try to use is again.");
+                            if (enableVoices) c_voice_core.speak($"Oh dear {user}, that comment was rejected, I will remove it from the list so we don't try to use is again.");
                             phrasesToComment.Remove(myComment);
                             Thread.Sleep(30 * 1000); // wait after a rejection
                         }
@@ -244,7 +275,7 @@ namespace Instagram_Bot
                             {
 
                                 obj.Click();
-                                c_voice_core.speak($"done, loading next post in a moment");
+                                if (enableVoices) c_voice_core.speak($"done, loading next post");
                                 Thread.Sleep(new Random().Next(secondsBetweenActions_min, secondsBetweenActions_max) * 1000); // wait a short(random) amount of time for page to change
                                 break;
                             }
@@ -254,11 +285,11 @@ namespace Instagram_Bot
 
 
                     }// end already following or no comments left
-
-                    Thread.Sleep(new Random().Next(secondsBetweenActions_min, secondsBetweenActions_max) * 1000); // wait a short(random) amount of time for page to change
+                    if(!alreadyFollowing)
+                        Thread.Sleep(new Random().Next(secondsBetweenActions_min, secondsBetweenActions_max) * 1000); // wait a short(random) amount of time for page to change
                 }
 
-                c_voice_core.speak($"all done {user}, let's load your profile page and check your stats before doing a new search");
+                if (enableVoices) c_voice_core.speak($"all done {user}, let's check your stats");
 
                 // Return to users profile page so they can see their stats while we wait for next search to start
                 IwebDriver.Navigate().GoToUrl($"https://www.instagram.com/{username}");
@@ -289,9 +320,9 @@ namespace Instagram_Bot
                     }
                 }
 
-                c_voice_core.speak($"You have {followers} followers and are following {following}. Well done, but I take all the credit.");
+                if (enableVoices) c_voice_core.speak($"You have {followers} followers and are following {following}. Well done, but I take all the credit.");
 
-                c_voice_core.speak($"Let's take a short break.");
+                if (enableVoices) c_voice_core.speak($"Let's take a short break.");
 
                 Thread.Sleep(new Random().Next(minutesBetweenBulkActions_min, minutesBetweenBulkActions_max) * 60000);// wait between each bulk action
             }
