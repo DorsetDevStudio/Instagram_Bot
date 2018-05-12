@@ -22,7 +22,7 @@ namespace Instagram_Bot
             // Instagram throttling & bot detection avoidance - we randomise the time between actions (clicks) to `look` more `human`)
             
             int secondsBetweenActions_min   = 1;    // rand min, e.g Thread.Sleep(new Random().Next(secondsBetweenActions_min, secondsBetweenActions_max) * 1000)
-            int secondsBetweenActions_max   = 10;   // rand max
+            int secondsBetweenActions_max   = 3;    // rand max
 
             int minutesBetweenBulkActions_min = 1;  // rand min, e.g Thread.Sleep(new Random().Next(minutesBetweenBulkActions_min, minutesBetweenBulkActions_max) * 60000)
             int minutesBetweenBulkActions_max = 30; // rand max
@@ -156,7 +156,23 @@ namespace Instagram_Bot
                     {
                         if (obj.GetAttribute("placeholder").ToUpper().Contains("COMMENT"))
                         {
-                            obj.SendKeys(myComment); // put comment in textarea
+
+                            bool sendKeysFailed = true;// must start as true
+                            while (sendKeysFailed)
+                            {
+                                try
+                                {
+                                    obj.SendKeys(myComment); // put comment in textarea
+                                    break;
+                                }
+                                catch
+                                {
+                                    sendKeysFailed = true; // some characters are not supported by chrome driver (some emojis for example)
+                                    phrasesToComment.Remove(myComment); // remove offending comment
+                                    myComment = phrasesToComment[new Random().Next(0, phrasesToComment.Count - 1)]; // select another comments and try again
+                                }
+                            }
+
                             Thread.Sleep(new Random().Next(secondsBetweenActions_min, secondsBetweenActions_max) * 1000); // wait a short(random) amount of time for page to change
                             IwebDriver.FindElement(By.TagName("form")).Submit(); // Only one form on page, so submit it to comment.
                             Thread.Sleep(new Random().Next(secondsBetweenActions_min, secondsBetweenActions_max) * 1000); // wait a short(random) amount of time for page to change
