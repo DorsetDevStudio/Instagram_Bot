@@ -189,7 +189,7 @@ namespace Instagram_Bot
                         if (IwebDriver.PageSource.ToUpper().Contains("couldn't post comment".ToUpper()))
                         {
                             phrasesToComment.Remove(myComment);
-                            Thread.Sleep(10 * 1000); // wait a short(random) amount of time after a rejection
+                            Thread.Sleep(30 * 1000); // wait after a rejection
                         }
 
                         // end COMMENT
