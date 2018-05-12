@@ -17,13 +17,17 @@ UPDATES  -- just restart the app to check for updates or run the installer again
 
 
 HASHTAGS
+
 To tell the bot which tags to search for just create a file at c:\hashtags.txt and add one tag per line (do not include the #)
+
 To tell the bot which tags NOT to search for just create a file at c:\ignore_hashtags.txt and add one tag per line (do not include the #)
 
 
 
 COMMENTS
+
 To tell the bot what comments to post just create a file at c:\comments.txt and add one comment per line (unicode emojis should be ok 👟👟👟)
+
 To tell the bot what comments NOT to post just create a file at c:\ignore_comments.txt and add one comment per line
 
 
