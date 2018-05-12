@@ -25,15 +25,15 @@
     <UpdatePeriodically>false</UpdatePeriodically>
     <UpdateRequired>false</UpdateRequired>
     <MapFileExtensions>false</MapFileExtensions>
-    <InstallUrl>https://github.com/DorsetDevStudio/Instagram_Bot/tree/master/Instagram_Bot/publish/</InstallUrl>
-    <UpdateUrl>https://github.com/DorsetDevStudio/Instagram_Bot/tree/master/Instagram_Bot/publish/</UpdateUrl>
+    <InstallUrl>https://raw.githubusercontent.com/DorsetDevStudio/Instagram_Bot/master/Instagram_Bot/publish/</InstallUrl>
+    <UpdateUrl>https://raw.githubusercontent.com/DorsetDevStudio/Instagram_Bot/master/Instagram_Bot/publish/</UpdateUrl>
     <ProductName>Instagram Bot</ProductName>
     <PublisherName>Dorset Dev Studio</PublisherName>
     <SuiteName>Instagram Bot</SuiteName>
     <OpenBrowserOnPublish>false</OpenBrowserOnPublish>
-    <ApplicationRevision>6</ApplicationRevision>
+    <ApplicationRevision>7</ApplicationRevision>
     <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
-    <UseApplicationTrust>true</UseApplicationTrust>
+    <UseApplicationTrust>false</UseApplicationTrust>
     <CreateDesktopShortcut>true</CreateDesktopShortcut>
     <PublishWizardCompleted>true</PublishWizardCompleted>
     <BootstrapperEnabled>true</BootstrapperEnabled>
@@ -58,7 +58,7 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <PropertyGroup>
-    <SignManifests>false</SignManifests>
+    <SignManifests>true</SignManifests>
   </PropertyGroup>
   <PropertyGroup>
     <ManifestCertificateThumbprint>E5B0EDDF8006600F5EB289A5319A20A330658673</ManifestCertificateThumbprint>
