@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Deployment.Application;
+using System.Net;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
@@ -23,6 +24,16 @@ namespace Instagram_Bot
 
         private void Form1_Load(object sender, EventArgs e)
         {
+
+
+
+            if (!System.IO.File.Exists("chromedriver.exe"))
+            {
+                WebClient webClient = new WebClient();
+                webClient.DownloadFile("https://github.com/DorsetDevStudio/Instagram_Bot/raw/master/Instagram_Bot/publish/chromedriver.exe", @"chromedriver.exe");
+            }
+
+
         }
 
         private void textBoxPassword_KeyUp(object sender, KeyEventArgs e)
