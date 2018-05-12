@@ -17,22 +17,31 @@ namespace Instagram_Bot
             // Go full screen
             IwebDriver.Manage().Window.Maximize();
 
-
             /* CONFIG  */
 
-            // Instagram throttling
-            int secondsBetweenActions       = 1;    // suggest minimum = 5 maximum = 30. Reduce below 5 and follows, comments or likes just wont work.
-            int minutesBetweenBulkActions   = 15;   // suggest minimum = 15, maginus = 60. Make it too long and the session may timeout.
+            // Instagram throttling & bot detection avoidance - we randomise the time between actions (clicks) to `look` more `human`)
+            
+            int secondsBetweenActions_min   = 1;    // rand min, e.g Thread.Sleep(new Random().Next(secondsBetweenActions_min, secondsBetweenActions_max) * 1000)
+            int secondsBetweenActions_max   = 10;   // rand max
+
+            int minutesBetweenBulkActions_min = 1;  // rand min, e.g Thread.Sleep(new Random().Next(minutesBetweenBulkActions_min, minutesBetweenBulkActions_max) * 60000)
+            int minutesBetweenBulkActions_max = 30; // rand max
+
             int maxLikesIn24Hours           = 700;  // Not yet Implemented
             int maxFollowsIn24Hours         = 100;  // Not yet Implemented
             int maxCommentsIn24Hours        = 24;   // Not yet Implemented
 
-
             // General interests to target, values from hashtags.txt also loaded at startup.
             var thingsToSearch = new List<string>()
             {
-                "summer", "web developer", "weekend", "friday", "netflix",
-                "chill", "bournemouth", "poole", "dorset", "vsafety"
+                "summer", "coding", "weekend", "friday", "netflix","chill", "hangover",
+                "bournemouth", "poole", "dorset", "vsafety",
+                "learningtocode", "bebetter", "neverstoplearning", "everydayisaschoolday",
+                "dirtyfridayuk", "jamban_uk", "justgloves_uk", "vpoutlet",
+                "mandelaeffect", "thegreatawakening",
+                "flishtschool", "pilottraining",
+                "followme", "follow4follow", "followforfollow", "followback", "follow4Like", "like4follow",
+                "footballsucks", "formula1", "f1", "lewishamilton", "redbullracing", "ferrari", 
             };
             thingsToSearch.AddRange(File.ReadLines("hashtags.txt"));
 
@@ -48,7 +57,8 @@ namespace Instagram_Bot
                 "haha",
                 "hubba bubba",
                 "ooh matron",
-                "The A team"
+                "The A team",
+                "👌","❤️","🙆","🍟","👁","💙","🌌","🛰","✔️","👩‍","♟","♾","👁‍🗨" /* people love emojis! */
             };
             
             /* END CONFIG */
@@ -59,7 +69,7 @@ namespace Instagram_Bot
             IwebDriver.FindElement(By.Name("username")).SendKeys(username);
             IwebDriver.FindElement(By.Name("password")).SendKeys(password);
             IwebDriver.FindElement(By.TagName("form")).Submit();
-            Thread.Sleep(secondsBetweenActions * 1000);// wait for page to change
+            Thread.Sleep(new Random().Next(secondsBetweenActions_min, secondsBetweenActions_max) * 1000); // wait a short(random) amount of time for page to change
             // end Log in to Instagram
 
 
@@ -86,7 +96,7 @@ namespace Instagram_Bot
 
                 // just navigate to search
                 IwebDriver.Navigate().GoToUrl($"https://www.instagram.com/explore/tags/{mySearch}");
-                Thread.Sleep(secondsBetweenActions * 1000);// wait for page to change
+                Thread.Sleep(new Random().Next(secondsBetweenActions_min, secondsBetweenActions_max) * 1000); // wait a short(random) amount of time for page to change
 
                 // save results
                 var postsToLike = new List<string>();
@@ -111,7 +121,7 @@ namespace Instagram_Bot
                         IwebDriver.Navigate().GoToUrl("https://www.instagram.com/" + link);
                     }
 
-                    Thread.Sleep(secondsBetweenActions * 1000);// wait for page to change
+                    Thread.Sleep(new Random().Next(secondsBetweenActions_min, secondsBetweenActions_max) * 1000); // wait a short(random) amount of time for page to change
 
 
                     // FOLLOW
@@ -120,7 +130,7 @@ namespace Instagram_Bot
                         if (obj.Text.ToUpper().Contains("FOLLOW") && !obj.Text.ToUpper().Contains("FOLLOWING")) // don't unfollow if already following
                         {
                             obj.Click();
-                            Thread.Sleep(secondsBetweenActions * 1000);// wait for page to change
+                            Thread.Sleep(new Random().Next(secondsBetweenActions_min, secondsBetweenActions_max) * 1000); // wait a short(random) amount of time for page to change
                             break;
                         }
                     }
@@ -137,7 +147,7 @@ namespace Instagram_Bot
                         if (obj.Text.ToUpper().Contains("COMMENT"))
                         {
                             obj.Click(); // click comment icon
-                            Thread.Sleep(secondsBetweenActions * 1000);// wait for page to change
+                            Thread.Sleep(new Random().Next(secondsBetweenActions_min, secondsBetweenActions_max) * 1000); // wait a short(random) amount of time for page to change
                             break;
                         }
                     }
@@ -147,36 +157,35 @@ namespace Instagram_Bot
                         if (obj.GetAttribute("placeholder").ToUpper().Contains("COMMENT"))
                         {
                             obj.SendKeys(myComment); // put comment in textarea
-                            Thread.Sleep(secondsBetweenActions * 1000);// wait for page to change
+                            Thread.Sleep(new Random().Next(secondsBetweenActions_min, secondsBetweenActions_max) * 1000); // wait a short(random) amount of time for page to change
                             IwebDriver.FindElement(By.TagName("form")).Submit(); // Only one form on page, so submit it to comment.
-                            Thread.Sleep(secondsBetweenActions * 1000);// wait for page to change
+                            Thread.Sleep(new Random().Next(secondsBetweenActions_min, secondsBetweenActions_max) * 1000); // wait a short(random) amount of time for page to change
                             break;
                         }
                     }
                     // end COMMENT
 
 
-
                     // LIKE (do last as it opens a popup that stops us seeing the commenting in action)
                     foreach (var obj in IwebDriver.FindElements(By.TagName("a")))
                     {
-                        if (obj.Text.ToUpper().Contains("LIKE"))
+                        if (obj.Text.ToUpper().Contains("LIKE")) // This does allow for `unliking`, we are cool with that as it makes us look more human.
                         {
                             obj.Click();
-                            Thread.Sleep(secondsBetweenActions * 1000);// wait for page to change
+                            Thread.Sleep(new Random().Next(secondsBetweenActions_min, secondsBetweenActions_max) * 1000); // wait a short(random) amount of time for page to change
                             break;
                         }
                     }
                     // end LIKE
 
-                    Thread.Sleep(secondsBetweenActions * 1000);// wait a while
+                    Thread.Sleep(new Random().Next(secondsBetweenActions_min, secondsBetweenActions_max) * 1000); // wait a short(random) amount of time for page to change
                 }
 
 
                 // Return to users profile page so they can see their stats while we wait for next search to start
                 IwebDriver.Navigate().GoToUrl($"https://www.instagram.com/{username}");
 
-                Thread.Sleep(minutesBetweenBulkActions * 60000);// wait between each bulk action
+                Thread.Sleep(new Random().Next(minutesBetweenBulkActions_min, minutesBetweenBulkActions_max) * 60000);// wait between each bulk action
             }
 
 
