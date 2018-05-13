@@ -31,7 +31,7 @@
     <PublisherName>Dorset Dev Studio</PublisherName>
     <SuiteName>Instagram Bot</SuiteName>
     <OpenBrowserOnPublish>false</OpenBrowserOnPublish>
-    <ApplicationRevision>38</ApplicationRevision>
+    <ApplicationRevision>39</ApplicationRevision>
     <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
     <UseApplicationTrust>false</UseApplicationTrust>
     <CreateDesktopShortcut>true</CreateDesktopShortcut>
@@ -174,7 +174,6 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Martin-Berube-Square-Animal-Pig.ico" />
-    <Content Include="Resources\popular_hashtags.txt" />
     <Content Include="Resources\screenshot.PNG" />
     <None Include="Resources\Pig-icon.png" />
   </ItemGroup>
