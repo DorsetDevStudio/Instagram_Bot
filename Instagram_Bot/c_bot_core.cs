@@ -20,8 +20,10 @@ namespace Instagram_Bot
             options.AddArgument("--user-agent=Mozilla/5.0 (iPad; CPU OS 6_0 like Mac OS X) AppleWebKit/536.26 (KHTML, like Gecko) Version/6.0 Mobile/10A5355d Safari/8536.25");
             IwebDriver = new ChromeDriver(options);
 
-            if (user.Contains("")) // use just the first name of pc username to be more personable
+            if (user.Contains(""))
+            { // use just the first name of pc username to be more personable
                 user = user.Split(' ')[0];
+            }
 
             if (stealthMode)
             {
@@ -42,12 +44,12 @@ namespace Instagram_Bot
             int minutesBetweenBulkActions_max = 2; // must be > minutesBetweenBulkActions_min
 
             // limits based on minimal research
-            int maxFollowsIn24Hours = 800;
-            int maxCommentsIn24Hours = 250;    
-            int maxLikesIn24Hours = (int)(maxFollowsIn24Hours * 1.5);
-
+            int maxFollowsIn24Hours = Properties.Settings.Default.dailyFollowLimit;
+            int maxCommentsIn24Hours = Properties.Settings.Default.dailyCommentLimit;
+            int maxLikesIn24Hours = Properties.Settings.Default.dailyLikeLimit;// no more than follow * 1.2
+           
             // Any value will work, trial and error
-            int maxPostsPerSearch = 1000;
+            int maxPostsPerSearch = 15;
 
             // General interests to target:
             // values from c:\hashtags.txt also loaded at startup. 
@@ -218,6 +220,31 @@ namespace Instagram_Bot
             while (true)
             {
 
+                if (!DateTime.TryParse(Properties.Settings.Default.countersStarted.ToString(), out DateTime o) )
+                {   // first run or rinning in debug mode
+                    Properties.Settings.Default.countersStarted = DateTime.Now;
+                    Properties.Settings.Default.Save();
+                    if (enableVoices) c_voice_core.speak($"Instagram limiters configured");
+                }
+
+                // dont worry about limits if not installed (debugging)
+                if (DateTime.TryParse(Properties.Settings.Default.countersStarted.ToString(), out DateTime _o))
+                {
+                    // get hours since counters started
+                    var hours = (_o - DateTime.Now).TotalHours;
+                    if (Properties.Settings.Default.totalFollowsSinceCountersStarted / hours > Properties.Settings.Default.dailyFollowLimit / 24)
+                    {
+                        if (enableVoices) c_voice_core.speak($"Daily follow limit exceeded");
+                        Thread.Sleep(3 * 60000); // wait a amount of time before trying again
+                        continue;// go to next post
+                    }
+                    else
+                    {
+                        var followLeftThisHour = (int)(Properties.Settings.Default.dailyFollowLimit / 24) - (int)(Properties.Settings.Default.totalFollowsSinceCountersStarted / hours) ;
+                        if (enableVoices) c_voice_core.speak($"{followLeftThisHour} follow left this hour");
+                    }
+                }
+   
                 Application.DoEvents(); // Prevent warnings during debugging.
                 var mySearch = thingsToSearch[new Random().Next(0, thingsToSearch.Count - 1)];
                 if (enableVoices) c_voice_core.speak($"Ok, let's get some followers");

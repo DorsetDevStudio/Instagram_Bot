@@ -46,5 +46,64 @@ namespace Instagram_Bot.Properties {
                 this["password"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("800")]
+        public int dailyFollowLimit {
+            get {
+                return ((int)(this["dailyFollowLimit"]));
+            }
+            set {
+                this["dailyFollowLimit"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("250")]
+        public int dailyCommentLimit {
+            get {
+                return ((int)(this["dailyCommentLimit"]));
+            }
+            set {
+                this["dailyCommentLimit"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("1000")]
+        public int dailyLikeLimit {
+            get {
+                return ((int)(this["dailyLikeLimit"]));
+            }
+            set {
+                this["dailyLikeLimit"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        public global::System.DateTime countersStarted {
+            get {
+                return ((global::System.DateTime)(this["countersStarted"]));
+            }
+            set {
+                this["countersStarted"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("0")]
+        public int totalFollowsSinceCountersStarted {
+            get {
+                return ((int)(this["totalFollowsSinceCountersStarted"]));
+            }
+            set {
+                this["totalFollowsSinceCountersStarted"] = value;
+            }
+        }
     }
 }
