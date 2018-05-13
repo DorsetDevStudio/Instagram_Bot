@@ -1,6 +1,6 @@
 ﻿
 
-![Screenshot](screenshot.PNG)
+![Screenshot](https://github.com/DorsetDevStudio/Instagram_Bot/blob/master/Instagram_Bot/Resources/screenshot.PNG)
 
 
 
