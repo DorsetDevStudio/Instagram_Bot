@@ -12,11 +12,16 @@ namespace Instagram_Bot
     public class c_bot_core
     {
 
-        IWebDriver IwebDriver = new ChromeDriver();
+        IWebDriver IwebDriver;
         string user = Environment.UserName.Replace(".", " ").Replace(@"\", "");
 
         public c_bot_core(string username, string password, bool stealthMode = false, bool enableVoices = true)
         {
+
+            // pretend to be an android mobile app so we can upload image/create posts
+            ChromeOptions options = new ChromeOptions();
+            options.AddArgument("--user-agent=Mozilla/5.0 (iPad; CPU OS 6_0 like Mac OS X) AppleWebKit/536.26 (KHTML, like Gecko) Version/6.0 Mobile/10A5355d Safari/8536.25");
+            IWebDriver IwebDriver = new ChromeDriver(options);
 
             if (user.Contains("")) // use just the first name of pc username to be more personable
                 user = user.Split(' ')[0];
@@ -33,18 +38,18 @@ namespace Instagram_Bot
             /* CONFIG  */
 
             // Instagram throttling & bot detection avoidance - we randomise the time between actions (clicks) to `look` more `human`)
-            
-            int secondsBetweenActions_min   = 2;    // rand min, e.g Thread.Sleep(new Random().Next(secondsBetweenActions_min, secondsBetweenActions_max) * 1000)
-            int secondsBetweenActions_max   = 3;    // rand max
+
+            int secondsBetweenActions_min = 2;    // rand min, e.g Thread.Sleep(new Random().Next(secondsBetweenActions_min, secondsBetweenActions_max) * 1000)
+            int secondsBetweenActions_max = 3;    // rand max
 
             int minutesBetweenBulkActions_min = 1;  // rand min, e.g Thread.Sleep(new Random().Next(minutesBetweenBulkActions_min, minutesBetweenBulkActions_max) * 60000)
             int minutesBetweenBulkActions_max = 2;  // rand max
 
-            int maxLikesIn24Hours           = 700;  // Not yet Implemented
-            int maxFollowsIn24Hours         = 100;  // Not yet Implemented
-            int maxCommentsIn24Hours        = 24;   // Not yet Implemented
+            int maxLikesIn24Hours = 700;  // Not yet Implemented
+            int maxFollowsIn24Hours = 100;  // Not yet Implemented
+            int maxCommentsIn24Hours = 24;   // Not yet Implemented
 
-            int maxPostsPerSearch           = 50;    // Any value will do, keep low for more variety in 
+            int maxPostsPerSearch = 50;    // Any value will do, keep low for more variety in 
 
 
             // General interests to target, values from hashtags.txt also loaded at startup.
@@ -59,7 +64,7 @@ namespace Instagram_Bot
                  DateTime.Now.AddDays(-1).ToString("dddd") // yesterday
             };
 
-            if(File.Exists(@"c:\hashtags.txt"))
+            if (File.Exists(@"c:\hashtags.txt"))
                 thingsToSearch.AddRange(File.ReadLines(@"c:\hashtags.txt"));
 
             if (File.Exists(@"c:\ignore_hashtags.txt"))
@@ -69,7 +74,7 @@ namespace Instagram_Bot
                     thingsToSearch.Remove(line);
                 }
             }
-              
+
             // Random generic comments to posts, we need hundreds of these so not to be spammy, or hook up to a random comment / phrase generator API
             var phrasesToComment = new List<string>()
             {
@@ -135,7 +140,7 @@ namespace Instagram_Bot
             if (enableVoices) c_voice_core.speak($"You have one minute to finish logging in before we begin");
 
             Thread.Sleep(60 * 1000); // wait for page to change
-                                    
+
             //// Thread.Sleep(5 * 1000); // wait for page to change
 
             // // has the user been asked to enter a passcode, if yes wait 2 minutes then assume we are in.
@@ -146,6 +151,60 @@ namespace Instagram_Bot
             // }
 
             // if (enableVoices) c_voice_core.speak($"We are in, awesome, let's get you some new followers");
+
+
+
+            // upload image (work in progress) does NOT work, way too many forms in DOM with `file` input type and have not found one that works.
+            /*
+            foreach (var obj1 in IwebDriver.FindElements(By.TagName("input")))
+            {
+                if (obj1.GetAttribute("type") == "file")
+                {
+
+                    if (enableVoices) c_voice_core.speak($"setting image");
+                    obj1.SendKeys(@"C:\test.png");
+
+                    Thread.Sleep(5 * 1000); // wait for page to change
+
+                    if (enableVoices) c_voice_core.speak($"uploading");
+                    IwebDriver.FindElement(By.TagName("form")).Submit();  // seems to submit but image does not apear on page, maybe it's the wrong form.
+
+                    Thread.Sleep(5 * 1000); // wait for page to change
+
+
+                    // we dont even get this far yet
+                    //foreach (var obj2 in IwebDriver.FindElements(By.TagName("button")))
+                    //{
+                    //    if (obj2.Text.ToUpper().Contains("next"))
+                    //    {
+                    //        if (enableVoices) c_voice_core.speak($"next");
+                    //        obj2.Click();
+                    //        Thread.Sleep(5 * 1000); // wait for page to change
+                    //    }
+                    //    else if (obj2.Text.ToUpper().Contains("share"))
+                    //    {
+                    //        if (enableVoices) c_voice_core.speak($"share");
+                    //        obj2.Click();
+                    //        Thread.Sleep(5 * 1000); // wait for page to change
+                    //        break;
+                    //    }
+                    //}
+
+                    break;
+
+                }
+            }
+            if (enableVoices) c_voice_core.speak($"done");
+            // click button with next in text
+            // click button with share in text
+            Thread.Sleep(60 * 1000); // wait for page to change
+            // end test code tocreate a new post
+            // stay here for debugging.
+            while (true) { };
+            */
+
+
+
 
             /* MAIN LOOP */
 
@@ -179,8 +238,8 @@ namespace Instagram_Bot
                 // load results in turn and like/follow them
                 foreach (var link in postsToLike)
                 {
-                    postCounter ++;
-                    
+                    postCounter++;
+
                     if (link.Contains("https://www.instagram.com/"))
                     {
                         IwebDriver.Navigate().GoToUrl(link);
@@ -291,7 +350,7 @@ namespace Instagram_Bot
                         // LIKE (do last as it opens a popup that stops us seeing the commenting in action)
                         foreach (var obj in IwebDriver.FindElements(By.TagName("a")))
                         {
-                            if (obj.Text.ToUpper().Contains("LIKE")) 
+                            if (obj.Text.ToUpper().Contains("LIKE"))
                             {
 
                                 obj.Click();
@@ -305,7 +364,7 @@ namespace Instagram_Bot
 
 
                     }// end already following or no comments left
-                    if(!alreadyFollowing)
+                    if (!alreadyFollowing)
                         Thread.Sleep(new Random().Next(secondsBetweenActions_min, secondsBetweenActions_max) * 1000); // wait a short(random) amount of time for page to change
                 }
 
@@ -320,7 +379,7 @@ namespace Instagram_Bot
                 string followers = "";
                 foreach (var obj in IwebDriver.FindElements(By.TagName("a")))
                 {
-                    if (obj.GetAttribute("href").Contains("followers") 
+                    if (obj.GetAttribute("href").Contains("followers")
                         && obj.GetAttribute("href").Contains(username))
                     {
                         followers = obj.FindElement(By.TagName("span")).Text.Replace(",", "").Replace(" ", "").Replace("followers", "");
@@ -353,4 +412,6 @@ namespace Instagram_Bot
         }
     }
 
+
 }
+
