@@ -199,6 +199,8 @@
             this.Controls.Add(this.buttonStartBot);
             this.Controls.Add(this.statusStrip1);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
+            this.MaximumSize = new System.Drawing.Size(619, 327);
+            this.MinimumSize = new System.Drawing.Size(619, 327);
             this.Name = "Form1";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Instagram Bot - (Open Source) - By Developer Farm";

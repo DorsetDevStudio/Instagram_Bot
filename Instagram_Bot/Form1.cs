@@ -2,6 +2,7 @@
 using System.Deployment.Application;
 using System.Diagnostics;
 using System.Net;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
@@ -30,16 +31,20 @@ namespace Instagram_Bot
             InitializeComponent();
         }
         c_bot_core botCore;
+        Thread th = null;
         private void button1_Click(object sender, EventArgs e)
         {
             if(checkBoxStealthMode.Checked)
                 WindowState = FormWindowState.Minimized;
 
             Application.DoEvents();
-
             try
             {
-                botCore = new c_bot_core(textBoxUsername.Text.Trim(), textBoxPassword.Text.Trim(), checkBoxStealthMode.Checked, !checkBoxDisableVoices.Checked);
+                Task.Factory.StartNew(() =>
+                {
+                    th = Thread.CurrentThread;
+                    botCore = new c_bot_core(textBoxUsername.Text.Trim(), textBoxPassword.Text.Trim(), checkBoxStealthMode.Checked, !checkBoxDisableVoices.Checked);
+                });
                 buttonStartBot.Enabled = false;
                 buttonStopBot.Enabled = true;
             }
@@ -55,7 +60,7 @@ namespace Instagram_Bot
 
             buttonStopBot.Enabled = false;
 
-            Text += $"{(ApplicationDeployment.IsNetworkDeployed ? " - Version:" + ApplicationDeployment.CurrentDeployment.CurrentVersion.ToString() : " - [NOT INSTALLED]")}";
+            Text += $"{(ApplicationDeployment.IsNetworkDeployed ? " - Version:" + ApplicationDeployment.CurrentDeployment.CurrentVersion.ToString() : " - [NOT INSTALLED]")} ({DateTime.Now.Year})";
 
             // fix TLS file download issues on win 7 machines, if win 7 users get an SSL/TLS error tell them to install windows updates, it WILL fix the problem.
             ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12;
@@ -98,10 +103,15 @@ namespace Instagram_Bot
         {
             try
             {
-                botCore.terminateBot();
+                //TODO: stopping bot does not close the instance of chrome, but at least it stops and does not lock up UI
+                th.Abort();
+                foreach (var process in Process.GetProcessesByName("chromedriver"))
+                {
+                    process.Kill();
+                }
                 buttonStartBot.Enabled = true;
                 buttonStopBot.Enabled = false;
-                MessageBox.Show("bot stopped");
+                MessageBox.Show("You will need to close the web browser manually", "STOPPED!");
             }
             catch (Exception eee)
             {
