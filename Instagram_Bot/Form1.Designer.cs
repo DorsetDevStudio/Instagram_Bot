@@ -40,6 +40,9 @@
             this.checkBoxStealthMode = new System.Windows.Forms.CheckBox();
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.buttonStopBot = new System.Windows.Forms.Button();
+            this.linkLabel1 = new System.Windows.Forms.LinkLabel();
+            this.linkLabel2 = new System.Windows.Forms.LinkLabel();
             this.statusStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.groupBox1.SuspendLayout();
@@ -97,12 +100,13 @@
             // 
             // buttonStartBot
             // 
-            this.buttonStartBot.Location = new System.Drawing.Point(478, 222);
+            this.buttonStartBot.BackColor = System.Drawing.Color.PaleGreen;
+            this.buttonStartBot.Location = new System.Drawing.Point(467, 222);
             this.buttonStartBot.Name = "buttonStartBot";
             this.buttonStartBot.Size = new System.Drawing.Size(109, 23);
             this.buttonStartBot.TabIndex = 2;
             this.buttonStartBot.Text = "Start Bot";
-            this.buttonStartBot.UseVisualStyleBackColor = true;
+            this.buttonStartBot.UseVisualStyleBackColor = false;
             this.buttonStartBot.Click += new System.EventHandler(this.button1_Click);
             // 
             // checkBoxDisableVoices
@@ -149,11 +153,47 @@
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Settings";
             // 
+            // buttonStopBot
+            // 
+            this.buttonStopBot.BackColor = System.Drawing.Color.OrangeRed;
+            this.buttonStopBot.Location = new System.Drawing.Point(313, 222);
+            this.buttonStopBot.Name = "buttonStopBot";
+            this.buttonStopBot.Size = new System.Drawing.Size(109, 23);
+            this.buttonStopBot.TabIndex = 11;
+            this.buttonStopBot.Text = "Stop Bot";
+            this.buttonStopBot.UseVisualStyleBackColor = false;
+            this.buttonStopBot.Click += new System.EventHandler(this.button1_Click_1);
+            // 
+            // linkLabel1
+            // 
+            this.linkLabel1.AutoSize = true;
+            this.linkLabel1.Location = new System.Drawing.Point(127, 206);
+            this.linkLabel1.Name = "linkLabel1";
+            this.linkLabel1.Size = new System.Drawing.Size(51, 13);
+            this.linkLabel1.TabIndex = 9;
+            this.linkLabel1.TabStop = true;
+            this.linkLabel1.Text = "View Site";
+            this.linkLabel1.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkLabel1_LinkClicked);
+            // 
+            // linkLabel2
+            // 
+            this.linkLabel2.AutoSize = true;
+            this.linkLabel2.Location = new System.Drawing.Point(488, 6);
+            this.linkLabel2.Name = "linkLabel2";
+            this.linkLabel2.Size = new System.Drawing.Size(99, 13);
+            this.linkLabel2.TabIndex = 12;
+            this.linkLabel2.TabStop = true;
+            this.linkLabel2.Text = "Check For Updates";
+            this.linkLabel2.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkLabel2_LinkClicked);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(603, 288);
+            this.Controls.Add(this.linkLabel2);
+            this.Controls.Add(this.linkLabel1);
+            this.Controls.Add(this.buttonStopBot);
             this.Controls.Add(this.groupBox1);
             this.Controls.Add(this.pictureBox1);
             this.Controls.Add(this.buttonStartBot);
@@ -185,6 +225,9 @@
         private System.Windows.Forms.CheckBox checkBoxStealthMode;
         private System.Windows.Forms.PictureBox pictureBox1;
         private System.Windows.Forms.GroupBox groupBox1;
+        private System.Windows.Forms.Button buttonStopBot;
+        private System.Windows.Forms.LinkLabel linkLabel1;
+        private System.Windows.Forms.LinkLabel linkLabel2;
     }
 }
 

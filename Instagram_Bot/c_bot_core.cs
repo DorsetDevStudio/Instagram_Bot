@@ -8,20 +8,17 @@ using System.Windows.Forms;
 
 namespace Instagram_Bot
 {
-
     public class c_bot_core
     {
-
         IWebDriver IwebDriver;
         string user = Environment.UserName.Replace(".", " ").Replace(@"\", "");
-
         public c_bot_core(string username, string password, bool stealthMode = false, bool enableVoices = true)
         {
 
             // pretend to be an android mobile app so we can upload image/create posts
             ChromeOptions options = new ChromeOptions();
             options.AddArgument("--user-agent=Mozilla/5.0 (iPad; CPU OS 6_0 like Mac OS X) AppleWebKit/536.26 (KHTML, like Gecko) Version/6.0 Mobile/10A5355d Safari/8536.25");
-            IWebDriver IwebDriver = new ChromeDriver(options);
+            IwebDriver = new ChromeDriver(options);
 
             if (user.Contains("")) // use just the first name of pc username to be more personable
                 user = user.Split(' ')[0];
@@ -412,8 +409,11 @@ namespace Instagram_Bot
             /* end of MAIN LOOP */
 
         }
+        public void terminateBot()
+        {
+            try { IwebDriver.Close();} catch { }
+            try { IwebDriver.Quit(); } catch { }
+        }
     }
-
-
 }
 
