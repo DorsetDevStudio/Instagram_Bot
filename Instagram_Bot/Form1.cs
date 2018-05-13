@@ -32,7 +32,9 @@ namespace Instagram_Bot
         c_bot_core botCore;
         private void button1_Click(object sender, EventArgs e)
         {
-            WindowState = FormWindowState.Minimized;
+            if(checkBoxStealthMode.Checked)
+                WindowState = FormWindowState.Minimized;
+
             Application.DoEvents();
 
             try
