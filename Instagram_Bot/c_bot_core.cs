@@ -87,7 +87,7 @@ namespace Instagram_Bot
                 "#interesting, where is that? @" + username,
                 "#Perfection, you should be a #photographer! @" + username,
                 "#Perfection, you've missed your calling! @" + username,
-                "#Perfection, aloost looks professional! @" + username,
+                "#Perfection, almost looks professional! @" + username,
                 "#haha, interesting approach me thinks 👌 @" + username,
                 "Wish I could take #photos like yours! @" + username,
                 "#Perfection, that put a #smile on face and made my " + DateTime.Now.ToString("dddd") + " :) @" + username,
@@ -243,8 +243,9 @@ namespace Instagram_Bot
                     }
                     else
                     {
+                        //TODO: followLeftThisHour if not calculating correctly (it was rushed)
                         var followLeftThisHour = (int)(Properties.Settings.Default.dailyFollowLimit / 24) - (int)(Properties.Settings.Default.totalFollowsSinceCountersStarted / hours) ;
-                        if (enableVoices) c_voice_core.speak($"{followLeftThisHour} follow left this hour");
+                        if (enableVoices) c_voice_core.speak($"{followLeftThisHour} follows left this hour");
                     }
                 }
    
@@ -312,7 +313,18 @@ namespace Instagram_Bot
                         }
                         else if (obj.Text.ToUpper().Contains("FOLLOW".ToUpper()) && Properties.Settings.Default.stopFolowingUntilDate > DateTime.Now)
                         {
-                            if (enableVoices) c_voice_core.speak($"follow ban in place for {(Properties.Settings.Default.stopFolowingUntilDate - DateTime.Now).Minutes} more minutes");
+
+                            var minutesLeft = (Properties.Settings.Default.stopFolowingUntilDate - DateTime.Now).Minutes;
+                            var secondsLeft = (Properties.Settings.Default.stopFolowingUntilDate - DateTime.Now).Seconds;
+
+                            if (minutesLeft == 0) // must be a few seconds left 
+                            {
+                                if (enableVoices) c_voice_core.speak($"follow ban in place for {secondsLeft} more seconds");
+                            }
+                            else
+                            {
+                                if (enableVoices) c_voice_core.speak($"follow ban in place for {minutesLeft} more minute{(minutesLeft > 1 ? "s" : "")}");
+                            }
                         }
                         else if (obj.Text.ToUpper().Contains("FOLLOW".ToUpper()))
                         {
