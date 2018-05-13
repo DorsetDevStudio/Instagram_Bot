@@ -387,9 +387,9 @@ namespace Instagram_Bot
                         // check if comment failed, if yes remove that comment from our comments list
                         if (IwebDriver.PageSource.ToUpper().Contains("couldn't post comment".ToUpper()))
                         {
-                            if (enableVoices) c_voice_core.speak($"Oh dear {user}, that comment was rejected, I will remove it from the list so we don't try to use is again.");
+                            if (enableVoices) c_voice_core.speak($"Oh dear {user}, that comment was rejected, I will remove it from the list so we don't try to use it again.");
                             phrasesToComment.Remove(myComment);
-                            Thread.Sleep(30 * 1000); // wait after a rejection
+                            Thread.Sleep(5 * 1000); // wait after a rejection
                         }
 
                         // end COMMENT
