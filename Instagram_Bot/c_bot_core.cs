@@ -10,6 +10,8 @@ namespace Instagram_Bot
 {
     public class c_bot_core
     {
+
+
         IWebDriver IwebDriver;
         string user = Environment.UserName.Replace(".", " ").Replace(@"\", "");
         public c_bot_core(string username, string password, bool stealthMode = false, bool enableVoices = true)
@@ -382,7 +384,7 @@ namespace Instagram_Bot
                                 }
                                 Thread.Sleep(1 * 1000);// wait for comment to type
                                 IwebDriver.FindElement(By.TagName("form")).Submit(); // Only one form on page, so submit it to comment.
-                                Thread.Sleep(new Random().Next(secondsBetweenActions_min, secondsBetweenActions_max) * 1000); // wait a short(random) amount of time for page to change
+                                Thread.Sleep(3 * 1000); // wait a short(random) amount of time for page to change
                                 break;
                             }
                         }
