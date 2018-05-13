@@ -31,7 +31,9 @@ namespace Instagram_Bot
 
         private void button1_Click(object sender, EventArgs e)
         {
-            var botCore = new c_bot_core(textBoxUsername.Text.Trim(), textBoxPassword.Text.Trim());         
+            WindowState = FormWindowState.Minimized;
+            Application.DoEvents();
+            var botCore = new c_bot_core(textBoxUsername.Text.Trim(), textBoxPassword.Text.Trim(), checkBoxStealthMode.Checked, !checkBoxDisableVoices.Checked);         
         }
 
         private void Form1_Load(object sender, EventArgs e)

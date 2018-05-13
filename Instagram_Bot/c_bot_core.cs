@@ -38,21 +38,23 @@ namespace Instagram_Bot
             /* CONFIG  */
 
             // Instagram throttling & bot detection avoidance - we randomise the time between actions (clicks) to `look` more `human`)
+            int secondsBetweenActions_min = 2;
+            int secondsBetweenActions_max = 3; // must be > secondsBetweenActions_min
 
-            int secondsBetweenActions_min = 2;    // rand min, e.g Thread.Sleep(new Random().Next(secondsBetweenActions_min, secondsBetweenActions_max) * 1000)
-            int secondsBetweenActions_max = 3;    // rand max
+            int minutesBetweenBulkActions_min = 1;  
+            int minutesBetweenBulkActions_max = 2; // must be > minutesBetweenBulkActions_min
 
-            int minutesBetweenBulkActions_min = 1;  // rand min, e.g Thread.Sleep(new Random().Next(minutesBetweenBulkActions_min, minutesBetweenBulkActions_max) * 60000)
-            int minutesBetweenBulkActions_max = 2;  // rand max
+            // limits based on minimal research
+            int maxFollowsIn24Hours = 800;
+            int maxCommentsIn24Hours = 250;    
+            int maxLikesIn24Hours = (int)(maxFollowsIn24Hours * 1.5);
 
-            int maxLikesIn24Hours = 700;  // Not yet Implemented
-            int maxFollowsIn24Hours = 100;  // Not yet Implemented
-            int maxCommentsIn24Hours = 24;   // Not yet Implemented
+            // Any value will work, trial and error
+            int maxPostsPerSearch = 1000;
 
-            int maxPostsPerSearch = 50;    // Any value will do, keep low for more variety in 
-
-
-            // General interests to target, values from hashtags.txt also loaded at startup.
+            // General interests to target:
+            // values from c:\hashtags.txt also loaded at startup. 
+            // Values from c:\ignore_hashtags.txt will be ignored.
             var thingsToSearch = new List<string>()
             {
                 "summer","chill","hangover",
@@ -75,27 +77,27 @@ namespace Instagram_Bot
                 }
             }
 
-            // Random generic comments to posts, we need hundreds of these so not to be spammy, or hook up to a random comment / phrase generator API
+            // Generic comments to post
+            // values from c:\comments.txt also loaded at startup. 
+            // Values from c:\ignore_comments.txt will be ignored.
             var phrasesToComment = new List<string>()
             {
                 "I #like it! @" + username,
-                "#nice :)",
+                "#nice :)" + username,
                 "#interesting, where is that? @" + username,
                 "#Perfection, you should be a #photographer! @" + username,
-                "#haha, interesting approach me thinks 👌",
-                "Wish I could take #photos like yours!",
-                "#lol",
+                "#haha, interesting approach me thinks 👌" + username,
+                "Wish I could take #photos like yours!" + username,
                 "#Perfection, that put a #smile on face and made my " + DateTime.Now.ToString("dddd") + " :) @" + username,
-                "#haha",
-                "It's #" + DateTime.Now.ToString("dddd") + " people 👌💙✔️ ",
-                "#Happy " + DateTime.Now.ToString("dddd") + " everybody :) from @" + username + " ✔️💙👌",
-                "✔️👌✔️",
-                "❤️✔️✔️",
-                "✔️🙆",
-                "🍟✔️",
-                "💙💙👌",
-                "✔️",
-                "✔️👩‍✔️",
+                "It's #" + DateTime.Now.ToString("dddd") + " people 👌💙✔️ " + username,
+                "#Happy " + DateTime.Now.ToString("dddd") + " everybody :) from @" + username + " ✔️💙👌" + username,
+                "✔️👌✔️" + username,
+                "❤️✔️✔️" + username,
+                "✔️🙆" + username,
+                "🍟✔️" + username,
+                "💙💙👌" + username,
+                "✔️" + username,
+                "✔️👩‍✔️" + username,
             };
 
             if (File.Exists(@"c:\comments.txt"))
