@@ -1,5 +1,9 @@
 ﻿
 
+![Screenshot](screenshot.PNG)
+
+
+
 INSTALL (Windows only) .NET 4.7
 
 To install and use just run this installer (ignore mutiple security warnings as we do not have a code signing certificate yet) .
