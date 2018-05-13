@@ -34,6 +34,13 @@ namespace Instagram_Bot
         Thread th = null;
         private void button1_Click(object sender, EventArgs e)
         {
+
+            if (textBoxUsername.Text.Length < 4)
+            {
+                MessageBox.Show("You need to enter your Instagram username. It's used to tag comments and monitoring follower numbers.");
+                return;
+            }
+
             if(checkBoxStealthMode.Checked)
                 WindowState = FormWindowState.Minimized;
 
@@ -87,6 +94,12 @@ namespace Instagram_Bot
 
             if(textBoxUsername.Text.Length==0)// first time user
                 notifyIcon1.ShowBalloonTip(5 * 1000, "Welcome to Instagram Bot", "To get started enter your Instagram login details and click Start.", ToolTipIcon.None);
+
+            MessageBox.Show("Please ensure your sound is turned up.","Instagram Bot is talking to you!");
+
+            c_voice_core.speak("Thanks, I hope you can hear me now. You can disable speach but I suggest you leave it on for now as I have a lot to say.");
+
+            c_voice_core.speak("Enter your Instagram username and password and then click start. Then just watch the screen without clicking or resizing the windows that appear. The bot may take a minute to start working after the login screen, if prompted by Instagram you should follow the security challenge and enter the pin.");
 
         }
 

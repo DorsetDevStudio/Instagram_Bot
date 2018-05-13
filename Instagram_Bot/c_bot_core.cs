@@ -56,25 +56,24 @@ namespace Instagram_Bot
             // Values from c:\ignore_hashtags.txt will be ignored.
             var thingsToSearch = new List<string>()
             {
-                "summer","chill","hangover",
-                "bournemouth", "poole",
-                "mandelaeffect", "thegreatawakening",
-                "followme", "follow4follow", "followforfollow", "followback", "follow4Like", "like4follow",
-                "formula1", "f1", "lewishamilton", "redbullracing", "ferrari",
+                "summer", "chill", "hangover", "followme", "follow4follow", "followforfollow", "followback", "follow4Like", "like4follow",
                  DateTime.Now.ToString("dddd"), // today
-                 DateTime.Now.AddDays(-1).ToString("dddd") // yesterday
+                 DateTime.Now.AddDays(-1).ToString("dddd"), // yesterday
+                 "hate"+DateTime.Now.ToString("dddd")+"s",
+                 "love"+DateTime.Now.ToString("dddd")+"s",
+
             };
 
             if (File.Exists(@"c:\hashtags.txt"))
-                thingsToSearch.AddRange(File.ReadLines(@"c:\hashtags.txt"));
+                foreach (var line in File.ReadLines(@"c:\hashtags.txt"))
+                    if(!thingsToSearch.Contains(line.Replace("#", "").Trim()))
+                        thingsToSearch.Add(line.Replace("#", "").Trim());
+
 
             if (File.Exists(@"c:\ignore_hashtags.txt"))
-            {
                 foreach (var line in File.ReadLines(@"c:\ignore_hashtags.txt"))
-                {
-                    thingsToSearch.Remove(line);
-                }
-            }
+                    thingsToSearch.Remove(line.Replace("#", "").Trim());
+
 
             // Generic comments to post
             // values from c:\comments.txt also loaded at startup. 
@@ -85,10 +84,12 @@ namespace Instagram_Bot
                 "#nice :) @" + username,
                 "#interesting, where is that? @" + username,
                 "#Perfection, you should be a #photographer! @" + username,
+                "#Perfection, you've missed your calling! @" + username,
+                "#Perfection, aloost looks professional ;! @" + username,
                 "#haha, interesting approach me thinks 👌 @" + username,
                 "Wish I could take #photos like yours! @" + username,
                 "#Perfection, that put a #smile on face and made my " + DateTime.Now.ToString("dddd") + " :) @" + username,
-                "It's #" + DateTime.Now.ToString("dddd") + " people 👌💙✔️ @" + username,
+                "It's #" + DateTime.Now.ToString("dddd") + " people " + username,
                 "#Happy " + DateTime.Now.ToString("dddd") + " everybody :) from @" + username,
                 "✔️👌✔️ @" + username,
                 "❤️✔️✔️ @" + username,
@@ -97,19 +98,19 @@ namespace Instagram_Bot
                 "💙💙👌 @" + username,
                 "✔️ @" + username,
                 "✔️👩‍✔️ @" + username,
+                "Just what I needed to see this fine " + DateTime.Now.ToString("dddd")+ " " + (DateTime.Now.Hour >= 12 ? "afternoon" : "morning")   + " :) " + username,
             };
 
             if (File.Exists(@"c:\comments.txt"))
-                phrasesToComment.AddRange(File.ReadLines(@"c:\comments.txt"));
+                foreach (var line in File.ReadLines(@"c:\comments.txt"))
+                    if (!phrasesToComment.Contains(line.Replace("#", "").Trim()))
+                        phrasesToComment.Add(line.Replace("#", "").Trim());
 
             if (File.Exists(@"c:\ignore_comments.txt"))
-            {
                 foreach (var line in File.ReadLines(@"c:\ignore_comments.txt"))
-                {
                     phrasesToComment.Remove(line);
-                }
-            }
-
+               
+            
             /* END CONFIG */
 
             IwebDriver.Navigate().GoToUrl("https://www.instagram.com/accounts/login/");
@@ -339,7 +340,10 @@ namespace Instagram_Bot
 
                         // COMMENT - this is usually the first thing to be blocked if you reduce time delays, you will see "posting fialed" at bottom of screen.
                         // pick a random comment
-                        var myComment = phrasesToComment[new Random().Next(0, phrasesToComment.Count - 1)];
+                        // {USERNAME} get's replaced with @USERNAME
+                        // {DAY} get's replaced with today's day .g: MONDAY, TUESDAY etc..
+
+                        var myComment = phrasesToComment[new Random().Next(0, phrasesToComment.Count - 1)].Replace("{USERNAME}","@" + username.Replace("{DAY}", "@" + DateTime.Now.ToString("dddd")));
 
                         // click the comment icon so the comment textarea will work (REQUIRED)
                         foreach (var obj in IwebDriver.FindElements(By.TagName("a")))
@@ -376,8 +380,7 @@ namespace Instagram_Bot
                                         myComment = phrasesToComment[new Random().Next(0, phrasesToComment.Count - 1)]; // select another comments and try again
                                     }
                                 }
-
-                                Thread.Sleep(new Random().Next(secondsBetweenActions_min, secondsBetweenActions_max) * 1000); // wait a short(random) amount of time for page to change
+                                Thread.Sleep(1 * 1000);// wait for comment to type
                                 IwebDriver.FindElement(By.TagName("form")).Submit(); // Only one form on page, so submit it to comment.
                                 Thread.Sleep(new Random().Next(secondsBetweenActions_min, secondsBetweenActions_max) * 1000); // wait a short(random) amount of time for page to change
                                 break;
@@ -387,9 +390,8 @@ namespace Instagram_Bot
                         // check if comment failed, if yes remove that comment from our comments list
                         if (IwebDriver.PageSource.ToUpper().Contains("couldn't post comment".ToUpper()))
                         {
-                            if (enableVoices) c_voice_core.speak($"Oh dear {user}, that comment was rejected, I will remove it from the list so we don't try to use it again.");
-                            phrasesToComment.Remove(myComment);
-                            Thread.Sleep(5 * 1000); // wait after a rejection
+                            if (enableVoices) c_voice_core.speak($"comment rejected");
+                            //TODO: try commenting another comment, perhaps a comment with no #hashtags or @users will work
                         }
 
                         // end COMMENT
@@ -399,7 +401,6 @@ namespace Instagram_Bot
                         {
                             if (obj.Text.ToUpper().Contains("LIKE"))
                             {
-
                                 obj.Click();
                                 if (enableVoices) c_voice_core.speak($"done, loading next post");
                                 Thread.Sleep(new Random().Next(secondsBetweenActions_min, secondsBetweenActions_max) * 1000); // wait a short(random) amount of time for page to change
@@ -421,7 +422,8 @@ namespace Instagram_Bot
                 IwebDriver.Navigate().GoToUrl($"https://www.instagram.com/{username}");
 
 
-                Thread.Sleep(3 * 1000); // wait a amount of time for page to change
+                //TODO: when testing on a new account with no profile image (may be unrelated) the stats below are not found, need to figure out why. Have increased wait to from 3 to 4 seconds to see if that helps.
+                Thread.Sleep(4 * 1000); // wait a amount of time for page to change
 
                 string followers = "";
                 foreach (var obj in IwebDriver.FindElements(By.TagName("a")))
