@@ -37,6 +37,11 @@ namespace Instagram_Bot
             if(checkBoxStealthMode.Checked)
                 WindowState = FormWindowState.Minimized;
 
+            Properties.Settings.Default.username = textBoxUsername.Text;
+            Properties.Settings.Default.password = textBoxPassword.Text;
+            Properties.Settings.Default.Save();
+
+
             Application.DoEvents();
             try
             {
@@ -57,6 +62,9 @@ namespace Instagram_Bot
 
         private void Form1_Load(object sender, EventArgs e)
         {
+
+            textBoxUsername.Text = Properties.Settings.Default.username;
+            textBoxPassword.Text = Properties.Settings.Default.password;
 
             buttonStopBot.Enabled = false;
 

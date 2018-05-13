@@ -80,21 +80,21 @@ namespace Instagram_Bot
             var phrasesToComment = new List<string>()
             {
                 "I #like it! @" + username,
-                "#nice :)" + username,
+                "#nice :) @" + username,
                 "#interesting, where is that? @" + username,
                 "#Perfection, you should be a #photographer! @" + username,
-                "#haha, interesting approach me thinks 👌" + username,
-                "Wish I could take #photos like yours!" + username,
+                "#haha, interesting approach me thinks 👌 @" + username,
+                "Wish I could take #photos like yours! @" + username,
                 "#Perfection, that put a #smile on face and made my " + DateTime.Now.ToString("dddd") + " :) @" + username,
-                "It's #" + DateTime.Now.ToString("dddd") + " people 👌💙✔️ " + username,
-                "#Happy " + DateTime.Now.ToString("dddd") + " everybody :) from @" + username + " ✔️💙👌" + username,
-                "✔️👌✔️" + username,
-                "❤️✔️✔️" + username,
-                "✔️🙆" + username,
-                "🍟✔️" + username,
-                "💙💙👌" + username,
-                "✔️" + username,
-                "✔️👩‍✔️" + username,
+                "It's #" + DateTime.Now.ToString("dddd") + " people 👌💙✔️ @" + username,
+                "#Happy " + DateTime.Now.ToString("dddd") + " everybody :) from @" + username,
+                "✔️👌✔️ @" + username,
+                "❤️✔️✔️ @" + username,
+                "✔️🙆 @" + username,
+                "🍟✔️ @" + username,
+                "💙💙👌 @" + username,
+                "✔️ @" + username,
+                "✔️👩‍✔️ @" + username,
             };
 
             if (File.Exists(@"c:\comments.txt"))
