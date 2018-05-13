@@ -87,11 +87,11 @@ namespace Instagram_Bot
                 "#interesting, where is that? @" + username,
                 "#Perfection, you should be a #photographer! @" + username,
                 "#Perfection, you've missed your calling! @" + username,
-                "#Perfection, aloost looks professional ;! @" + username,
+                "#Perfection, aloost looks professional! @" + username,
                 "#haha, interesting approach me thinks 👌 @" + username,
                 "Wish I could take #photos like yours! @" + username,
                 "#Perfection, that put a #smile on face and made my " + DateTime.Now.ToString("dddd") + " :) @" + username,
-                "It's #" + DateTime.Now.ToString("dddd") + " people " + username,
+                "It's #" + DateTime.Now.ToString("dddd") + " people @" + username,
                 "#Happy " + DateTime.Now.ToString("dddd") + " everybody :) from @" + username,
                 "✔️👌✔️ @" + username,
                 "❤️✔️✔️ @" + username,
@@ -100,7 +100,7 @@ namespace Instagram_Bot
                 "💙💙👌 @" + username,
                 "✔️ @" + username,
                 "✔️👩‍✔️ @" + username,
-                "Just what I needed to see this fine " + DateTime.Now.ToString("dddd")+ " " + (DateTime.Now.Hour >= 12 ? "afternoon" : "morning")   + " :) " + username,
+                "Just what I needed to see this fine " + DateTime.Now.ToString("dddd")+ " " + (DateTime.Now.Hour >= 12 ? "afternoon" : "morning")   + " :) @" + username,
             };
 
             if (File.Exists(@"c:\comments.txt"))
