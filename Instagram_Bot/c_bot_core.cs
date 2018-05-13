@@ -290,7 +290,7 @@ namespace Instagram_Bot
                     {
                         if (obj.GetAttribute("title").ToUpper() == obj.Text.ToUpper() && obj.Text.Length > 5)
                         {
-                            instagram_post_user = obj.Text;
+                            instagram_post_user = obj.Text.Replace("_"," ");
                             break;
                         }
                     }
