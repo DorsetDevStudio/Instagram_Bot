@@ -307,12 +307,28 @@ namespace Instagram_Bot
                             alreadyFollowing = true;
                             break;
                         }
+                        else if(Properties.Settings.Default.stopFolowingUntilDate > DateTime.Now)
+                        {
+                            if (enableVoices) c_voice_core.speak($"follow ban in place for {(Properties.Settings.Default.stopFolowingUntilDate - DateTime.Now).Minutes} more minutes");  
+                        }
                         else
                         {
                             if (obj.Text.ToUpper().Contains("FOLLOW".ToUpper()))
                             {
                                 if (enableVoices) c_voice_core.speak($"following");
                                 obj.Click();
+                                Thread.Sleep(2 * 1000); // wait and see it it worked, will change to following
+                                if (obj.Text.ToUpper().Contains("FOLLOWING".ToUpper()))
+                                {
+                                    Properties.Settings.Default.totalFollowsSinceCountersStarted += 1;
+                                    Properties.Settings.Default.Save();
+                                }
+                                else
+                                {
+                                    if (enableVoices) c_voice_core.speak($"following failed, I will stop following for 15 minutes.");
+                                    Properties.Settings.Default.stopFolowingUntilDate = DateTime.Now.AddMinutes(15);
+                                    Properties.Settings.Default.Save();
+                                }
                                 Thread.Sleep(new Random().Next(secondsBetweenActions_min, secondsBetweenActions_max) * 1000); // wait a short(random) amount of time for page to change
                                 break;
                             }

@@ -105,5 +105,16 @@ namespace Instagram_Bot.Properties {
                 this["totalFollowsSinceCountersStarted"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        public global::System.DateTime stopFolowingUntilDate {
+            get {
+                return ((global::System.DateTime)(this["stopFolowingUntilDate"]));
+            }
+            set {
+                this["stopFolowingUntilDate"] = value;
+            }
+        }
     }
 }
