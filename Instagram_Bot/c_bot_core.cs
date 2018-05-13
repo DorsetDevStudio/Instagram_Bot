@@ -110,17 +110,24 @@ namespace Instagram_Bot
 
             /* END CONFIG */
 
-            if (enableVoices) c_voice_core.speak($"ok {user}, let's connect to Instagram");
-
-            // Log in to Instagram
             IwebDriver.Navigate().GoToUrl("https://www.instagram.com/accounts/login/");
-            Thread.Sleep(3 * 1000); // wait for page to change
-            IwebDriver.FindElement(By.Name("username")).SendKeys(username);
-            IwebDriver.FindElement(By.Name("password")).SendKeys(password);
-            IwebDriver.FindElement(By.TagName("form")).Submit();
-            Thread.Sleep(3 * 1000); // wait for page to change
-            // end Log in to Instagram
 
+            if (enableVoices) c_voice_core.speak($"let's connect to Instagram");
+
+            if (password.Length < 4)
+            {
+                if (enableVoices) c_voice_core.speak($"Please login now {user}");
+            }
+            else
+            {
+                // Log in to Instagram               
+                Thread.Sleep(3 * 1000); // wait for page to change
+                IwebDriver.FindElement(By.Name("username")).SendKeys(username);
+                IwebDriver.FindElement(By.Name("password")).SendKeys(password);
+                IwebDriver.FindElement(By.TagName("form")).Submit();
+                Thread.Sleep(3 * 1000); // wait for page to change
+                                        // end Log in to Instagram
+            }
 
             //// check we are logged in, if not return to main form UI
             //if (IwebDriver.PageSource.Contains("your password was incorrect"))
@@ -136,7 +143,7 @@ namespace Instagram_Bot
             //    return; // exit this instance of bot
             //}
 
-            if (enableVoices) c_voice_core.speak($"You have one minute to finish logging in before we begin");
+            if (enableVoices) c_voice_core.speak($"You have one minute to complete login");
 
             Thread.Sleep(60 * 1000); // wait for page to change
 
@@ -213,7 +220,7 @@ namespace Instagram_Bot
 
                 Application.DoEvents(); // Prevent warnings during debugging.
                 var mySearch = thingsToSearch[new Random().Next(0, thingsToSearch.Count - 1)];
-                if (enableVoices) c_voice_core.speak($"Ok, time to find some more followers. Searching for {mySearch}");
+                if (enableVoices) c_voice_core.speak($"Ok, let's get some followers");
 
                 // just navigate to search
                 IwebDriver.Navigate().GoToUrl($"https://www.instagram.com/explore/tags/{mySearch}");
@@ -230,7 +237,7 @@ namespace Instagram_Bot
                     if (postsToLike.Count >= maxPostsPerSearch) // limit per search
                         break;
                 }
-                if (enableVoices) c_voice_core.speak($"Ok we have {postsToLike.Count} posts to work with");
+                if (enableVoices) c_voice_core.speak($"{postsToLike.Count} posts found");
 
                 int postCounter = 0;
 
@@ -261,7 +268,7 @@ namespace Instagram_Bot
                         }
                     }
 
-                    if (enableVoices) c_voice_core.speak($"This is post {postCounter} of {postsToLike.Count} by user {instagram_post_user}");
+                    if (enableVoices) c_voice_core.speak($"post {postCounter} of {postsToLike.Count} by user {instagram_post_user}");
 
                     bool alreadyFollowing = false;
                     // FOLLOW

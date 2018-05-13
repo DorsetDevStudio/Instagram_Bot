@@ -52,6 +52,10 @@ namespace Instagram_Bot
                 });
                 buttonStartBot.Enabled = false;
                 buttonStopBot.Enabled = true;
+
+                //notifyIcon1.ShowBalloonTip(3 * 1000, "Running", "", ToolTipIcon.None);
+
+
             }
             catch (Exception ee)
             {
@@ -76,9 +80,13 @@ namespace Instagram_Bot
             // This file must be in the working directory but does not like to be deployed with app
             if (!System.IO.File.Exists("chromedriver.exe"))
             {
+                notifyIcon1.ShowBalloonTip(2 * 1000, "Instagram Bot", "Installing drivers...", ToolTipIcon.None);
                 WebClient webClient = new WebClient();
                 webClient.DownloadFile("https://github.com/DorsetDevStudio/Instagram_Bot/raw/master/Instagram_Bot/publish/chromedriver.exe", @"chromedriver.exe");
             }
+
+            if(textBoxUsername.Text.Length==0)// first time user
+                notifyIcon1.ShowBalloonTip(5 * 1000, "Welcome to Instagram Bot", "To get started enter your Instagram login details and click Start.", ToolTipIcon.None);
 
         }
 
@@ -125,6 +133,20 @@ namespace Instagram_Bot
             {
                 MessageBox.Show($"There was an error when trying to stop the bot! Maybe it stopped, maybe it didn't\n\nError message = {eee.Message}");
             }
+        }
+
+        private void exitToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            foreach (var process in Process.GetProcessesByName("chromedriver"))
+            {
+                process.Kill();
+            }
+            Close();
+        }
+
+        private void linkLabel3_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        {
+            MessageBox.Show("By entering your login details here they will be saved for next time you use the bot. If you don't wan't to enter your details here just click [Start] and log in manually each time.");
         }
     }
 

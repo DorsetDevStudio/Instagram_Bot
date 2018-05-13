@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Form1));
             this.statusStrip1 = new System.Windows.Forms.StatusStrip();
             this.toolStripStatusLabel1 = new System.Windows.Forms.ToolStripStatusLabel();
@@ -43,9 +44,14 @@
             this.buttonStopBot = new System.Windows.Forms.Button();
             this.linkLabel1 = new System.Windows.Forms.LinkLabel();
             this.linkLabel2 = new System.Windows.Forms.LinkLabel();
+            this.notifyIcon1 = new System.Windows.Forms.NotifyIcon(this.components);
+            this.contextMenuStripForNotifyIcon = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.exitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.linkLabel3 = new System.Windows.Forms.LinkLabel();
             this.statusStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.groupBox1.SuspendLayout();
+            this.contextMenuStripForNotifyIcon.SuspendLayout();
             this.SuspendLayout();
             // 
             // statusStrip1
@@ -105,7 +111,7 @@
             this.buttonStartBot.Name = "buttonStartBot";
             this.buttonStartBot.Size = new System.Drawing.Size(109, 23);
             this.buttonStartBot.TabIndex = 2;
-            this.buttonStartBot.Text = "Start Bot";
+            this.buttonStartBot.Text = "Start";
             this.buttonStartBot.UseVisualStyleBackColor = false;
             this.buttonStartBot.Click += new System.EventHandler(this.button1_Click);
             // 
@@ -140,6 +146,7 @@
             // 
             // groupBox1
             // 
+            this.groupBox1.Controls.Add(this.linkLabel3);
             this.groupBox1.Controls.Add(this.checkBoxStealthMode);
             this.groupBox1.Controls.Add(this.checkBoxDisableVoices);
             this.groupBox1.Controls.Add(this.label2);
@@ -160,7 +167,7 @@
             this.buttonStopBot.Name = "buttonStopBot";
             this.buttonStopBot.Size = new System.Drawing.Size(109, 23);
             this.buttonStopBot.TabIndex = 11;
-            this.buttonStopBot.Text = "Stop Bot";
+            this.buttonStopBot.Text = "Stop";
             this.buttonStopBot.UseVisualStyleBackColor = false;
             this.buttonStopBot.Click += new System.EventHandler(this.button1_Click_1);
             // 
@@ -186,6 +193,41 @@
             this.linkLabel2.Text = "Check For Updates";
             this.linkLabel2.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkLabel2_LinkClicked);
             // 
+            // notifyIcon1
+            // 
+            this.notifyIcon1.BalloonTipIcon = System.Windows.Forms.ToolTipIcon.Info;
+            this.notifyIcon1.BalloonTipText = "Running";
+            this.notifyIcon1.BalloonTipTitle = "Welcome";
+            this.notifyIcon1.ContextMenuStrip = this.contextMenuStripForNotifyIcon;
+            this.notifyIcon1.Icon = ((System.Drawing.Icon)(resources.GetObject("notifyIcon1.Icon")));
+            this.notifyIcon1.Text = "Instagram Bot";
+            this.notifyIcon1.Visible = true;
+            // 
+            // contextMenuStripForNotifyIcon
+            // 
+            this.contextMenuStripForNotifyIcon.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.exitToolStripMenuItem});
+            this.contextMenuStripForNotifyIcon.Name = "contextMenuStripForNotifyIcon";
+            this.contextMenuStripForNotifyIcon.Size = new System.Drawing.Size(93, 26);
+            // 
+            // exitToolStripMenuItem
+            // 
+            this.exitToolStripMenuItem.Name = "exitToolStripMenuItem";
+            this.exitToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.exitToolStripMenuItem.Text = "&Exit";
+            this.exitToolStripMenuItem.Click += new System.EventHandler(this.exitToolStripMenuItem_Click);
+            // 
+            // linkLabel3
+            // 
+            this.linkLabel3.AutoSize = true;
+            this.linkLabel3.Location = new System.Drawing.Point(276, 63);
+            this.linkLabel3.Name = "linkLabel3";
+            this.linkLabel3.Size = new System.Drawing.Size(13, 13);
+            this.linkLabel3.TabIndex = 9;
+            this.linkLabel3.TabStop = true;
+            this.linkLabel3.Text = "?";
+            this.linkLabel3.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkLabel3_LinkClicked);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -210,6 +252,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
             this.groupBox1.ResumeLayout(false);
             this.groupBox1.PerformLayout();
+            this.contextMenuStripForNotifyIcon.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -230,6 +273,10 @@
         private System.Windows.Forms.Button buttonStopBot;
         private System.Windows.Forms.LinkLabel linkLabel1;
         private System.Windows.Forms.LinkLabel linkLabel2;
+        private System.Windows.Forms.NotifyIcon notifyIcon1;
+        private System.Windows.Forms.ContextMenuStrip contextMenuStripForNotifyIcon;
+        private System.Windows.Forms.ToolStripMenuItem exitToolStripMenuItem;
+        private System.Windows.Forms.LinkLabel linkLabel3;
     }
 }
 
