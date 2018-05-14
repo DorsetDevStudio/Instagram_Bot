@@ -377,8 +377,11 @@ namespace Instagram_Bot
                             {
                                 if (enableVoices) c_voice_core.speak($"commenting");
                                 bool sendKeysFailed = true;// must start as true
-                                while (sendKeysFailed)
+
+                                int attempsToComment = 0;
+                                while (sendKeysFailed && attempsToComment < 3)
                                 {
+                                    attempsToComment++;
                                     try
                                     {
                                         obj.SendKeys(myComment); // put comment in textarea
@@ -387,10 +390,22 @@ namespace Instagram_Bot
                                     catch (Exception e)
                                     {
 
-                                        if (enableVoices) c_voice_core.speak($"error with a comment, the error was {e.Message}. The comment {myComment} will be removed from the list.");
+                                        if (e.Message.Contains("element not visible"))
+                                        { // comments disbaled on post, nothing to wory about
 
-                                        sendKeysFailed = true; // some characters are not supported by chrome driver (some emojis for example)
-                                        phrasesToComment.Remove(myComment); // remove offending comment
+                                        }
+                                        else if (e.Message.Contains("character"))
+                                        {
+                                            if (enableVoices) c_voice_core.speak($"The comment {myComment} contains an unsupported character, i'll remove it from the list.");
+                                            sendKeysFailed = true; // some characters are not supported by chrome driver (some emojis for example)
+                                            phrasesToComment.Remove(myComment); // remove offending comment
+                                        }
+                                        else
+                                        {   // other unknown error, relay full error message but dont remove comment from list as it may be perfectly fine.
+                                            if (enableVoices) c_voice_core.speak($"error with a comment, the error was {e.Message}. The comment {myComment} will be removed from the list.");
+                                            sendKeysFailed = true; // some characters are not supported by chrome driver (some emojis for example)
+                                        }
+
                                         if (phrasesToComment.Count == 0)
                                         {
                                             break;
