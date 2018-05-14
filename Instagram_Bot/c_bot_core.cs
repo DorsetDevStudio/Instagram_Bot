@@ -87,7 +87,7 @@ namespace Instagram_Bot
                 "#Perfection, almost looks professional! @" + username,
                 "#haha, interesting approach me thinks @" + username,
                 "Wish I could take #photos like yours! @" + username,
-                "#Perfection, that put a #smile on face and made my " + DateTime.Now.ToString("dddd") + " :) @" + username,
+                "#Perfection, that put a #smile on my face and made my " + DateTime.Now.ToString("dddd") + " :) @" + username,
                 "It's #" + DateTime.Now.ToString("dddd") + " people @" + username,
                 "#Happy " + DateTime.Now.ToString("dddd") + " everybody :) from @" + username,
                 "✔️ @" + username,
