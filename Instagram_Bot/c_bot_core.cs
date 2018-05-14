@@ -67,9 +67,13 @@ namespace Instagram_Bot
             };
 
             if (File.Exists(@"c:\hashtags.txt"))
+            {
+                thingsToSearch.Clear();// just use users hashtags
                 foreach (var line in File.ReadLines(@"c:\hashtags.txt"))
-                    if(!thingsToSearch.Contains(line.Replace("#", "").Trim()))
+                    if (!thingsToSearch.Contains(line.Replace("#", "").Trim()))
                         thingsToSearch.Add(line.Replace("#", "").Trim());
+                if (enableVoices) c_voice_core.speak($"{thingsToSearch} hashtags loaded from hashtags file");
+            }
 
 
             if (File.Exists(@"c:\ignore_hashtags.txt"))
@@ -88,25 +92,25 @@ namespace Instagram_Bot
                 "#Perfection, you should be a #photographer! @" + username,
                 "#Perfection, you've missed your calling! @" + username,
                 "#Perfection, almost looks professional! @" + username,
-                "#haha, interesting approach me thinks 👌 @" + username,
+                "#haha, interesting approach me thinks @" + username,
                 "Wish I could take #photos like yours! @" + username,
                 "#Perfection, that put a #smile on face and made my " + DateTime.Now.ToString("dddd") + " :) @" + username,
                 "It's #" + DateTime.Now.ToString("dddd") + " people @" + username,
                 "#Happy " + DateTime.Now.ToString("dddd") + " everybody :) from @" + username,
-                "✔️👌✔️ @" + username,
                 "❤️✔️✔️ @" + username,
-                "✔️🙆 @" + username,
-                "🍟✔️ @" + username,
-                "💙💙👌 @" + username,
+                "💙💙 @" + username,
                 "✔️ @" + username,
-                "✔️👩‍✔️ @" + username,
                 "Just what I needed to see this fine " + DateTime.Now.ToString("dddd")+ " " + (DateTime.Now.Hour >= 12 ? "afternoon" : "morning")   + " :) @" + username,
             };
 
             if (File.Exists(@"c:\comments.txt"))
+            {
+                phrasesToComment.Clear();// only use users comments if provided
                 foreach (var line in File.ReadLines(@"c:\comments.txt"))
                     if (!phrasesToComment.Contains(line.Replace("#", "").Trim()))
                         phrasesToComment.Add(line.Replace("#", "").Trim());
+                if (enableVoices) c_voice_core.speak($"{phrasesToComment} comments loaded from comments file");
+            }
 
             if (File.Exists(@"c:\ignore_comments.txt"))
                 foreach (var line in File.ReadLines(@"c:\ignore_comments.txt"))
@@ -284,7 +288,7 @@ namespace Instagram_Bot
                         }
                     }
 
-                    if (enableVoices) c_voice_core.speak($"post {postCounter} of {postsToLike.Count} by user {instagram_post_user}");
+                   // if (enableVoices) c_voice_core.speak($"post {postCounter} of {postsToLike.Count} by user {instagram_post_user}");
 
                     bool alreadyFollowing = false;
                     // FOLLOW
@@ -341,7 +345,7 @@ namespace Instagram_Bot
                     // end FOLLOW
 
 
-                    if (enableVoices) c_voice_core.speak($"{phrasesToComment.Count} comments to pick from");
+                    //if (enableVoices) c_voice_core.speak($"{phrasesToComment.Count} comments to pick from");
 
                     if (phrasesToComment.Count > 0 && !alreadyFollowing) // don't try and comment if we have nothing to say, this may happen when commenting starts failing everytime and we've removed all coments from our comments list
                     {
