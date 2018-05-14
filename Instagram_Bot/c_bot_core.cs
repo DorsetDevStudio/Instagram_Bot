@@ -380,8 +380,11 @@ namespace Instagram_Bot
                                         obj.SendKeys(myComment); // put comment in textarea
                                         break;
                                     }
-                                    catch
+                                    catch (Exception e)
                                     {
+
+                                        if (enableVoices) c_voice_core.speak($"error with a comment, the error was {e.Message}. The comment {myComment} will be removed from the list.");
+
                                         sendKeysFailed = true; // some characters are not supported by chrome driver (some emojis for example)
                                         phrasesToComment.Remove(myComment); // remove offending comment
                                         if (phrasesToComment.Count == 0)
