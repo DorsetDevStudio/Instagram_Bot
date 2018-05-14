@@ -345,9 +345,16 @@ namespace Instagram_Bot
                             Thread.Sleep(new Random().Next(secondsBetweenActions_min, secondsBetweenActions_max) * 1000); // wait a short(random) amount of time for page to change
                             break;
                         }
+                        else
+                        {
+                            if (enableVoices) c_voice_core.speak($"error locating follow button");
+                        }
 
                     }
                     // end FOLLOW
+
+
+                    if (enableVoices) c_voice_core.speak($"{phrasesToComment.Count} comments to pick from");
 
                     if (phrasesToComment.Count > 0 && !alreadyFollowing) // don't try and comment if we have nothing to say, this may happen when commenting starts failing everytime and we've removed all coments from our comments list
                     {
@@ -358,6 +365,9 @@ namespace Instagram_Bot
                         // {DAY} get's replaced with today's day .g: MONDAY, TUESDAY etc..
 
                         var myComment = phrasesToComment[new Random().Next(0, phrasesToComment.Count - 1)].Replace("{USERNAME}","@" + username.Replace("{DAY}", "@" + DateTime.Now.ToString("dddd")));
+
+                        
+
 
                         // click the comment icon so the comment textarea will work (REQUIRED)
                         foreach (var obj in IwebDriver.FindElements(By.TagName("a")))
@@ -426,6 +436,13 @@ namespace Instagram_Bot
 
 
                     }// end already following or no comments left
+
+                    else
+                    {
+                        if (enableVoices) c_voice_core.speak($"not attempting to comment, there are {phrasesToComment.Count} comments to pick from");
+                    }
+
+
                     if (!alreadyFollowing)
                         Thread.Sleep(new Random().Next(secondsBetweenActions_min, secondsBetweenActions_max) * 1000); // wait a short(random) amount of time for page to change
                 }
