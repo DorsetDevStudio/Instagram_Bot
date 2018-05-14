@@ -22,18 +22,11 @@ namespace Instagram_Bot
             options.UnhandledPromptBehavior = UnhandledPromptBehavior.Dismiss;
             IwebDriver = new ChromeDriver(options);
 
+            IwebDriver.Manage().Window.Maximize();
+
             if (user.Contains(""))
             { // use just the first name of pc username to be more personable
                 user = user.Split(' ')[0];
-            }
-
-            if (stealthMode)
-            {
-                IwebDriver.Manage().Window.Minimize();
-            }
-            else
-            {
-                IwebDriver.Manage().Window.Maximize();
             }
 
             /* CONFIG  */
@@ -153,6 +146,15 @@ namespace Instagram_Bot
             else {
                 if (enableVoices) c_voice_core.speak($"We are in, awesome, let's get you some new followers");
             }
+
+
+            if (stealthMode)
+            {
+                if (enableVoices) c_voice_core.speak($"Entering stealth mode");
+                IwebDriver.Manage().Window.Minimize();
+            }
+           
+   
 
             // upload image (work in progress) does NOT work, way too many forms in DOM with `file` input type and have not found one that works.
             /*

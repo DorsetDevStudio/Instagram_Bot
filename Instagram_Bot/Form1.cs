@@ -41,8 +41,7 @@ namespace Instagram_Bot
                 return;
             }
 
-            if(checkBoxStealthMode.Checked)
-                WindowState = FormWindowState.Minimized;
+            WindowState = FormWindowState.Minimized;
 
             Properties.Settings.Default.username = textBoxUsername.Text;
             Properties.Settings.Default.password = textBoxPassword.Text;
