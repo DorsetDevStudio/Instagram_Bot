@@ -134,36 +134,21 @@ namespace Instagram_Bot
                                         // end Log in to Instagram
             }
 
-            //// check we are logged in, if not return to main form UI
-            //if (IwebDriver.PageSource.Contains("your password was incorrect"))
-            //{
-            //    if (enableVoices) c_voice_core.speak($"It didn't work, either the username {username} or password you provided were incorrect, please enter the correct login details and try again. Take your time {user}, no rush");
-            //    IwebDriver.Close();
-            //    IwebDriver.Quit();
-            //    MessageBox.Show(
-            //        "Invalid username or password, please try again.",
-            //        "Login Failed",
-            //        MessageBoxButtons.OK,
-            //        MessageBoxIcon.Error);
-            //    return; // exit this instance of bot
-            //}
 
-            if (enableVoices) c_voice_core.speak($"You have one minute to complete login");
+            if (IwebDriver.PageSource.Contains("your password was incorrect"))
+            {
+                if (enableVoices) c_voice_core.speak($"You have one minute to complete login");
+                Thread.Sleep(60 * 1000); // wait for page to change
 
-            Thread.Sleep(60 * 1000); // wait for page to change
-
-            //// Thread.Sleep(5 * 1000); // wait for page to change
-
-            // // has the user been asked to enter a passcode, if yes wait 2 minutes then assume we are in.
-            // if (IwebDriver.PageSource.Contains("We Detected An Unusual Login Attempt"))
-            // {
-            //     if (enableVoices) c_voice_core.speak($"Instagram needs to validate your identity, please follow instructions and then wait up to 2 minutes.");
-            //     Thread.Sleep(2 * 60000);
-            // }
-
-            // if (enableVoices) c_voice_core.speak($"We are in, awesome, let's get you some new followers");
-
-
+            }
+            else if (IwebDriver.PageSource.Contains("security") || IwebDriver.PageSource.Contains("Unusual"))
+            {
+                if (enableVoices) c_voice_core.speak($"You have one minute to complete login");
+                Thread.Sleep(60 * 1000); // wait for page to change
+            }
+            else {
+                if (enableVoices) c_voice_core.speak($"We are in, awesome, let's get you some new followers");
+            }
 
             // upload image (work in progress) does NOT work, way too many forms in DOM with `file` input type and have not found one that works.
             /*
@@ -325,6 +310,7 @@ namespace Instagram_Bot
                             {
                                 if (enableVoices) c_voice_core.speak($"follow ban in place for {minutesLeft} more minute{(minutesLeft > 1 ? "s" : "")}");
                             }
+                            break;
                         }
                         else if (obj.Text.ToUpper().Contains("FOLLOW".ToUpper()))
                         {
@@ -348,6 +334,7 @@ namespace Instagram_Bot
                         else
                         {
                             if (enableVoices) c_voice_core.speak($"error locating follow button");
+                            break;
                         }
 
                     }
@@ -425,6 +412,7 @@ namespace Instagram_Bot
                         {
                             if (obj.Text.ToUpper().Contains("LIKE"))
                             {
+                                if (enableVoices) c_voice_core.speak($"liking");
                                 obj.Click();
                                 if (enableVoices) c_voice_core.speak($"done, loading next post");
                                 Thread.Sleep(new Random().Next(secondsBetweenActions_min, secondsBetweenActions_max) * 1000); // wait a short(random) amount of time for page to change
@@ -439,7 +427,7 @@ namespace Instagram_Bot
 
                     else
                     {
-                        if (enableVoices) c_voice_core.speak($"not attempting to comment, there are {phrasesToComment.Count} comments to pick from");
+                        if (enableVoices) c_voice_core.speak($"not attempting to comment, there are {phrasesToComment.Count} comments to pick from and already Following set to {alreadyFollowing}");
                     }
 
 

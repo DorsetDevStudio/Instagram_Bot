@@ -97,9 +97,12 @@ namespace Instagram_Bot
 
             MessageBox.Show("Please ensure your sound is turned up.","Instagram Bot is talking to you!");
 
-            c_voice_core.speak("Thanks, I hope you can hear me now. You can disable speach but I suggest you leave it on for now as I have a lot to say.");
 
-            c_voice_core.speak("Enter your Instagram username and password and then click start. Then just watch the screen without clicking or resizing the windows that appear. The bot may take a minute to start working after the login screen, if prompted by Instagram you should follow the security challenge and enter the pin.");
+            var t = new Task(() => {
+                c_voice_core.speak("Enter your Instagram username and password and then click start. Then just watch the screen without clicking or resizing the windows that appear. If prompted by Instagram you should follow the security challenge and enter the pin.");
+            });
+            t.Start();
+
 
         }
 
@@ -160,6 +163,12 @@ namespace Instagram_Bot
         private void linkLabel3_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
             MessageBox.Show("By entering your login details here they will be saved for next time you use the bot. If you don't wan't to enter your details here just click [Start] and log in manually each time.");
+        }
+
+        private void Form1_Shown(object sender, EventArgs e)
+        {
+         
+   
         }
     }
 

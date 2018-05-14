@@ -11,7 +11,7 @@ namespace Instagram_Bot
         {
             synth = new SpeechSynthesizer();
             synth.SetOutputToDefaultAudioDevice();
-            //synth.SelectVoiceByHints(VoiceGender.Female);
+            synth.SelectVoiceByHints(VoiceGender.NotSet);
             synth.SpeakCompleted += Synth_SpeakCompleted;
             //synth.SpeakAsync(new Prompt(phrase, SynthesisTextFormat.Text)); 
             synth.Speak(new Prompt(phrase, SynthesisTextFormat.Text));
