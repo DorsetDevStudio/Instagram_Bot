@@ -97,7 +97,7 @@ namespace Instagram_Bot
                 "#Perfection, that put a #smile on face and made my " + DateTime.Now.ToString("dddd") + " :) @" + username,
                 "It's #" + DateTime.Now.ToString("dddd") + " people @" + username,
                 "#Happy " + DateTime.Now.ToString("dddd") + " everybody :) from @" + username,
-                "❤️✔️✔️ @" + username,
+                "💙✔️✔️ @" + username,
                 "💙💙 @" + username,
                 "✔️ @" + username,
                 "Just what I needed to see this fine " + DateTime.Now.ToString("dddd")+ " " + (DateTime.Now.Hour >= 12 ? "afternoon" : "morning")   + " :) @" + username,
@@ -232,7 +232,7 @@ namespace Instagram_Bot
                     }
                     else
                     {
-                        //TODO: followLeftThisHour if not calculating correctly (it was rushed)
+                        //TODO: followLeftThisHour is not calculating correctly (it was rushed)
                         var followLeftThisHour = (int)(Properties.Settings.Default.dailyFollowLimit / 24) - (int)(Properties.Settings.Default.totalFollowsSinceCountersStarted / hours) ;
                         if (enableVoices) c_voice_core.speak($"{followLeftThisHour} follows left this hour");
                     }
@@ -422,7 +422,7 @@ namespace Instagram_Bot
                                 if (enableVoices) c_voice_core.speak($"liking");
                                 obj.Click();
                                 if (enableVoices) c_voice_core.speak($"done, loading next post");
-                                Thread.Sleep(new Random().Next(secondsBetweenActions_min, secondsBetweenActions_max) * 1000); // wait a short(random) amount of time for page to change
+                                Thread.Sleep(1 * 1000); // wait a amount of time for page to change
                                 break;
                             }
                         }
@@ -434,7 +434,7 @@ namespace Instagram_Bot
 
                     else
                     {
-                        if (enableVoices) c_voice_core.speak($"not attempting to comment, there are {phrasesToComment.Count} comments to pick from and already Following set to {alreadyFollowing}");
+                        if (enableVoices) c_voice_core.speak($"not attempting to comment, there are {phrasesToComment.Count} comments to pick from and {(alreadyFollowing ? "not" : "")} already following them");
                     }
 
 
