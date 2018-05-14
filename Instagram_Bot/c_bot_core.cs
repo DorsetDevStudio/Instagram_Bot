@@ -72,7 +72,7 @@ namespace Instagram_Bot
                 foreach (var line in File.ReadLines(@"c:\hashtags.txt"))
                     if (!thingsToSearch.Contains(line.Replace("#", "").Trim()))
                         thingsToSearch.Add(line.Replace("#", "").Trim());
-                if (enableVoices) c_voice_core.speak($"{thingsToSearch} hashtags loaded from hashtags file");
+                if (enableVoices) c_voice_core.speak($"{thingsToSearch.Count} hashtags loaded from hashtags file");
             }
 
 
@@ -109,7 +109,7 @@ namespace Instagram_Bot
                 foreach (var line in File.ReadLines(@"c:\comments.txt"))
                     if (!phrasesToComment.Contains(line.Replace("#", "").Trim()))
                         phrasesToComment.Add(line.Replace("#", "").Trim());
-                if (enableVoices) c_voice_core.speak($"{phrasesToComment} comments loaded from comments file");
+                if (enableVoices) c_voice_core.speak($"{phrasesToComment.Count} comments loaded from comments file");
             }
 
             if (File.Exists(@"c:\ignore_comments.txt"))
