@@ -449,7 +449,7 @@ namespace Instagram_Bot
 
                     else
                     {
-                        if (enableVoices) c_voice_core.speak($"not attempting to comment, there are {phrasesToComment.Count} comments to pick from and {(alreadyFollowing ? "not" : "")} already following them");
+                        if (enableVoices) c_voice_core.speak($"not attempting to comment, there are {phrasesToComment.Count} comments to pick from and {(!alreadyFollowing ? "not" : "")} already following them");
                     }
 
 
