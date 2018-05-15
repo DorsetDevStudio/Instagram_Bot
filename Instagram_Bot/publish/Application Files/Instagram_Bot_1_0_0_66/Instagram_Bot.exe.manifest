@@ -43,14 +43,14 @@
     </dependentAssembly>
   </dependency>
   <dependency>
-    <dependentAssembly dependencyType="install" allowDelayedBinding="true" codebase="Instagram_Bot.exe" size="6988800">
+    <dependentAssembly dependencyType="install" allowDelayedBinding="true" codebase="Instagram_Bot.exe" size="6983168">
       <assemblyIdentity name="Instagram_Bot" version="1.0.0.0" language="neutral" processorArchitecture="msil" />
       <hash>
         <dsig:Transforms>
           <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
         </dsig:Transforms>
         <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha256" />
-        <dsig:DigestValue>mZOmZE82lwCJzcTF/QdhgkVQG2v81kl/r9pcKpQjVpY=</dsig:DigestValue>
+        <dsig:DigestValue>ERITQ4wT+CP0MdMkXk7cwT1ltdmsSUFpSUI6eZk0Szw=</dsig:DigestValue>
       </hash>
     </dependentAssembly>
   </dependency>
@@ -66,13 +66,13 @@
       </hash>
     </dependentAssembly>
   </dependency>
-  <file name="Instagram_Bot.exe.config" size="2283">
+  <file name="Instagram_Bot.exe.config" size="1799">
     <hash>
       <dsig:Transforms>
         <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
       </dsig:Transforms>
       <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha256" />
-      <dsig:DigestValue>dWnW/6ex6kheOs/fTgAr5qScu3zk+RttCoPoGCKrhzQ=</dsig:DigestValue>
+      <dsig:DigestValue>RHl75uKdvri1kPYQjq3p1ZTVc19OCvsuF4fWkeXmWWY=</dsig:DigestValue>
     </hash>
   </file>
   <file name="Martin-Berube-Square-Animal-Pig.ico" size="176922">
