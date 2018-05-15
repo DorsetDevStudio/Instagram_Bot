@@ -208,7 +208,7 @@ namespace Instagram_Bot
 
 
             bool chromeIsMinimised = false;
-
+            bool _sleeping = false;
             /* MAIN LOOP */
             // loop forever, performing a new search and then following, liking and spamming the hell out of everyone.
             while (true)
@@ -276,56 +276,46 @@ namespace Instagram_Bot
 
 
                     // we may need to sleep, need to check if we should be bwtewwn each post
-                    // handle `don't run between` times
-                    bool _sleeping = true;
-                    while (_sleeping)
+                    // handle `don't run between` times       
+
+                    if (!_sleeping) // check if we should be
                     {
-                        bool _sleep = false;
-
-                        timeSpans _ts = null;
-
                         foreach (timeSpans timeSpan in sleepTimes)
                         {
                             if (DateTime.Now.TimeOfDay > timeSpan.from.TimeOfDay
                                 && DateTime.Now.TimeOfDay < timeSpan.to.TimeOfDay)
                             {
-                                _ts = timeSpan;
-                                _sleep = true;
+                                _sleeping = true;
+                                if (enableVoices) c_voice_core.speak($"I'm tired, yawn, sleeping until {timeSpan.to.ToShortTimeString()}");
                                 break;
                             }
                         }
 
-                        if (_sleeping && !_sleep) // just woke up
-                        {
-                            if (enableVoices) c_voice_core.speak($"Time for work");
-                        }
-                        else if (!_sleeping && _sleep) // just went to sleep
-                        {
-                            if (enableVoices) c_voice_core.speak($"I'm tired, sleeping until {_ts.to.ToShortTimeString()}");
-                        }
-
-                        _sleeping = _sleep;
-
-                        if (_sleeping)
-                        {
-                            //minimise chrome while sleeping
-                            if (!chromeIsMinimised && !stealthMode)
-                            {
-                                IwebDriver.Manage().Window.Minimize();
-                                chromeIsMinimised = true;
-                            }
-
-                            Thread.Sleep(1 * 1000);// sleep 1 second
-                            Application.DoEvents();
-                        }
                     }
 
 
+                    while (_sleeping) // check if we shouldnt be
+                    {
+                        bool _sleep = false;
+                        foreach (timeSpans timeSpan in sleepTimes)
+                        {
+                            if (DateTime.Now.TimeOfDay > timeSpan.from.TimeOfDay
+                                && DateTime.Now.TimeOfDay < timeSpan.to.TimeOfDay)
+                            {
+                                _sleep = true;
+                                break;
+                            }
+                        }
+                        if (!_sleep) // just woke up
+                        {
+                            if (enableVoices) c_voice_core.speak($"Nap over, damn it");
+                            _sleeping = false;
+                        }
+                        Thread.Sleep(1 * 1000);// sleep 1 second
+                        Application.DoEvents();
+                    }
 
 
-
-
-                    
 
                     postCounter++;
 
