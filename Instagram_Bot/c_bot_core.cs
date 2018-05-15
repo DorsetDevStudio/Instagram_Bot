@@ -8,12 +8,15 @@ using System.Windows.Forms;
 
 namespace Instagram_Bot
 {
+
+
     public class c_bot_core
     {
 
+
         IWebDriver IwebDriver;
         string user = Environment.UserName.Replace(".", " ").Replace(@"\", "");
-        public c_bot_core(string username, string password, bool stealthMode = false, bool enableVoices = true)
+        public c_bot_core(string username, string password, bool stealthMode = false, bool enableVoices = true, List<timeSpans> sleepTimes = null)
         {
 
             // pretend to be an android mobile app so we can upload image/create posts
@@ -151,8 +154,8 @@ namespace Instagram_Bot
                 if (enableVoices) c_voice_core.speak($"Entering stealth mode");
                 IwebDriver.Manage().Window.Minimize();
             }
-           
-   
+
+
 
             // upload image (work in progress) does NOT work, way too many forms in DOM with `file` input type and have not found one that works.
             /*
@@ -204,13 +207,50 @@ namespace Instagram_Bot
             */
 
 
-
+            bool chromeIsMinimised = false;
 
             /* MAIN LOOP */
-
             // loop forever, performing a new search and then following, liking and spamming the hell out of everyone.
             while (true)
             {
+
+
+                // handle `don't run between` times
+
+                bool _sleeping = true;
+                while (_sleeping)
+                {
+                    foreach (timeSpans timeSpan in sleepTimes)
+                    {
+
+
+                        if (DateTime.Now.TimeOfDay > timeSpan.from.TimeOfDay
+                            && DateTime.Now.TimeOfDay < timeSpan.to.TimeOfDay)
+                        {
+                            if (!stealthMode)
+                            {
+                                IwebDriver.Manage().Window.Minimize();
+                                chromeIsMinimised = true;
+                            }
+                            // we are sleeping
+                            _sleeping = true;
+                            break;// jump out or foreach, we dont care about other enties
+                        }
+                        //no entries caused a break so we are not in a sleep period
+                        // no longer or not sleeping
+                        _sleeping = false;
+                    }
+                    Thread.Sleep(1 * 1000);// sleep 1 second
+                    Application.DoEvents();
+                }
+                // maximise window after sleep period
+                if (chromeIsMinimised && !stealthMode)
+                {
+                    IwebDriver.Manage().Window.Maximize();
+                }
+
+
+
 
                 if (!DateTime.TryParse(Properties.Settings.Default.countersStarted.ToString(), out DateTime o) )
                 {   // first run or rinning in debug mode

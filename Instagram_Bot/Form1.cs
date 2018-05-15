@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Deployment.Application;
 using System.Diagnostics;
 using System.Net;
@@ -8,6 +9,8 @@ using System.Windows.Forms;
 
 namespace Instagram_Bot
 {
+
+
     public partial class Form1 : Form
     {
         // To install just run https://github.com/DorsetDevStudio/Instagram_Bot/raw/master/Instagram_Bot/publish/setup.exe
@@ -35,6 +38,22 @@ namespace Instagram_Bot
         private void button1_Click(object sender, EventArgs e)
         {
 
+
+            // package up `don't run between times` so we can pass to bot_core as a list of class timeSpans
+            var sleepTimes = new List<timeSpans>();
+            if (dateTimePicker1.Value < dateTimePicker2.Value)
+            {
+                sleepTimes.Add(new timeSpans() { from = dateTimePicker1.Value, to =dateTimePicker2.Value});
+            }
+            if (dateTimePicker3.Value < dateTimePicker4.Value)
+            {
+                sleepTimes.Add(new timeSpans() { from = dateTimePicker3.Value, to = dateTimePicker4.Value });
+            }
+            // end package up `don't run between times`
+
+
+
+
             if (textBoxUsername.Text.Length < 4)
             {
                 MessageBox.Show("You need to enter your Instagram username. It's used to tag comments and monitoring follower numbers.");
@@ -43,10 +62,16 @@ namespace Instagram_Bot
 
             WindowState = FormWindowState.Minimized;
 
+
+
+            // save users' settings for next time. (only works if running fully installed via click once)
             Properties.Settings.Default.username = textBoxUsername.Text;
             Properties.Settings.Default.password = textBoxPassword.Text;
+            Properties.Settings.Default.sleepTimeSpan1_From = dateTimePicker1.Value;
+            Properties.Settings.Default.sleepTimeSpan1_To = dateTimePicker2.Value;
+            Properties.Settings.Default.sleepTimeSpan2_From = dateTimePicker3.Value;
+            Properties.Settings.Default.sleepTimeSpan2_To = dateTimePicker4.Value;
             Properties.Settings.Default.Save();
-
 
             Application.DoEvents();
             try
@@ -54,7 +79,7 @@ namespace Instagram_Bot
                 Task.Factory.StartNew(() =>
                 {
                     th = Thread.CurrentThread;
-                    botCore = new c_bot_core(textBoxUsername.Text.Trim(), textBoxPassword.Text.Trim(), checkBoxStealthMode.Checked, !checkBoxDisableVoices.Checked);
+                    botCore = new c_bot_core(textBoxUsername.Text.Trim(), textBoxPassword.Text.Trim(), checkBoxStealthMode.Checked, !checkBoxDisableVoices.Checked, sleepTimes);
                 });
                 buttonStartBot.Enabled = false;
                 buttonStopBot.Enabled = true;
@@ -75,6 +100,16 @@ namespace Instagram_Bot
 
             textBoxUsername.Text = Properties.Settings.Default.username;
             textBoxPassword.Text = Properties.Settings.Default.password;
+
+            try // load `don't run between times` from user settings , could fail on first load
+            {
+                dateTimePicker1.Value = Properties.Settings.Default.sleepTimeSpan1_From;
+                dateTimePicker2.Value = Properties.Settings.Default.sleepTimeSpan1_To;
+
+                dateTimePicker3.Value = Properties.Settings.Default.sleepTimeSpan2_From;
+                dateTimePicker4.Value = Properties.Settings.Default.sleepTimeSpan2_To;
+            }
+            catch { }
 
             buttonStopBot.Enabled = false;
 
@@ -169,6 +204,37 @@ namespace Instagram_Bot
          
    
         }
+
+        private void dateTimePicker2_ValueChanged(object sender, EventArgs e)
+        {
+            dateTimePicker1.MaxDate = dateTimePicker2.Value;
+            dateTimePicker3.MinDate = dateTimePicker2.Value;
+        }
+
+        private void dateTimePicker1_ValueChanged(object sender, EventArgs e)
+        {
+            dateTimePicker2.MinDate = dateTimePicker1.Value;
+        }
+
+        private void dateTimePicker4_ValueChanged(object sender, EventArgs e)
+        {
+            dateTimePicker3.MaxDate = dateTimePicker4.Value;
+        }
+
+        private void dateTimePicker3_ValueChanged(object sender, EventArgs e)
+        {
+            dateTimePicker2.MaxDate = dateTimePicker3.Value;
+            dateTimePicker4.MinDate = dateTimePicker3.Value;
+        }
     }
+
+
+    //TODO Move to own file
+    public class timeSpans
+    {
+        public DateTime from;
+        public DateTime to;
+    }
+
 
 }

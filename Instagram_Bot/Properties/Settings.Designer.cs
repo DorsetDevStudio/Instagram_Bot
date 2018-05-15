@@ -116,5 +116,49 @@ namespace Instagram_Bot.Properties {
                 this["stopFolowingUntilDate"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        public global::System.DateTime sleepTimeSpan1_From {
+            get {
+                return ((global::System.DateTime)(this["sleepTimeSpan1_From"]));
+            }
+            set {
+                this["sleepTimeSpan1_From"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        public global::System.DateTime sleepTimeSpan1_To {
+            get {
+                return ((global::System.DateTime)(this["sleepTimeSpan1_To"]));
+            }
+            set {
+                this["sleepTimeSpan1_To"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        public global::System.DateTime sleepTimeSpan2_From {
+            get {
+                return ((global::System.DateTime)(this["sleepTimeSpan2_From"]));
+            }
+            set {
+                this["sleepTimeSpan2_From"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        public global::System.DateTime sleepTimeSpan2_To {
+            get {
+                return ((global::System.DateTime)(this["sleepTimeSpan2_To"]));
+            }
+            set {
+                this["sleepTimeSpan2_To"] = value;
+            }
+        }
     }
 }
