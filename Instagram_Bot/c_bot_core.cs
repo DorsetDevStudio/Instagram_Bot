@@ -214,61 +214,12 @@ namespace Instagram_Bot
             while (true)
             {
 
-
-                // handle `don't run between` times
-                bool _sleeping = true;
-                while (_sleeping)
-                {
-                    bool _sleep = false;
-
-                    timeSpans _ts = null;
-
-                    foreach (timeSpans timeSpan in sleepTimes)
-                    {
-                        if (DateTime.Now.TimeOfDay > timeSpan.from.TimeOfDay
-                            && DateTime.Now.TimeOfDay < timeSpan.to.TimeOfDay)
-                        {
-                            _ts = timeSpan;
-                            _sleep = true;
-                            break;
-                        }
-                    }
-
-                    if (_sleeping && !_sleep) // just woke up
-                    {
-                        if (enableVoices) c_voice_core.speak($"Time for work");
-                    }
-                    else if (!_sleeping && _sleep) // just went to sleep
-                    {
-                        if (enableVoices) c_voice_core.speak($"I'm tired, sleeping until {_ts.to.ToShortTimeString()}");
-                    }
-
-                    _sleeping = _sleep;
-                    
-                    if (_sleeping)
-                    {
-                        //minimise chrome while sleeping
-                        if (!chromeIsMinimised && !stealthMode)
-                        {
-                            IwebDriver.Manage().Window.Minimize();
-                            chromeIsMinimised = true;
-                        }
-                        
-                        Thread.Sleep(1 * 1000);// sleep 1 second
-                        Application.DoEvents();
-                    }
-                }
-
-
                 // maximise window after sleep period
                 if (chromeIsMinimised && !stealthMode)
                 {
                     IwebDriver.Manage().Window.Maximize();
                     chromeIsMinimised = false;
                 }
-
-
-
 
                 if (!DateTime.TryParse(Properties.Settings.Default.countersStarted.ToString(), out DateTime o) )
                 {   // first run or rinning in debug mode
@@ -322,6 +273,60 @@ namespace Instagram_Bot
                 // load results in turn and like/follow them
                 foreach (var link in postsToLike)
                 {
+
+
+                    // we may need to sleep, need to check if we should be bwtewwn each post
+                    // handle `don't run between` times
+                    bool _sleeping = true;
+                    while (_sleeping)
+                    {
+                        bool _sleep = false;
+
+                        timeSpans _ts = null;
+
+                        foreach (timeSpans timeSpan in sleepTimes)
+                        {
+                            if (DateTime.Now.TimeOfDay > timeSpan.from.TimeOfDay
+                                && DateTime.Now.TimeOfDay < timeSpan.to.TimeOfDay)
+                            {
+                                _ts = timeSpan;
+                                _sleep = true;
+                                break;
+                            }
+                        }
+
+                        if (_sleeping && !_sleep) // just woke up
+                        {
+                            if (enableVoices) c_voice_core.speak($"Time for work");
+                        }
+                        else if (!_sleeping && _sleep) // just went to sleep
+                        {
+                            if (enableVoices) c_voice_core.speak($"I'm tired, sleeping until {_ts.to.ToShortTimeString()}");
+                        }
+
+                        _sleeping = _sleep;
+
+                        if (_sleeping)
+                        {
+                            //minimise chrome while sleeping
+                            if (!chromeIsMinimised && !stealthMode)
+                            {
+                                IwebDriver.Manage().Window.Minimize();
+                                chromeIsMinimised = true;
+                            }
+
+                            Thread.Sleep(1 * 1000);// sleep 1 second
+                            Application.DoEvents();
+                        }
+                    }
+
+
+
+
+
+
+                    
+
                     postCounter++;
 
                     if (link.Contains("https://www.instagram.com/"))
