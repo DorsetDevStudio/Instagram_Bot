@@ -220,19 +220,41 @@ namespace Instagram_Bot
                 while (_sleeping)
                 {
                     bool _sleep = false;
+
+                    timeSpans _ts = null;
+
                     foreach (timeSpans timeSpan in sleepTimes)
                     {
                         if (DateTime.Now.TimeOfDay > timeSpan.from.TimeOfDay
                             && DateTime.Now.TimeOfDay < timeSpan.to.TimeOfDay)
                         {
+                            _ts = timeSpan;
                             _sleep = true;
+                            break;
                         }
                     }
+
+                    if (_sleeping && !_sleep) // just woke up
+                    {
+                        if (enableVoices) c_voice_core.speak($"Time for work");
+                    }
+                    else if (!_sleeping && _sleep) // just went to sleep
+                    {
+                        if (enableVoices) c_voice_core.speak($"I'm tired, sleeping until {_ts.to.ToShortTimeString()}");
+                    }
+
                     _sleeping = _sleep;
-                    if (enableVoices) c_voice_core.speak($"I'm tired, sleeping.");
+                    
                     if (_sleeping)
                     {
-                        Thread.Sleep(10 * 1000);// sleep 10 second
+                        //minimise chrome while sleeping
+                        if (!chromeIsMinimised && !stealthMode)
+                        {
+                            IwebDriver.Manage().Window.Minimize();
+                            chromeIsMinimised = true;
+                        }
+                        
+                        Thread.Sleep(1 * 1000);// sleep 1 second
                         Application.DoEvents();
                     }
                 }
@@ -242,6 +264,7 @@ namespace Instagram_Bot
                 if (chromeIsMinimised && !stealthMode)
                 {
                     IwebDriver.Manage().Window.Maximize();
+                    chromeIsMinimised = false;
                 }
 
 
