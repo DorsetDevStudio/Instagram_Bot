@@ -35,3 +35,4 @@ To tell the bot what comments to post just create a file at c:\comments.txt and 
 To tell the bot what comments NOT to post just create a file at c:\ignore_comments.txt and add one comment per line
 
 
+
