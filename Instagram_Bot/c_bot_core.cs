@@ -216,33 +216,28 @@ namespace Instagram_Bot
 
 
                 // handle `don't run between` times
-
                 bool _sleeping = true;
                 while (_sleeping)
                 {
+                    bool _sleep = false;
                     foreach (timeSpans timeSpan in sleepTimes)
                     {
-
-
                         if (DateTime.Now.TimeOfDay > timeSpan.from.TimeOfDay
                             && DateTime.Now.TimeOfDay < timeSpan.to.TimeOfDay)
                         {
-                            if (!stealthMode)
-                            {
-                                IwebDriver.Manage().Window.Minimize();
-                                chromeIsMinimised = true;
-                            }
-                            // we are sleeping
-                            _sleeping = true;
-                            break;// jump out or foreach, we dont care about other enties
+                            _sleep = true;
                         }
-                        //no entries caused a break so we are not in a sleep period
-                        // no longer or not sleeping
-                        _sleeping = false;
                     }
-                    Thread.Sleep(1 * 1000);// sleep 1 second
-                    Application.DoEvents();
+                    _sleeping = _sleep;
+                    if (enableVoices) c_voice_core.speak($"I'm tired, sleeping.");
+                    if (_sleeping)
+                    {
+                        Thread.Sleep(10 * 1000);// sleep 10 second
+                        Application.DoEvents();
+                    }
                 }
+
+
                 // maximise window after sleep period
                 if (chromeIsMinimised && !stealthMode)
                 {
