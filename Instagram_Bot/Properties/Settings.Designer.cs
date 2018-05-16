@@ -171,5 +171,16 @@ namespace Instagram_Bot.Properties {
                 this["stopCommentingUntilDate"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        public global::System.DateTime stopUnFollowingUntilDate {
+            get {
+                return ((global::System.DateTime)(this["stopUnFollowingUntilDate"]));
+            }
+            set {
+                this["stopUnFollowingUntilDate"] = value;
+            }
+        }
     }
 }

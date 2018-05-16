@@ -414,8 +414,8 @@ namespace Instagram_Bot
                             }
                             else
                             {
-                                if (enableVoices) c_voice_core.speak($"following failed, I will stop following for 60 minutes.");
-                                Properties.Settings.Default.stopFolowingUntilDate = DateTime.Now.AddMinutes(60);
+                                if (enableVoices) c_voice_core.speak($"following failed, I will stop following for 5 minutes.");
+                                Properties.Settings.Default.stopFolowingUntilDate = DateTime.Now.AddMinutes(5);
                                 Properties.Settings.Default.Save();
                             }
                             Thread.Sleep(new Random().Next(secondsBetweenActions_min, secondsBetweenActions_max) * 1000); // wait a short(random) amount of time for page to change
@@ -534,8 +534,8 @@ namespace Instagram_Bot
                             if (IwebDriver.PageSource.ToUpper().Contains("couldn't post comment".ToUpper()))
                             {
 
-                                if (enableVoices) c_voice_core.speak($"comment failed, I will stop commenting for 60 minutes.");
-                                Properties.Settings.Default.stopCommentingUntilDate = DateTime.Now.AddMinutes(60);
+                                if (enableVoices) c_voice_core.speak($"comment failed, I will stop commenting for 5 minutes.");
+                                Properties.Settings.Default.stopCommentingUntilDate = DateTime.Now.AddMinutes(5);
                                 Properties.Settings.Default.Save();
 
                             }
@@ -550,11 +550,11 @@ namespace Instagram_Bot
                         // LIKE (do last as it opens a popup that stops us seeing the commenting in action)
                         foreach (var obj in IwebDriver.FindElements(By.TagName("a")))
                         {
-                            if (obj.Text.ToUpper().Contains("LIKE"))
+                            if (obj.Text.ToUpper().Contains("LIKE") && !obj.Text.ToUpper().Contains("UNLIKE"))
                             {
                                 if (enableVoices) c_voice_core.speak($"liking");
                                 obj.Click();
-                                if (enableVoices) c_voice_core.speak($"done, loading next post");
+                                if (enableVoices) c_voice_core.speak($"done");
                                 Thread.Sleep(1 * 1000); // wait a amount of time for page to change
                                 break;
                             }
@@ -569,7 +569,10 @@ namespace Instagram_Bot
 
                     else
                     {
-                        if (enableVoices) c_voice_core.speak($"not attempting to comment, there are {phrasesToComment.Count} comments to pick from and {(!alreadyFollowing ? "not" : "")} already following them");
+
+                       // if (enableVoices) c_voice_core.speak($"not attempting to comment, there are {phrasesToComment.Count} comments to pick from and {(!alreadyFollowing ? "not" : "")} already following them");
+
+
                     }
 
 
@@ -613,8 +616,8 @@ namespace Instagram_Bot
                                 // if following failed dont keep trying
                                 if (!obj.Text.ToLower().Trim().Contains("following"))
                                 {
-                                    if (enableVoices) c_voice_core.speak($"following failed, I will stop following for 60 minutes.");
-                                    Properties.Settings.Default.stopFolowingUntilDate = DateTime.Now.AddMinutes(60);
+                                    if (enableVoices) c_voice_core.speak($"following failed, I will stop following for 5 minutes.");
+                                    Properties.Settings.Default.stopFolowingUntilDate = DateTime.Now.AddMinutes(5);
                                     Properties.Settings.Default.Save();
                                     break;
                                 }
@@ -628,6 +631,84 @@ namespace Instagram_Bot
                 }
 
                 // end go to activity page and follow back anyone that followed us
+
+
+
+                // go to activity page and follow back anyone that followed us
+                var _unfollowBanMinutesLeft = (Properties.Settings.Default.stopUnFollowingUntilDate - DateTime.Now).Minutes;
+                var _unfollowBansecondsLeft = (Properties.Settings.Default.stopUnFollowingUntilDate - DateTime.Now).Seconds;
+                if (secondsLeft > 0)
+                {
+                    if (_unfollowBanMinutesLeft == 0) // must be a few seconds left 
+                    {
+                        if (enableVoices) c_voice_core.speak($"unfollow ban in place for {_unfollowBansecondsLeft} more seconds");
+                    }
+                    else
+                    {
+                        if (enableVoices) c_voice_core.speak($"unfollow ban in place for {_unfollowBanMinutesLeft} more minute{(_unfollowBanMinutesLeft > 1 ? "s" : "")}");
+                    }
+                }
+                else
+                {
+
+                    // unfollow people , we don't care if they follow back or not
+                    // go to https://www.instagram.com/g.stuart/
+                    // find link with followers in text and click it
+                    // scan page for a tags with following in the text and click to unfollow
+
+                    IwebDriver.Navigate().GoToUrl($"https://www.instagram.com/{username}");
+                    Thread.Sleep(4 * 1000); // wait a amount of time for page to change
+
+                    foreach (var obj in IwebDriver.FindElements(By.TagName("a")))
+                    {
+                        if (obj.GetAttribute("href").Contains("followers")
+                            && obj.GetAttribute("href").ToLower().Contains(username))
+                        {
+                            obj.Click(); // bring up follow list
+                            Thread.Sleep(2 * 1000); // wait a amount of time for page to change
+
+
+
+
+
+
+                            foreach (var obj2 in IwebDriver.FindElements(By.TagName("button")))
+                            {
+                                if (obj2.Text.ToLower().Trim().Contains("following"))
+                                {
+                                    try
+                                    {
+                                        obj.Click();
+                                        Thread.Sleep(new Random().Next(secondsBetweenActions_min, secondsBetweenActions_max) * 1000); // wait a short(random) amount of time between clicks
+
+                                        // if unfollow failed dont keep trying
+                                        if (obj2.Text.ToLower().Trim().Contains("following"))
+                                        {
+                                            if (enableVoices) c_voice_core.speak($"unfollow failed, I will stop unfollowing for 5 minutes.");
+                                            Properties.Settings.Default.stopUnFollowingUntilDate = DateTime.Now.AddMinutes(5);
+                                            Properties.Settings.Default.Save();
+                                            break;
+                                        }
+                                    }
+                                    catch
+                                    {
+                                        if (enableVoices) c_voice_core.speak($"follow failed");
+                                    }
+                                }
+                            }
+
+
+
+
+
+
+                            break;
+                        }
+                    }
+                }
+
+                // end unfollow people that dont follow back
+
 
 
 
