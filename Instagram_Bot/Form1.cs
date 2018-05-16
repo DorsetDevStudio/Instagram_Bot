@@ -24,7 +24,7 @@ namespace Instagram_Bot
         commit & push
         That's it!
          *
-         *
+         * http://chromedriver.storage.googleapis.com/index.html
          */
 
         // SIGNING must be OFF as WebDriver.dll is not signed which results in click ones deployment errors if the main app is signed.
@@ -65,6 +65,7 @@ namespace Instagram_Bot
 
 
             // save users' settings for next time. (only works if running fully installed via click once)
+            textBoxUsername.Text = textBoxUsername.Text.Trim().ToLower();
             Properties.Settings.Default.username = textBoxUsername.Text;
             Properties.Settings.Default.password = textBoxPassword.Text;
             Properties.Settings.Default.sleepTimeSpan1_From = dateTimePicker1.Value;

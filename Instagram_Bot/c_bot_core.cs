@@ -145,7 +145,7 @@ namespace Instagram_Bot
                 Thread.Sleep(60 * 1000); // wait for page to change
             }
             else {
-                if (enableVoices) c_voice_core.speak($"We are in, awesome, let's get you some new followers");
+                if (enableVoices) c_voice_core.speak($"We are in, awesome");
             }
 
 
@@ -523,7 +523,7 @@ namespace Instagram_Bot
                 foreach (var obj in IwebDriver.FindElements(By.TagName("a")))
                 {
                     if (obj.GetAttribute("href").Contains("followers")
-                        && obj.GetAttribute("href").Contains(username))
+                        && obj.GetAttribute("href").ToLower().Contains(username))
                     {
                         followers = obj.FindElement(By.TagName("span")).Text.Replace(",", "").Replace(" ", "").Replace("followers", "");
                         break;
@@ -535,7 +535,7 @@ namespace Instagram_Bot
                 foreach (var obj in IwebDriver.FindElements(By.TagName("a")))
                 {
                     if (obj.GetAttribute("href").Contains("following")
-                        && obj.GetAttribute("href").Contains(username))
+                        && obj.GetAttribute("href").ToLower().Contains(username))
                     {
                         following = obj.FindElement(By.TagName("span")).Text.Replace(",", "").Replace(" ", "").Replace("following", "");
                         break;
