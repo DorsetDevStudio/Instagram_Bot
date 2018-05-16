@@ -115,7 +115,7 @@ namespace Instagram_Bot
 
             IwebDriver.Navigate().GoToUrl("https://www.instagram.com/accounts/login/");
 
-            if (enableVoices) c_voice_core.speak($"let's connect to Instagram");
+           // if (enableVoices) c_voice_core.speak($"let's connect to Instagram");
 
             if (password.Length < 4)
             {
@@ -124,11 +124,11 @@ namespace Instagram_Bot
             else
             {
                 // Log in to Instagram               
-                Thread.Sleep(3 * 1000); // wait for page to change
+                Thread.Sleep(1 * 1000); // wait for page to change
                 IwebDriver.FindElement(By.Name("username")).SendKeys(username);
                 IwebDriver.FindElement(By.Name("password")).SendKeys(password);
                 IwebDriver.FindElement(By.TagName("form")).Submit();
-                Thread.Sleep(3 * 1000); // wait for page to change
+                Thread.Sleep(2 * 1000); // wait for page to change
                                         // end Log in to Instagram
             }
 
@@ -661,7 +661,7 @@ namespace Instagram_Bot
 
                     foreach (var obj in IwebDriver.FindElements(By.TagName("a")))
                     {
-                        if (obj.GetAttribute("href").Contains("followers")
+                        if (obj.GetAttribute("href").Contains("following")
                             && obj.GetAttribute("href").ToLower().Contains(username))
                         {
                             obj.Click(); // bring up follow list
