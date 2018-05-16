@@ -47,7 +47,7 @@ namespace Instagram_Bot
             int maxLikesIn24Hours = Properties.Settings.Default.dailyLikeLimit;// no more than follow * 1.2
            
             // Any value will work, trial and error
-            int maxPostsPerSearch = 15;
+            int maxPostsPerSearch = 5;
 
             // General interests to target:
             // values from c:\hashtags.txt also loaded at startup. 
@@ -614,7 +614,7 @@ namespace Instagram_Bot
                                 Thread.Sleep(new Random().Next(secondsBetweenActions_min, secondsBetweenActions_max) * 1000); // wait a short(random) amount of time between clicks
 
                                 // if following failed dont keep trying
-                                if (!obj.Text.ToLower().Trim().Contains("following"))
+                                if (!obj.Text.ToLower().Trim().Contains("following") && !obj.Text.ToLower().Trim().Contains("requested"))
                                 {
                                     if (enableVoices) c_voice_core.speak($"following failed, I will stop following for 5 minutes.");
                                     Properties.Settings.Default.stopFolowingUntilDate = DateTime.Now.AddMinutes(5);
@@ -678,7 +678,7 @@ namespace Instagram_Bot
                                 {
                                     try
                                     {
-                                        obj.Click();
+                                        obj2.Click();
                                         Thread.Sleep(new Random().Next(secondsBetweenActions_min, secondsBetweenActions_max) * 1000); // wait a short(random) amount of time between clicks
 
                                         // if unfollow failed dont keep trying
@@ -692,7 +692,7 @@ namespace Instagram_Bot
                                     }
                                     catch
                                     {
-                                        if (enableVoices) c_voice_core.speak($"follow failed");
+                                        if (enableVoices) c_voice_core.speak($"unfollow failed");
                                     }
                                 }
                             }
