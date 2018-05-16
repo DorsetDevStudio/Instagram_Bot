@@ -38,5 +38,8 @@
     <Setting Name="sleepTimeSpan2_To" Type="System.DateTime" Scope="User">
       <Value Profile="(Default)" />
     </Setting>
+    <Setting Name="stopCommentingUntilDate" Type="System.DateTime" Scope="User">
+      <Value Profile="(Default)" />
+    </Setting>
   </Settings>
 </SettingsFile>

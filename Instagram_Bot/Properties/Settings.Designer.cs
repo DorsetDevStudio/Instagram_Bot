@@ -160,5 +160,16 @@ namespace Instagram_Bot.Properties {
                 this["sleepTimeSpan2_To"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        public global::System.DateTime stopCommentingUntilDate {
+            get {
+                return ((global::System.DateTime)(this["stopCommentingUntilDate"]));
+            }
+            set {
+                this["stopCommentingUntilDate"] = value;
+            }
+        }
     }
 }
