@@ -16,7 +16,7 @@ namespace Instagram_Bot
 
         IWebDriver IwebDriver;
         string user = Environment.UserName.Replace(".", " ").Replace(@"\", "");
-        public c_bot_core(string username, string password, bool stealthMode = false, bool enableVoices = true, List<timeSpans> sleepTimes = null)
+        public c_bot_core(string username, string password, bool stealthMode = false, bool enableVoices = true, List<timeSpans> sleepTimes = null, int banLength = 5)
         {
 
             // pretend to be an android mobile app so we can upload image/create posts
@@ -262,8 +262,8 @@ namespace Instagram_Bot
                             // if following failed dont keep trying
                             if (!obj.Text.ToLower().Trim().Contains("following"))
                             {
-                                if (enableVoices) c_voice_core.speak($"following failed, I will stop following for 60 minutes.");
-                                Properties.Settings.Default.stopFolowingUntilDate = DateTime.Now.AddMinutes(60);
+                                if (enableVoices) c_voice_core.speak($"following failed, I will stop following for {banLength} minutes.");
+                                Properties.Settings.Default.stopFolowingUntilDate = DateTime.Now.AddMinutes(banLength);
                                 Properties.Settings.Default.Save();
                                 break;
                             }
@@ -414,8 +414,8 @@ namespace Instagram_Bot
                             }
                             else
                             {
-                                if (enableVoices) c_voice_core.speak($"following failed, I will stop following for 5 minutes.");
-                                Properties.Settings.Default.stopFolowingUntilDate = DateTime.Now.AddMinutes(5);
+                                if (enableVoices) c_voice_core.speak($"following failed, I will stop following for {banLength} minutes.");
+                                Properties.Settings.Default.stopFolowingUntilDate = DateTime.Now.AddMinutes(banLength);
                                 Properties.Settings.Default.Save();
                             }
                             Thread.Sleep(new Random().Next(secondsBetweenActions_min, secondsBetweenActions_max) * 1000); // wait a short(random) amount of time for page to change
@@ -534,8 +534,8 @@ namespace Instagram_Bot
                             if (IwebDriver.PageSource.ToUpper().Contains("couldn't post comment".ToUpper()))
                             {
 
-                                if (enableVoices) c_voice_core.speak($"comment failed, I will stop commenting for 5 minutes.");
-                                Properties.Settings.Default.stopCommentingUntilDate = DateTime.Now.AddMinutes(5);
+                                if (enableVoices) c_voice_core.speak($"comment failed, I will stop commenting for {banLength} minutes.");
+                                Properties.Settings.Default.stopCommentingUntilDate = DateTime.Now.AddMinutes(banLength);
                                 Properties.Settings.Default.Save();
 
                             }
@@ -616,8 +616,8 @@ namespace Instagram_Bot
                                 // if following failed dont keep trying
                                 if (!obj.Text.ToLower().Trim().Contains("following") && !obj.Text.ToLower().Trim().Contains("requested"))
                                 {
-                                    if (enableVoices) c_voice_core.speak($"following failed, I will stop following for 5 minutes.");
-                                    Properties.Settings.Default.stopFolowingUntilDate = DateTime.Now.AddMinutes(5);
+                                    if (enableVoices) c_voice_core.speak($"following failed, I will stop following for {banLength} minutes.");
+                                    Properties.Settings.Default.stopFolowingUntilDate = DateTime.Now.AddMinutes(banLength);
                                     Properties.Settings.Default.Save();
                                     break;
                                 }
@@ -684,8 +684,8 @@ namespace Instagram_Bot
                                         // if unfollow failed dont keep trying
                                         if (obj2.Text.ToLower().Trim().Contains("following"))
                                         {
-                                            if (enableVoices) c_voice_core.speak($"unfollow failed, I will stop unfollowing for 5 minutes.");
-                                            Properties.Settings.Default.stopUnFollowingUntilDate = DateTime.Now.AddMinutes(5);
+                                            if (enableVoices) c_voice_core.speak($"unfollow failed, I will stop unfollowing for {banLength} minutes.");
+                                            Properties.Settings.Default.stopUnFollowingUntilDate = DateTime.Now.AddMinutes(banLength);
                                             Properties.Settings.Default.Save();
                                             break;
                                         }

@@ -72,6 +72,8 @@ namespace Instagram_Bot
             Properties.Settings.Default.sleepTimeSpan1_To = dateTimePicker2.Value;
             Properties.Settings.Default.sleepTimeSpan2_From = dateTimePicker3.Value;
             Properties.Settings.Default.sleepTimeSpan2_To = dateTimePicker4.Value;
+            Properties.Settings.Default.banLength = (int)numericUpDownBanLength.Value;
+
             Properties.Settings.Default.Save();
 
             Application.DoEvents();
@@ -109,6 +111,10 @@ namespace Instagram_Bot
 
                 dateTimePicker3.Value = Properties.Settings.Default.sleepTimeSpan2_From;
                 dateTimePicker4.Value = Properties.Settings.Default.sleepTimeSpan2_To;
+
+
+                numericUpDownBanLength.Value = Properties.Settings.Default.banLength;
+
             }
             catch { }
 

@@ -56,17 +56,20 @@
             this.notifyIcon1 = new System.Windows.Forms.NotifyIcon(this.components);
             this.contextMenuStripForNotifyIcon = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.exitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.label7 = new System.Windows.Forms.Label();
+            this.numericUpDownBanLength = new System.Windows.Forms.NumericUpDown();
             this.statusStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.groupBox1.SuspendLayout();
             this.contextMenuStripForNotifyIcon.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownBanLength)).BeginInit();
             this.SuspendLayout();
             // 
             // statusStrip1
             // 
             this.statusStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.toolStripStatusLabel1});
-            this.statusStrip1.Location = new System.Drawing.Point(0, 266);
+            this.statusStrip1.Location = new System.Drawing.Point(0, 309);
             this.statusStrip1.Name = "statusStrip1";
             this.statusStrip1.Size = new System.Drawing.Size(603, 22);
             this.statusStrip1.TabIndex = 2;
@@ -115,7 +118,7 @@
             // buttonStartBot
             // 
             this.buttonStartBot.BackColor = System.Drawing.Color.PaleGreen;
-            this.buttonStartBot.Location = new System.Drawing.Point(467, 222);
+            this.buttonStartBot.Location = new System.Drawing.Point(472, 271);
             this.buttonStartBot.Name = "buttonStartBot";
             this.buttonStartBot.Size = new System.Drawing.Size(109, 23);
             this.buttonStartBot.TabIndex = 2;
@@ -148,12 +151,14 @@
             this.pictureBox1.Image = global::Instagram_Bot.Properties.Resources.Pig_icon;
             this.pictureBox1.Location = new System.Drawing.Point(12, 19);
             this.pictureBox1.Name = "pictureBox1";
-            this.pictureBox1.Size = new System.Drawing.Size(274, 244);
+            this.pictureBox1.Size = new System.Drawing.Size(274, 275);
             this.pictureBox1.TabIndex = 9;
             this.pictureBox1.TabStop = false;
             // 
             // groupBox1
             // 
+            this.groupBox1.Controls.Add(this.numericUpDownBanLength);
+            this.groupBox1.Controls.Add(this.label7);
             this.groupBox1.Controls.Add(this.label5);
             this.groupBox1.Controls.Add(this.label6);
             this.groupBox1.Controls.Add(this.dateTimePicker3);
@@ -171,7 +176,7 @@
             this.groupBox1.Controls.Add(this.textBoxUsername);
             this.groupBox1.Location = new System.Drawing.Point(292, 19);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(295, 188);
+            this.groupBox1.Size = new System.Drawing.Size(295, 246);
             this.groupBox1.TabIndex = 10;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Settings";
@@ -274,7 +279,7 @@
             // buttonStopBot
             // 
             this.buttonStopBot.BackColor = System.Drawing.Color.OrangeRed;
-            this.buttonStopBot.Location = new System.Drawing.Point(313, 222);
+            this.buttonStopBot.Location = new System.Drawing.Point(318, 271);
             this.buttonStopBot.Name = "buttonStopBot";
             this.buttonStopBot.Size = new System.Drawing.Size(109, 23);
             this.buttonStopBot.TabIndex = 11;
@@ -328,11 +333,42 @@
             this.exitToolStripMenuItem.Text = "&Exit";
             this.exitToolStripMenuItem.Click += new System.EventHandler(this.exitToolStripMenuItem_Click);
             // 
+            // label7
+            // 
+            this.label7.AutoSize = true;
+            this.label7.Location = new System.Drawing.Point(24, 200);
+            this.label7.Name = "label7";
+            this.label7.Size = new System.Drawing.Size(186, 13);
+            this.label7.TabIndex = 18;
+            this.label7.Text = "Minutes to stop trying after an a failure";
+            // 
+            // numericUpDownBanLength
+            // 
+            this.numericUpDownBanLength.Location = new System.Drawing.Point(216, 198);
+            this.numericUpDownBanLength.Maximum = new decimal(new int[] {
+            1440,
+            0,
+            0,
+            0});
+            this.numericUpDownBanLength.Minimum = new decimal(new int[] {
+            5,
+            0,
+            0,
+            0});
+            this.numericUpDownBanLength.Name = "numericUpDownBanLength";
+            this.numericUpDownBanLength.Size = new System.Drawing.Size(57, 20);
+            this.numericUpDownBanLength.TabIndex = 19;
+            this.numericUpDownBanLength.Value = new decimal(new int[] {
+            5,
+            0,
+            0,
+            0});
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(603, 288);
+            this.ClientSize = new System.Drawing.Size(603, 331);
             this.Controls.Add(this.linkLabel2);
             this.Controls.Add(this.linkLabel1);
             this.Controls.Add(this.buttonStopBot);
@@ -341,7 +377,6 @@
             this.Controls.Add(this.buttonStartBot);
             this.Controls.Add(this.statusStrip1);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
-            this.MaximumSize = new System.Drawing.Size(619, 327);
             this.MinimumSize = new System.Drawing.Size(619, 327);
             this.Name = "Form1";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
@@ -354,6 +389,7 @@
             this.groupBox1.ResumeLayout(false);
             this.groupBox1.PerformLayout();
             this.contextMenuStripForNotifyIcon.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownBanLength)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -386,6 +422,8 @@
         private System.Windows.Forms.Label label6;
         private System.Windows.Forms.DateTimePicker dateTimePicker3;
         private System.Windows.Forms.DateTimePicker dateTimePicker4;
+        private System.Windows.Forms.NumericUpDown numericUpDownBanLength;
+        private System.Windows.Forms.Label label7;
     }
 }
 
