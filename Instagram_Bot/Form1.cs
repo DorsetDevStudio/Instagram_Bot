@@ -65,7 +65,6 @@ namespace Instagram_Bot
 
 
 
-
             // save users' settings for next time. (only works if running fully installed via click once)
             textBoxUsername.Text = textBoxUsername.Text.Trim().ToLower();
             Properties.Settings.Default.username = textBoxUsername.Text;
