@@ -223,52 +223,52 @@ namespace Instagram_Bot
                 }
 
 
-                if (enableVoices) C_voice_core.speak($"debug point 0");
+               // if (enableVoices) C_voice_core.speak($"debug point 0");
 
 
-                //if (!DateTime.TryParse(Properties.Settings.Default.countersStarted.ToString(), out DateTime o) )
-                //{   // first run or rinning in debug mode
-                //    Properties.Settings.Default.countersStarted = DateTime.Now;
-                //    Properties.Settings.Default.Save();
-                //    if (enableVoices) C_voice_core.speak($"Instagram limiters configured");
-                //}
-
-
-
-               // if (enableVoices) C_voice_core.speak($"debug point 1");
-
-                //// dont worry about limits if not installed (debugging)
-                //if (DateTime.TryParse(Properties.Settings.Default.countersStarted.ToString(), out DateTime _o))
-                //{
-
-
-                //    if (enableVoices) C_voice_core.speak($"debug point 2");
-
-                //    // get hours since counters started
-                //    var hours = (_o - DateTime.Now).TotalHours;
-                //    if (Properties.Settings.Default.totalFollowsSinceCountersStarted / hours > Properties.Settings.Default.dailyFollowLimit / 24)
-                //    {
-                //        if (enableVoices) C_voice_core.speak($"Daily follow limit exceeded");
-                //        Thread.Sleep(3 * 60000); // wait a amount of time before trying again
-                //        continue;// go to next post
-                //    }
-                //    else
-                //    {
-
-                //        if (enableVoices) C_voice_core.speak($"debug point 3");
-
-                //        //TODO: followLeftThisHour is not calculating correctly (it was rushed)
-                //        var followLeftThisHour = (int)(Properties.Settings.Default.dailyFollowLimit / 24) - (int)(Properties.Settings.Default.totalFollowsSinceCountersStarted / hours);
-                //        if (enableVoices) C_voice_core.speak($"{followLeftThisHour} follows left this hour");
-                //    }
+                if (!DateTime.TryParse(Properties.Settings.Default.countersStarted.ToString(), out DateTime o))
+                {   // first run or rinning in debug mode
+                    Properties.Settings.Default.countersStarted = DateTime.Now;
+                    Properties.Settings.Default.Save();
+                    if (enableVoices) C_voice_core.speak($"Instagram limiters configured");
+                }
 
 
 
-                //}
-                //else
-                //{
-                //    if (enableVoices) C_voice_core.speak($"no follow counter");
-                //}
+              //  if (enableVoices) C_voice_core.speak($"debug point 1");
+
+                // dont worry about limits if not installed (debugging)
+                if (DateTime.TryParse(Properties.Settings.Default.countersStarted.ToString(), out DateTime _o))
+                {
+
+
+                   // if (enableVoices) C_voice_core.speak($"debug point 2");
+
+                    // get hours since counters started
+                    var hours = (_o - DateTime.Now).TotalHours;
+                    if (Properties.Settings.Default.totalFollowsSinceCountersStarted / hours > Properties.Settings.Default.dailyFollowLimit / 24)
+                    {
+                        if (enableVoices) C_voice_core.speak($"Daily follow limit exceeded");
+                        Thread.Sleep(3 * 60000); // wait a amount of time before trying again
+                        continue;// go to next post
+                    }
+                    else
+                    {
+
+                       // if (enableVoices) C_voice_core.speak($"debug point 3");
+
+                        //TODO: followLeftThisHour is not calculating correctly (it was rushed)
+                        var followLeftThisHour = (int)(Properties.Settings.Default.dailyFollowLimit / 24) - (int)(Properties.Settings.Default.totalFollowsSinceCountersStarted / hours);
+                        if (enableVoices) C_voice_core.speak($"{followLeftThisHour} follows left this hour");
+                    }
+
+
+
+                }
+                else
+                {
+                    if (enableVoices) C_voice_core.speak($"no follow counter");
+                }
 
 
 
@@ -305,7 +305,7 @@ namespace Instagram_Bot
                 }
 
 
-                if (enableVoices) C_voice_core.speak($"debugging");
+              //  if (enableVoices) C_voice_core.speak($"debugging");
 
 
                 // Application.DoEvents(); // Prevent warnings during debugging.
@@ -376,10 +376,6 @@ namespace Instagram_Bot
                         Application.DoEvents();
                     }
 
-
-
-                  
-
                     postCounter++;
 
                     if (link.Contains("https://www.instagram.com/"))
@@ -405,7 +401,7 @@ namespace Instagram_Bot
                     }
 
                     // testing new database functionality
-                    new Classes.C_DataLayer().AddInstaUser(IU: new Classes.InstaUser() { username = instagram_post_user });
+                    new Classes.C_DataLayer().AddInstaUser(IU: new Classes.InstaUser() { username = instagram_post_user.Replace(" ","_") });
 
 
                     // if (enableVoices) c_voice_core.speak($"post {postCounter} of {postsToLike.Count} by user {instagram_post_user}");
