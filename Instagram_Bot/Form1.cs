@@ -35,7 +35,7 @@ namespace Instagram_Bot
         {
             InitializeComponent();
         }
-        c_bot_core botCore;
+        C_bot_core botCore;
         Thread th = null;
         private void button1_Click(object sender, EventArgs e)
         {
@@ -85,7 +85,7 @@ namespace Instagram_Bot
                 Task.Factory.StartNew(() =>
                 {
                     th = Thread.CurrentThread;
-                    botCore = new c_bot_core(textBoxUsername.Text.Trim(), textBoxPassword.Text.Trim(), checkBoxStealthMode.Checked, !checkBoxDisableVoices.Checked, sleepTimes, (int)numericUpDownBanLength.Value);
+                    botCore = new C_bot_core(textBoxUsername.Text.Trim(), textBoxPassword.Text.Trim(), checkBoxStealthMode.Checked, !checkBoxDisableVoices.Checked, sleepTimes, (int)numericUpDownBanLength.Value);
                 });
                 buttonStartBot.Enabled = false;
                 buttonStopBot.Enabled = true;
@@ -142,10 +142,10 @@ namespace Instagram_Bot
             MessageBox.Show("Please ensure your sound is turned up.","Instagram Bot is talking to you!");
 
 
-            var t = new Task(() => {
-                c_voice_core.speak("Enter your Instagram username and password and then click start. Then just watch the screen without clicking or resizing the windows that appear. If prompted by Instagram you should follow the security challenge and enter the pin.");
-            });
-            t.Start();
+            C_voice_core.speak(
+                "Enter your Instagram username and password and then click start. If prompted by Instagram you should follow the security challenge and enter the pin.", 
+                async: true);
+            
 
 
         }

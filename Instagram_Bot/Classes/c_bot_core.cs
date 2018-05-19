@@ -2,22 +2,18 @@
 using OpenQA.Selenium.Chrome;
 using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Threading;
 using System.Windows.Forms;
 
 namespace Instagram_Bot
 {
 
-
-
-    public class c_bot_core
+    public class C_bot_core : IC_bot_core
     {
-
 
         IWebDriver IwebDriver;
         string user = Environment.UserName.Replace(".", " ").Replace(@"\", "");
-        public c_bot_core(string username, string password, bool stealthMode = false, bool enableVoices = true, List<timeSpans> sleepTimes = null, int banLength = 5)
+        public C_bot_core(string username, string password, bool stealthMode = false, bool enableVoices = true, List<timeSpans> sleepTimes = null, int banLength = 5)
         {
 
             // pretend to be an android mobile app so we can upload image/create posts
@@ -120,7 +116,7 @@ namespace Instagram_Bot
 
             if (password.Length < 4)
             {
-                if (enableVoices) c_voice_core.speak($"Please login now {user}");
+                if (enableVoices) C_voice_core.speak($"Please login now {user}");
             }
             else
             {
@@ -136,23 +132,23 @@ namespace Instagram_Bot
 
             if (IwebDriver.PageSource.Contains("your password was incorrect"))
             {
-                if (enableVoices) c_voice_core.speak($"You have one minute to complete login");
+                if (enableVoices) C_voice_core.speak($"You have one minute to complete login");
                 Thread.Sleep(60 * 1000); // wait for page to change
 
             }
             else if (IwebDriver.PageSource.Contains("security") || IwebDriver.PageSource.Contains("Unusual"))
             {
-                if (enableVoices) c_voice_core.speak($"You have one minute to complete login");
+                if (enableVoices) C_voice_core.speak($"You have one minute to complete login");
                 Thread.Sleep(60 * 1000); // wait for page to change
             }
             else {
-                if (enableVoices) c_voice_core.speak($"We are in, awesome");
+                if (enableVoices) C_voice_core.speak($"We are in, awesome");
             }
 
 
             if (stealthMode)
             {
-                if (enableVoices) c_voice_core.speak($"Entering stealth mode");
+                if (enableVoices) C_voice_core.speak($"Entering stealth mode");
                 IwebDriver.Manage().Window.Minimize();
             }
 
@@ -226,7 +222,7 @@ namespace Instagram_Bot
                 {   // first run or rinning in debug mode
                     Properties.Settings.Default.countersStarted = DateTime.Now;
                     Properties.Settings.Default.Save();
-                    if (enableVoices) c_voice_core.speak($"Instagram limiters configured");
+                    if (enableVoices) C_voice_core.speak($"Instagram limiters configured");
                 }
 
                 // dont worry about limits if not installed (debugging)
@@ -236,7 +232,7 @@ namespace Instagram_Bot
                     var hours = (_o - DateTime.Now).TotalHours;
                     if (Properties.Settings.Default.totalFollowsSinceCountersStarted / hours > Properties.Settings.Default.dailyFollowLimit / 24)
                     {
-                        if (enableVoices) c_voice_core.speak($"Daily follow limit exceeded");
+                        if (enableVoices) C_voice_core.speak($"Daily follow limit exceeded");
                         Thread.Sleep(3 * 60000); // wait a amount of time before trying again
                         continue;// go to next post
                     }
@@ -244,7 +240,7 @@ namespace Instagram_Bot
                     {
                         //TODO: followLeftThisHour is not calculating correctly (it was rushed)
                         var followLeftThisHour = (int)(Properties.Settings.Default.dailyFollowLimit / 24) - (int)(Properties.Settings.Default.totalFollowsSinceCountersStarted / hours) ;
-                        if (enableVoices) c_voice_core.speak($"{followLeftThisHour} follows left this hour");
+                        if (enableVoices) C_voice_core.speak($"{followLeftThisHour} follows left this hour");
                     }
                 }
 
@@ -263,7 +259,7 @@ namespace Instagram_Bot
                             // if following failed dont keep trying
                             if (!obj.Text.ToLower().Trim().Contains("following"))
                             {
-                                if (enableVoices) c_voice_core.speak($"following failed, I will stop following for {banLength} minutes.");
+                                if (enableVoices) C_voice_core.speak($"following failed, I will stop following for {banLength} minutes.");
                                 Properties.Settings.Default.stopFolowingUntilDate = DateTime.Now.AddMinutes(banLength);
                                 Properties.Settings.Default.Save();
                                 break;
@@ -272,7 +268,7 @@ namespace Instagram_Bot
                         }
                         catch
                         {
-                            if (enableVoices) c_voice_core.speak($"follow failed");
+                            if (enableVoices) C_voice_core.speak($"follow failed");
                         }
                     }
                 }
@@ -281,7 +277,7 @@ namespace Instagram_Bot
 
                 Application.DoEvents(); // Prevent warnings during debugging.
                 var mySearch = thingsToSearch[new Random().Next(0, thingsToSearch.Count - 1)];
-                if (enableVoices) c_voice_core.speak($"Ok, let's get some followers");
+                if (enableVoices) C_voice_core.speak($"Ok, let's get some followers");
 
                 // just navigate to search
                 IwebDriver.Navigate().GoToUrl($"https://www.instagram.com/explore/tags/{mySearch}");
@@ -298,7 +294,7 @@ namespace Instagram_Bot
                     if (postsToLike.Count >= maxPostsPerSearch) // limit per search
                         break;
                 }
-                if (enableVoices) c_voice_core.speak($"{postsToLike.Count} posts found");
+                if (enableVoices) C_voice_core.speak($"{postsToLike.Count} posts found");
 
                 int postCounter = 0;
 
@@ -318,7 +314,7 @@ namespace Instagram_Bot
                                 && DateTime.Now.TimeOfDay < timeSpan.to.TimeOfDay)
                             {
                                 _sleeping = true;
-                                if (enableVoices) c_voice_core.speak($"I'm tired, yawn, sleeping until {timeSpan.to.ToShortTimeString()}");
+                                if (enableVoices) C_voice_core.speak($"I'm tired, yawn, sleeping until {timeSpan.to.ToShortTimeString()}");
                                 break;
                             }
                         }
@@ -340,7 +336,7 @@ namespace Instagram_Bot
                         }
                         if (!_sleep) // just woke up
                         {
-                            if (enableVoices) c_voice_core.speak($"Nap over, damn it");
+                            if (enableVoices) C_voice_core.speak($"Nap over, damn it");
                             _sleeping = false;
                         }
                         Thread.Sleep(1 * 1000);// sleep 1 second
@@ -383,7 +379,7 @@ namespace Instagram_Bot
                     {
                         if (obj.Text.ToUpper().Contains("FOLLOWING".ToUpper()))
                         {
-                            if (enableVoices) c_voice_core.speak($"already following");
+                            if (enableVoices) C_voice_core.speak($"already following");
                             alreadyFollowing = true;
                             break;
                         }
@@ -395,17 +391,17 @@ namespace Instagram_Bot
 
                             if (_minutesLeft == 0) // must be a few seconds left 
                             {
-                                if (enableVoices) c_voice_core.speak($"follow ban in place for {_secondsLeft} more seconds");
+                                if (enableVoices) C_voice_core.speak($"follow ban in place for {_secondsLeft} more seconds");
                             }
                             else
                             {
-                                if (enableVoices) c_voice_core.speak($"follow ban in place for {_minutesLeft} more minute{(_minutesLeft > 1 ? "s" : "")}");
+                                if (enableVoices) C_voice_core.speak($"follow ban in place for {_minutesLeft} more minute{(_minutesLeft > 1 ? "s" : "")}");
                             }
                             break;
                         }
                         else if (obj.Text.ToUpper().Contains("FOLLOW".ToUpper()))
                         {
-                            if (enableVoices) c_voice_core.speak($"following");
+                            if (enableVoices) C_voice_core.speak($"following");
                             obj.Click();
                             Thread.Sleep(2 * 1000); // wait and see it it worked, will change to following
                             if (obj.Text.ToUpper().Contains("FOLLOWING".ToUpper()))
@@ -415,7 +411,7 @@ namespace Instagram_Bot
                             }
                             else
                             {
-                                if (enableVoices) c_voice_core.speak($"following failed, I will stop following for {banLength} minutes.");
+                                if (enableVoices) C_voice_core.speak($"following failed, I will stop following for {banLength} minutes.");
                                 Properties.Settings.Default.stopFolowingUntilDate = DateTime.Now.AddMinutes(banLength);
                                 Properties.Settings.Default.Save();
                             }
@@ -424,7 +420,7 @@ namespace Instagram_Bot
                         }
                         else
                         {
-                            if (enableVoices) c_voice_core.speak($"error locating follow button");
+                            if (enableVoices) C_voice_core.speak($"error locating follow button");
                             break;
                         }
 
@@ -451,11 +447,11 @@ namespace Instagram_Bot
 
                             if (_commentBanminutesLeft == 0) // must be a few seconds left 
                             {
-                                if (enableVoices) c_voice_core.speak($"comment ban in place for {_commentBanSecondsLeft} more seconds");
+                                if (enableVoices) C_voice_core.speak($"comment ban in place for {_commentBanSecondsLeft} more seconds");
                             }
                             else
                             {
-                                if (enableVoices) c_voice_core.speak($"comment ban in place for {_commentBanminutesLeft} more minute{(_commentBanminutesLeft > 1 ? "s" : "")}");
+                                if (enableVoices) C_voice_core.speak($"comment ban in place for {_commentBanminutesLeft} more minute{(_commentBanminutesLeft > 1 ? "s" : "")}");
                             }
 
                         }
@@ -486,7 +482,7 @@ namespace Instagram_Bot
                             {
                                 if (obj.GetAttribute("placeholder").ToUpper().Contains("COMMENT".ToUpper()))
                                 {
-                                    if (enableVoices) c_voice_core.speak($"commenting");
+                                    if (enableVoices) C_voice_core.speak($"commenting");
                                     bool sendKeysFailed = true;// must start as true
 
                                     int attempsToComment = 0;
@@ -507,13 +503,13 @@ namespace Instagram_Bot
                                             }
                                             else if (e.Message.Contains("character"))
                                             {
-                                                if (enableVoices) c_voice_core.speak($"The comment {myComment} contains an unsupported character, i'll remove it from the list.");
+                                                if (enableVoices) C_voice_core.speak($"The comment {myComment} contains an unsupported character, i'll remove it from the list.");
                                                 sendKeysFailed = true; // some characters are not supported by chrome driver (some emojis for example)
                                                 phrasesToComment.Remove(myComment); // remove offending comment
                                             }
                                             else
                                             {   // other unknown error, relay full error message but dont remove comment from list as it may be perfectly fine.
-                                                if (enableVoices) c_voice_core.speak($"error with a comment, the error was {e.Message}. The comment {myComment} will be removed from the list.");
+                                                if (enableVoices) C_voice_core.speak($"error with a comment, the error was {e.Message}. The comment {myComment} will be removed from the list.");
                                                 sendKeysFailed = true; // some characters are not supported by chrome driver (some emojis for example)
                                             }
 
@@ -535,7 +531,7 @@ namespace Instagram_Bot
                             if (IwebDriver.PageSource.ToUpper().Contains("couldn't post comment".ToUpper()))
                             {
 
-                                if (enableVoices) c_voice_core.speak($"comment failed, I will stop commenting for {banLength} minutes.");
+                                if (enableVoices) C_voice_core.speak($"comment failed, I will stop commenting for {banLength} minutes.");
                                 Properties.Settings.Default.stopCommentingUntilDate = DateTime.Now.AddMinutes(banLength);
                                 Properties.Settings.Default.Save();
 
@@ -553,9 +549,9 @@ namespace Instagram_Bot
                         {
                             if (obj.Text.ToUpper().Contains("LIKE") && !obj.Text.ToUpper().Contains("UNLIKE"))
                             {
-                                if (enableVoices) c_voice_core.speak($"liking");
+                                if (enableVoices) C_voice_core.speak($"liking");
                                 obj.Click();
-                                if (enableVoices) c_voice_core.speak($"done");
+                                if (enableVoices) C_voice_core.speak($"done");
                                 Thread.Sleep(1 * 1000); // wait a amount of time for page to change
                                 break;
                             }
@@ -593,11 +589,11 @@ namespace Instagram_Bot
                 {
                     if (minutesLeft == 0) // must be a few seconds left 
                     {
-                        if (enableVoices) c_voice_core.speak($"follow ban in place for {secondsLeft} more seconds");
+                        if (enableVoices) C_voice_core.speak($"follow ban in place for {secondsLeft} more seconds");
                     }
                     else
                     {
-                        if (enableVoices) c_voice_core.speak($"follow ban in place for {minutesLeft} more minute{(minutesLeft > 1 ? "s" : "")}");
+                        if (enableVoices) C_voice_core.speak($"follow ban in place for {minutesLeft} more minute{(minutesLeft > 1 ? "s" : "")}");
                     }
                 }
                 else
@@ -617,7 +613,7 @@ namespace Instagram_Bot
                                 // if following failed dont keep trying
                                 if (!obj.Text.ToLower().Trim().Contains("following") && !obj.Text.ToLower().Trim().Contains("requested"))
                                 {
-                                    if (enableVoices) c_voice_core.speak($"following failed, I will stop following for {banLength} minutes.");
+                                    if (enableVoices) C_voice_core.speak($"following failed, I will stop following for {banLength} minutes.");
                                     Properties.Settings.Default.stopFolowingUntilDate = DateTime.Now.AddMinutes(banLength);
                                     Properties.Settings.Default.Save();
                                     break;
@@ -625,7 +621,7 @@ namespace Instagram_Bot
                             }
                             catch
                             {
-                                if (enableVoices) c_voice_core.speak($"follow failed");
+                                if (enableVoices) C_voice_core.speak($"follow failed");
                             }
                         }
                     }
@@ -642,11 +638,11 @@ namespace Instagram_Bot
                 {
                     if (_unfollowBanMinutesLeft == 0) // must be a few seconds left 
                     {
-                        if (enableVoices) c_voice_core.speak($"unfollow ban in place for {_unfollowBansecondsLeft} more seconds");
+                        if (enableVoices) C_voice_core.speak($"unfollow ban in place for {_unfollowBansecondsLeft} more seconds");
                     }
                     else
                     {
-                        if (enableVoices) c_voice_core.speak($"unfollow ban in place for {_unfollowBanMinutesLeft} more minute{(_unfollowBanMinutesLeft > 1 ? "s" : "")}");
+                        if (enableVoices) C_voice_core.speak($"unfollow ban in place for {_unfollowBanMinutesLeft} more minute{(_unfollowBanMinutesLeft > 1 ? "s" : "")}");
                     }
                 }
                 else
@@ -685,7 +681,7 @@ namespace Instagram_Bot
                                         // if unfollow failed dont keep trying
                                         if (obj2.Text.ToLower().Trim().Contains("following"))
                                         {
-                                            if (enableVoices) c_voice_core.speak($"unfollow failed, I will stop unfollowing for {banLength} minutes.");
+                                            if (enableVoices) C_voice_core.speak($"unfollow failed, I will stop unfollowing for {banLength} minutes.");
                                             Properties.Settings.Default.stopUnFollowingUntilDate = DateTime.Now.AddMinutes(banLength);
                                             Properties.Settings.Default.Save();
                                             break;
@@ -693,7 +689,7 @@ namespace Instagram_Bot
                                     }
                                     catch
                                     {
-                                        if (enableVoices) c_voice_core.speak($"unfollow failed");
+                                        if (enableVoices) C_voice_core.speak($"unfollow failed");
                                     }
                                 }
                             }
@@ -718,7 +714,7 @@ namespace Instagram_Bot
 
 
 
-                if (enableVoices) c_voice_core.speak($"all done {user}, let's check your stats");
+                if (enableVoices) C_voice_core.speak($"all done {user}, let's check your stats");
 
                 // Return to users profile page so they can see their stats while we wait for next search to start
                 IwebDriver.Navigate().GoToUrl($"https://www.instagram.com/{username}");
@@ -750,9 +746,9 @@ namespace Instagram_Bot
                     }
                 }
 
-                if (enableVoices) c_voice_core.speak($"You have {followers} followers and are following {following}. Well done, but I take all the credit.");
+                if (enableVoices) C_voice_core.speak($"You have {followers} followers and are following {following}. Well done, but I take all the credit.");
 
-                if (enableVoices) c_voice_core.speak($"Let's take a short break.");
+                if (enableVoices) C_voice_core.speak($"Let's take a short break.");
 
                 Thread.Sleep(new Random().Next(minutesBetweenBulkActions_min, minutesBetweenBulkActions_max) * 60000);// wait between each bulk action
             }
@@ -761,7 +757,7 @@ namespace Instagram_Bot
             /* end of MAIN LOOP */
 
         }
-        public void terminateBot()
+        public void TerminateBot()
         {
             try { IwebDriver.Close();} catch { }
             try { IwebDriver.Quit(); } catch { }
