@@ -57,7 +57,8 @@ namespace Instagram_Bot
 
             if (textBoxUsername.Text.Length < 4)
             {
-                MessageBox.Show("You need to enter your Instagram username. It's used to tag comments and monitoring follower numbers.");
+                MessageBox.Show("You need to enter your Instagram user" +
+                    "name. It's used to tag comments and monitoring follower numbers.");
                 return;
             }
 
@@ -83,7 +84,7 @@ namespace Instagram_Bot
                 Task.Factory.StartNew(() =>
                 {
                     th = Thread.CurrentThread;
-                    botCore = new c_bot_core(textBoxUsername.Text.Trim(), textBoxPassword.Text.Trim(), checkBoxStealthMode.Checked, !checkBoxDisableVoices.Checked, sleepTimes, (int)numericUpDownBanLength.Value);
+                    botCore = new c_bot_core(textBoxUsername.Text.Trim(), textBoxPassword.Text.Trim(), checkBoxStealthMode.Checked, !checkBoxDisableVoices.Checked, sleepTimes);
                 });
                 buttonStartBot.Enabled = false;
                 buttonStopBot.Enabled = true;
@@ -131,7 +132,7 @@ namespace Instagram_Bot
             {
                 notifyIcon1.ShowBalloonTip(2 * 1000, "Instagram Bot", "Installing drivers...", ToolTipIcon.None);
                 WebClient webClient = new WebClient();
-                webClient.DownloadFile("https://github.com/DorsetDevStudio/Instagram_Bot/raw/master/Instagram_Bot/publish/chromedriver.exe", @"chromedriver.exe");
+                webClient.DownloadFile("https://github.com/DorsetDevStudio/Instagram_Bot/blob/master/Instagram_Bot/Resources/Downloads/chromedriver.exe?raw=true", @"chromedriver.exe");
             }
 
             if(textBoxUsername.Text.Length==0)// first time user
