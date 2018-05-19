@@ -1,4 +1,11 @@
 ﻿
+APP NOT STARTING ?
+
+A recent Windows 10 update (April/May 2018) is preventing many programs from running (not just ours), to work around this go to App and Browser Control and turn off Smart Screen for Apps, it will then work.
+
+
+
+
 
 ![Screenshot](https://github.com/DorsetDevStudio/Instagram_Bot/blob/master/Instagram_Bot/Resources/Images/screenshot.PNG)
 
