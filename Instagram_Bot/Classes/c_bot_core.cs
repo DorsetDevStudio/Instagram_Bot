@@ -62,19 +62,19 @@ namespace Instagram_Bot
 
             };
 
-            //if (File.Exists(@"c:\hashtags.txt"))
-            //{
-            //    thingsToSearch.Clear();// just use users hashtags
-            //    foreach (var line in File.ReadLines(@"c:\hashtags.txt"))
-            //        if (!thingsToSearch.Contains(line.Replace("#", "").Trim()))
-            //            thingsToSearch.Add(line.Replace("#", "").Trim());
-            //    if (enableVoices) c_voice_core.speak($"{thingsToSearch.Count} hashtags loaded from hashtags file");
-            //}
+            if (File.Exists(@"c:\hashtags.txt"))
+            {
+                thingsToSearch.Clear();// just use users hashtags
+                foreach (var line in File.ReadLines(@"c:\hashtags.txt"))
+                    if (!thingsToSearch.Contains(line.Replace("#", "").Trim()))
+                        thingsToSearch.Add(line.Replace("#", "").Trim());
+                if (enableVoices) c_voice_core.speak($"{thingsToSearch.Count} hashtags loaded from hashtags file");
+            }
 
 
-            //if (File.Exists(@"c:\ignore_hashtags.txt"))
-            //    foreach (var line in File.ReadLines(@"c:\ignore_hashtags.txt"))
-            //        thingsToSearch.Remove(line.Replace("#", "").Trim());
+            if (File.Exists(@"c:\ignore_hashtags.txt"))
+                foreach (var line in File.ReadLines(@"c:\ignore_hashtags.txt"))
+                    thingsToSearch.Remove(line.Replace("#", "").Trim());
 
 
             // Generic comments to post
@@ -97,20 +97,20 @@ namespace Instagram_Bot
                 "Just what I needed to see this fine " + DateTime.Now.ToString("dddd")+ " " + (DateTime.Now.Hour >= 12 ? "afternoon" : "morning")   + " :) @" + username,
             };
 
-            //if (File.Exists(@"c:\comments.txt"))
-            //{
-            //    phrasesToComment.Clear();// only use users comments if provided
-            //    foreach (var line in File.ReadLines(@"c:\comments.txt"))
-            //        if (!phrasesToComment.Contains(line.Replace("#", "").Trim()))
-            //            phrasesToComment.Add(line.Replace("#", "").Trim());
-            //    if (enableVoices) c_voice_core.speak($"{phrasesToComment.Count} comments loaded from comments file");
-            //}
+            if (File.Exists(@"c:\comments.txt"))
+            {
+                phrasesToComment.Clear();// only use users comments if provided
+                foreach (var line in File.ReadLines(@"c:\comments.txt"))
+                    if (!phrasesToComment.Contains(line.Replace("#", "").Trim()))
+                        phrasesToComment.Add(line.Replace("#", "").Trim());
+                if (enableVoices) c_voice_core.speak($"{phrasesToComment.Count} comments loaded from comments file");
+            }
 
-            //if (File.Exists(@"c:\ignore_comments.txt"))
-            //    foreach (var line in File.ReadLines(@"c:\ignore_comments.txt"))
-            //        phrasesToComment.Remove(line);
-               
-            
+            if (File.Exists(@"c:\ignore_comments.txt"))
+                foreach (var line in File.ReadLines(@"c:\ignore_comments.txt"))
+                    phrasesToComment.Remove(line);
+
+
             /* END CONFIG */
 
             IwebDriver.Navigate().GoToUrl("https://www.instagram.com/accounts/login/");
