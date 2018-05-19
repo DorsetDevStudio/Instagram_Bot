@@ -56,7 +56,8 @@ namespace Instagram_Bot
 
             if (textBoxUsername.Text.Length < 4)
             {
-                MessageBox.Show("You need to enter your Instagram username. It's used to tag comments and monitoring follower numbers.");
+                MessageBox.Show("You need to enter your Instagram user" +
+                    "name. It's used to tag comments and monitoring follower numbers.");
                 return;
             }
 
