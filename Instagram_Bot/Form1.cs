@@ -84,7 +84,7 @@ namespace Instagram_Bot
                 Task.Factory.StartNew(() =>
                 {
                     th = Thread.CurrentThread;
-                    botCore = new c_bot_core(textBoxUsername.Text.Trim(), textBoxPassword.Text.Trim(), checkBoxStealthMode.Checked, !checkBoxDisableVoices.Checked, sleepTimes);
+                    botCore = new c_bot_core(textBoxUsername.Text.Trim(), textBoxPassword.Text.Trim(), checkBoxStealthMode.Checked, !checkBoxDisableVoices.Checked, sleepTimes, (int)numericUpDownBanLength.Value);
                 });
                 buttonStartBot.Enabled = false;
                 buttonStopBot.Enabled = true;
