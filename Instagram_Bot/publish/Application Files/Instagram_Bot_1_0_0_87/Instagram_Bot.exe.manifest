@@ -1,0 +1,125 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<asmv1:assembly xsi:schemaLocation="urn:schemas-microsoft-com:asm.v1 assembly.adaptive.xsd" manifestVersion="1.0" xmlns:asmv1="urn:schemas-microsoft-com:asm.v1" xmlns="urn:schemas-microsoft-com:asm.v2" xmlns:asmv2="urn:schemas-microsoft-com:asm.v2" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:co.v1="urn:schemas-microsoft-com:clickonce.v1" xmlns:asmv3="urn:schemas-microsoft-com:asm.v3" xmlns:dsig="http://www.w3.org/2000/09/xmldsig#" xmlns:co.v2="urn:schemas-microsoft-com:clickonce.v2">
+  <asmv1:assemblyIdentity name="Instagram_Bot.exe" version="1.0.0.87" publicKeyToken="8a68061991b97742" language="neutral" processorArchitecture="msil" type="win32" />
+  <description asmv2:iconFile="Resources\Images\Martin-Berube-Square-Animal-Pig.ico" xmlns="urn:schemas-microsoft-com:asm.v1" />
+  <application />
+  <entryPoint>
+    <assemblyIdentity name="Instagram_Bot" version="1.0.0.0" publicKeyToken="BDE392AAE645074D" language="neutral" processorArchitecture="msil" />
+    <commandLine file="Instagram_Bot.exe" parameters="" />
+  </entryPoint>
+  <trustInfo>
+    <security>
+      <applicationRequestMinimum>
+        <PermissionSet version="1" class="System.Security.NamedPermissionSet" Name="LocalIntranet" Description="Default rights given to applications on the local intranet" Unrestricted="true" ID="Custom" SameSite="site" />
+        <defaultAssemblyRequest permissionSetReference="Custom" />
+      </applicationRequestMinimum>
+      <requestedPrivileges xmlns="urn:schemas-microsoft-com:asm.v3">
+        <!-- UAC Manifest Options
+             If you want to change the Windows User Account Control level replace the 
+             requestedExecutionLevel node with one of the following.
+
+        <requestedExecutionLevel  level="asInvoker" uiAccess="false" />
+        <requestedExecutionLevel  level="requireAdministrator" uiAccess="false" />
+        <requestedExecutionLevel  level="highestAvailable" uiAccess="false" />
+
+            Specifying requestedExecutionLevel element will disable file and registry virtualization. 
+            Remove this element if your application requires this virtualization for backwards
+            compatibility.
+        -->
+        <requestedExecutionLevel level="asInvoker" uiAccess="false" />
+      </requestedPrivileges>
+    </security>
+  </trustInfo>
+  <dependency>
+    <dependentOS>
+      <osVersionInfo>
+        <os majorVersion="5" minorVersion="1" buildNumber="2600" servicePackMajor="0" />
+      </osVersionInfo>
+    </dependentOS>
+  </dependency>
+  <dependency>
+    <dependentAssembly dependencyType="preRequisite" allowDelayedBinding="true">
+      <assemblyIdentity name="Microsoft.Windows.CommonLanguageRuntime" version="4.0.30319.0" />
+    </dependentAssembly>
+  </dependency>
+  <dependency>
+    <dependentAssembly dependencyType="install" allowDelayedBinding="true" codebase="Instagram_Bot.exe" size="13397936">
+      <assemblyIdentity name="Instagram_Bot" version="1.0.0.0" publicKeyToken="BDE392AAE645074D" language="neutral" processorArchitecture="msil" />
+      <hash>
+        <dsig:Transforms>
+          <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
+        </dsig:Transforms>
+        <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha256" />
+        <dsig:DigestValue>Uz2vvAlIS2ZoK7M1D+R0aaA7goavoIc1WUbptnpJpek=</dsig:DigestValue>
+      </hash>
+    </dependentAssembly>
+  </dependency>
+  <dependency>
+    <dependentAssembly dependencyType="install" allowDelayedBinding="true" codebase="Newtonsoft.Json.dll" size="662528">
+      <assemblyIdentity name="Newtonsoft.Json" version="11.0.0.0" publicKeyToken="30AD4FE6B2A6AEED" language="neutral" processorArchitecture="msil" />
+      <hash>
+        <dsig:Transforms>
+          <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
+        </dsig:Transforms>
+        <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha256" />
+        <dsig:DigestValue>9Yw3T/yq5ONtdA2Q+/f+cNCrtzKM2a86CntwgD6ZS6Q=</dsig:DigestValue>
+      </hash>
+    </dependentAssembly>
+  </dependency>
+  <dependency>
+    <dependentAssembly dependencyType="install" allowDelayedBinding="true" codebase="WebDriver.dll" size="1083392">
+      <assemblyIdentity name="WebDriver" version="3.12.0.0" publicKeyToken="C9DA18476859F51E" language="neutral" processorArchitecture="msil" />
+      <hash>
+        <dsig:Transforms>
+          <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
+        </dsig:Transforms>
+        <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha256" />
+        <dsig:DigestValue>yM9Ciyafq0SbfNaf8WXJRtHdeiQxaGYgmUipAOjRhng=</dsig:DigestValue>
+      </hash>
+    </dependentAssembly>
+  </dependency>
+  <file name="Instagram_Bot.exe.config" size="2655">
+    <hash>
+      <dsig:Transforms>
+        <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
+      </dsig:Transforms>
+      <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha256" />
+      <dsig:DigestValue>GYGXpj/O8HigNnMJiRM/675GD8xFIFhTTdX6B4huIiw=</dsig:DigestValue>
+    </hash>
+  </file>
+  <file name="Resources\Images\Martin-Berube-Square-Animal-Pig.ico" size="176922">
+    <hash>
+      <dsig:Transforms>
+        <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
+      </dsig:Transforms>
+      <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha256" />
+      <dsig:DigestValue>RSiEQ5aUw1ayTVdR414SE9e/FN82HDs4AdMKLquamtI=</dsig:DigestValue>
+    </hash>
+  </file>
+  <file name="Resources\Images\screenshot.PNG" size="90283">
+    <hash>
+      <dsig:Transforms>
+        <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
+      </dsig:Transforms>
+      <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha256" />
+      <dsig:DigestValue>fiMUyzml+q5Po5h4L+Q41Fm+m0mHWoqkIttpvc4Yex0=</dsig:DigestValue>
+    </hash>
+  </file>
+  <compatibility xmlns="urn:schemas-microsoft-com:compatibility.v1">
+    <application>
+      <!-- A list of the Windows versions that this application has been tested on and is
+           is designed to work with. Uncomment the appropriate elements and Windows will 
+           automatically selected the most compatible environment. -->
+      <!-- Windows Vista -->
+      <!--<supportedOS Id="{e2011457-1546-43c5-a5fe-008deee3d3f0}" />-->
+      <!-- Windows 7 -->
+      <!--<supportedOS Id="{35138b9a-5d96-4fbd-8e2d-a2440225f93a}" />-->
+      <!-- Windows 8 -->
+      <!--<supportedOS Id="{4a2f28e3-53b9-4441-ba9c-d69d4a4a6e38}" />-->
+      <!-- Windows 8.1 -->
+      <!--<supportedOS Id="{1f676c76-80e1-4239-95bb-83d0f6d0da78}" />-->
+      <!-- Windows 10 -->
+      <!--<supportedOS Id="{8e0f7a12-bfb3-4fe8-b9a5-48fd50a15a9a}" />-->
+    </application>
+  </compatibility>
+<publisherIdentity name="CN=BOOTY1\Stuart" issuerKeyHash="f93c662d5ebb69d5085b1b0b5c94b3a09bd4bb4a" /><Signature Id="StrongNameSignature" xmlns="http://www.w3.org/2000/09/xmldsig#"><SignedInfo><CanonicalizationMethod Algorithm="http://www.w3.org/2001/10/xml-exc-c14n#" /><SignatureMethod Algorithm="http://www.w3.org/2000/09/xmldsig#rsa-sha256" /><Reference URI=""><Transforms><Transform Algorithm="http://www.w3.org/2000/09/xmldsig#enveloped-signature" /><Transform Algorithm="http://www.w3.org/2001/10/xml-exc-c14n#" /></Transforms><DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha256" /><DigestValue>61YLkRHI+KsJDTfHO+UBonS82olhc4pVr2P11dXbJNY=</DigestValue></Reference></SignedInfo><SignatureValue>hxUxAeTyBu1IPDg+Rgc4YhGy/dmjlGyBI+22Ed1Q1fVGq4RV8XZuysxmcAPgO97+E0OrMu1wiGCCxC35Vhmb69pKUYm9Jfvj6Nmyo2wTe9nUtvhc/yP0tr9Rcpp656ZLsC2PmN2dsNf3eDjm5bOvEZFb38xLAHtH7t9eDwY2bw4=</SignatureValue><KeyInfo Id="StrongNameKeyInfo"><KeyValue><RSAKeyValue><Modulus>0KrLnIo8Gj2McPddHT2zs9mf4C8b55vN/yeM+5/JQ0kDoK5vEOR/d73Cj7vPe0hnjeMHyCcGKtiPDYnhfrsh1RYuOWAOMgRQCrCP6ZR5JMoRDJXFZsL7FlDG3J9JI/SI20I2PbfZbSpyvMNwmK6wf+tyJHbJlsf3Uj/Cam03YJ0=</Modulus><Exponent>AQAB</Exponent></RSAKeyValue></KeyValue><msrel:RelData xmlns:msrel="http://schemas.microsoft.com/windows/rel/2005/reldata"><r:license xmlns:r="urn:mpeg:mpeg21:2003:01-REL-R-NS" xmlns:as="http://schemas.microsoft.com/windows/pki/2005/Authenticode"><r:grant><as:ManifestInformation Hash="d624dbd5d5f563af558a736189dabc74a201e53bc7370d09abf8c811910b56eb" Description="" Url=""><as:assemblyIdentity name="Instagram_Bot.exe" version="1.0.0.87" publicKeyToken="8a68061991b97742" language="neutral" processorArchitecture="msil" type="win32" /></as:ManifestInformation><as:SignedBy /><as:AuthenticodePublisher><as:X509SubjectName>CN=BOOTY1\Stuart</as:X509SubjectName></as:AuthenticodePublisher></r:grant><r:issuer><Signature Id="AuthenticodeSignature" xmlns="http://www.w3.org/2000/09/xmldsig#"><SignedInfo><CanonicalizationMethod Algorithm="http://www.w3.org/2001/10/xml-exc-c14n#" /><SignatureMethod Algorithm="http://www.w3.org/2000/09/xmldsig#rsa-sha256" /><Reference URI=""><Transforms><Transform Algorithm="http://www.w3.org/2000/09/xmldsig#enveloped-signature" /><Transform Algorithm="http://www.w3.org/2001/10/xml-exc-c14n#" /></Transforms><DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha256" /><DigestValue>Owlov33g9OeY34j2O6PvjbZK3kqAaWL7YR6699t6OJQ=</DigestValue></Reference></SignedInfo><SignatureValue>t0cB/8FDF5F7kcEXKN9a/luFm+XDEsBI+avASAWmJ4J+ix/94nD3GM7sxDowbZ/Mke2DbP9lYvSj98LFUEDAVtb/F0WE84tGBv68PzD99O4JNzSpnHy52FRWtRV2jU+3GYlrsC68b+6qVBNCp6TnuHMyrTtX4ZF4rVDPQic/DPc=</SignatureValue><KeyInfo><KeyValue><RSAKeyValue><Modulus>0KrLnIo8Gj2McPddHT2zs9mf4C8b55vN/yeM+5/JQ0kDoK5vEOR/d73Cj7vPe0hnjeMHyCcGKtiPDYnhfrsh1RYuOWAOMgRQCrCP6ZR5JMoRDJXFZsL7FlDG3J9JI/SI20I2PbfZbSpyvMNwmK6wf+tyJHbJlsf3Uj/Cam03YJ0=</Modulus><Exponent>AQAB</Exponent></RSAKeyValue></KeyValue><X509Data><X509Certificate>MIIBzTCCATagAwIBAgIQEuytSZ4W55xH6w1UJFdtaTANBgkqhkiG9w0BAQsFADAlMSMwIQYDVQQDHhoAQgBPAE8AVABZADEAXABTAHQAdQBhAHIAdDAeFw0xODA1MTIxODE5NTRaFw0xOTA1MTMwMDE5NTRaMCUxIzAhBgNVBAMeGgBCAE8ATwBUAFkAMQBcAFMAdAB1AGEAcgB0MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQDQqsucijwaPYxw910dPbOz2Z/gLxvnm83/J4z7n8lDSQOgrm8Q5H93vcKPu897SGeN4wfIJwYq2I8NieF+uyHVFi45YA4yBFAKsI/plHkkyhEMlcVmwvsWUMbcn0kj9IjbQjY9t9ltKnK8w3CYrrB/63IkdsmWx/dSP8JqbTdgnQIDAQABMA0GCSqGSIb3DQEBCwUAA4GBACT6OEUfpw6529bRPkZVZSMGZhI4MP4yvtkRTATy7b7PeEEhseVgc8gwMPaVdR4PX0PE+hKHYdq/+Ej2H/OOqrC/C0DQCOuJ3ln1nkbPGCEikLpu22PlLfqosQ7b/EOmhIPPJlTZMMq5ZwCQnUAzMbOuINHP7NGuqXl9x0KqjhWB</X509Certificate></X509Data></KeyInfo></Signature></r:issuer></r:license></msrel:RelData></KeyInfo></Signature></asmv1:assembly>
