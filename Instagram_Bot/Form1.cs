@@ -12,6 +12,7 @@ namespace Instagram_Bot
 
 
 
+
     public partial class Form1 : Form
     {
         // To install just run https://github.com/DorsetDevStudio/Instagram_Bot/raw/master/Instagram_Bot/publish/setup.exe
