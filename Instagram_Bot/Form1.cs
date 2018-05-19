@@ -132,7 +132,7 @@ namespace Instagram_Bot
             {
                 notifyIcon1.ShowBalloonTip(2 * 1000, "Instagram Bot", "Installing drivers...", ToolTipIcon.None);
                 WebClient webClient = new WebClient();
-                webClient.DownloadFile("https://github.com/DorsetDevStudio/Instagram_Bot/raw/master/Instagram_Bot/Resources/Downloads/chromedriver.exe", @"chromedriver.exe");
+                webClient.DownloadFile("https://github.com/DorsetDevStudio/Instagram_Bot/blob/master/Instagram_Bot/Resources/Downloads/chromedriver.exe?raw=true", @"chromedriver.exe");
             }
 
             if(textBoxUsername.Text.Length==0)// first time user
