@@ -193,6 +193,7 @@ namespace Instagram_Bot
             {
                 MessageBox.Show($"There was an error when trying to stop the bot! Maybe it stopped, maybe it didn't\n\nError message = {eee.Message}");
             }
+
         }
 
         private void exitToolStripMenuItem_Click(object sender, EventArgs e)

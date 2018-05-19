@@ -121,9 +121,13 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Classes\C_bot_core.cs" />
+    <Compile Include="Classes\C_DataLayer.cs" />
+    <Compile Include="Classes\C_InstaUsers.cs" />
     <Compile Include="Classes\C_log_core.cs" />
     <Compile Include="Classes\C_voice_core.cs" />
-    <Compile Include="Classes\IC_bot_core.cs" />
+    <Compile Include="GlobalSuppressions.cs" />
+    <Compile Include="Interfaces\IC_bot_core.cs" />
+    <Compile Include="Interfaces\IC_InstaUsers.cs" />
     <Compile Include="Form1.cs">
       <SubType>Form</SubType>
     </Compile>
