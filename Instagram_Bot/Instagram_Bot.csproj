@@ -159,15 +159,9 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Resources\Databases\" />
-    <Folder Include="Resources\Downloads\" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="ChromeDriver\chromedriver.exe">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Resource>
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="chromedriver.exe">
+    <Resource Include="Resources\Downloads\chromedriver.exe">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Resource>
     <Content Include="Resources\Images\Martin-Berube-Square-Animal-Pig.ico" />
