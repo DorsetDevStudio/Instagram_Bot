@@ -58,7 +58,7 @@ namespace Instagram_Bot.Classes
 
             try
             {
-                conn.Open();
+                if (conn.State != System.Data.ConnectionState.Open) conn.Open();
                 C_voice_core.speak("db connection open");
             }
             catch (InvalidOperationException se)
@@ -82,7 +82,8 @@ namespace Instagram_Bot.Classes
                 SQLcommand.Parameters.AddWithValue("username", IU.username);
                 SQLcommand.Parameters.AddWithValue("datetime", DateTime.Now.ToString(SQLiteDateTimeFormat));
                 SQLcommand.Parameters.AddWithValue("date_last_updated", DateTime.Now.ToString(SQLiteDateTimeFormat));
-                conn.Open();
+
+                if(conn.State != System.Data.ConnectionState.Open) conn.Open();
                 SQLcommand.ExecuteNonQuery();
                 conn.Close();
             }
@@ -122,7 +123,7 @@ namespace Instagram_Bot.Classes
                 SQLcommand.Parameters.AddWithValue("date_last_liked", IU.date_last_liked != null ? IU.date_last_liked.ToString(SQLiteDateTimeFormat) : "");
                 SQLcommand.Parameters.AddWithValue("date_last_updated", DateTime.Now.ToString(SQLiteDateTimeFormat));
                 SQLcommand.Parameters.AddWithValue("SQLiteNullDateString", SQLiteNullDateString);
-                conn.Open();
+                if (conn.State != System.Data.ConnectionState.Open) conn.Open();
                 SQLcommand.ExecuteNonQuery();
                 conn.Close();
             }
@@ -146,7 +147,7 @@ namespace Instagram_Bot.Classes
                 using (SQLiteCommand SQLcommand = new SQLiteCommand("select * from insta_users WHERE username = @username);", conn))
                 {
                     SQLcommand.Parameters.AddWithValue("username", IU.username);
-                    conn.Open();
+                    if (conn.State != System.Data.ConnectionState.Open) conn.Open();
                     using (SQLiteDataReader rdr = SQLcommand.ExecuteReader())
                     {
                         if (rdr.Read()) // there can only ever be 1 row
@@ -188,7 +189,7 @@ namespace Instagram_Bot.Classes
                 using (SQLiteCommand SQLcommand = new SQLiteCommand("select value from config WHERE name=@name limit 1;", conn))
                 {
                     SQLcommand.Parameters.AddWithValue("name", name);
-                    conn.Open();
+                    if (conn.State != System.Data.ConnectionState.Open) conn.Open();
                     using (SQLiteDataReader rdr = SQLcommand.ExecuteReader())
                     {
                         if (rdr.Read()) // there can only ever be 1 row
@@ -265,7 +266,7 @@ namespace Instagram_Bot.Classes
                     "times_unfollowed INTEGER DEFAULT 0," +
                     "date_last_updated TEXT not null" +
                 ");", conn);
-                conn.Open();
+                if (conn.State != System.Data.ConnectionState.Open) conn.Open();
                 SQLcommand.ExecuteNonQuery();
                 conn.Close();
 
@@ -280,7 +281,7 @@ namespace Instagram_Bot.Classes
                        "date_created TEXT not null," +
                        "date_changed TEXT null" +
                    ");", conn);
-                conn.Open();
+                if (conn.State != System.Data.ConnectionState.Open) conn.Open();
                 SQLcommand.ExecuteNonQuery();
                 conn.Close();
 
@@ -295,7 +296,7 @@ namespace Instagram_Bot.Classes
                        "posts INTEGER null," +
                        "datetime TEXT not null" +
                    ");", conn);
-                conn.Open();
+                if (conn.State != System.Data.ConnectionState.Open) conn.Open();
                 SQLcommand.ExecuteNonQuery();
 
                 conn.Close();
