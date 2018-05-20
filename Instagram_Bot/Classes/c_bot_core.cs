@@ -217,13 +217,13 @@ namespace Instagram_Bot
                 }
                 catch (InvalidOperationException ee)
                 {                  
-                    if (enableVoices) C_voice_core.speak($"SQLite invalid operation error {ee.InnerException.ToString()}",true);
-                    MessageBox.Show($"SQLite invalid operation error {ee.InnerException.ToString()}");
+                    if (enableVoices) C_voice_core.speak($"SQLite invalid operation error {ee.InnerException.Message}",true);
+                    MessageBox.Show($"SQLite invalid operation error {ee.InnerException.Message}");
                 }
                 catch (Exception ee)
                 {
-                    if (enableVoices) C_voice_core.speak($"SQLite error {ee.InnerException.ToString()}",true);
-                    MessageBox.Show($"SQLite error {ee.InnerException.ToString()}");
+                    if (enableVoices) C_voice_core.speak($"SQLite error {ee.InnerException.Message}",true);
+                    MessageBox.Show($"SQLite error {ee.InnerException.Message}");
                 }
               
                 DateTime commentingBannedUntil = DateTime.Now;
