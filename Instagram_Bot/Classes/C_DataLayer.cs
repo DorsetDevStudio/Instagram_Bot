@@ -17,11 +17,10 @@ namespace Instagram_Bot.Classes
         }
 
         // db file in end users working directory, will be created if does not exist
-        private string SQLiteFile = "Data.db";
+        private static string SQLiteFile = "Data.db";
         public readonly static string SQLiteDateTimeFormat = "yyyy-MM-dd HH:mm:ss";// DO NOT CHANGE
         private string SQLiteNullDateString = "0001-01-01 00:00:00";// DO NOT CHANGE
-
-        private SQLiteConnection conn = new SQLiteConnection();
+        private static  SQLiteConnection conn = new SQLiteConnection(SQLiteFile);
 
         private void MakeConnection()
         {
@@ -55,22 +54,13 @@ namespace Instagram_Bot.Classes
 
             try
             {
-                conn.ConnectionString = $"Data Source={SQLiteFile};Version=3;";
-
-
-
-                
 
                 conn.Open();
-
-               C_voice_core.speak("db connection open");
-
+                C_voice_core.speak("db connection open");
             }
             catch (Exception se)
             {
-
                 C_voice_core.speak($"SQL Error: {se.Message}");
-
                 System.Windows.Forms.MessageBox.Show($"SQL Error: {se.Message}");
             }
         }
@@ -88,12 +78,11 @@ namespace Instagram_Bot.Classes
                 SQLcommand.Parameters.AddWithValue("datetime", DateTime.Now.ToString(SQLiteDateTimeFormat));
                 SQLcommand.Parameters.AddWithValue("date_last_updated", DateTime.Now.ToString(SQLiteDateTimeFormat));
                 SQLcommand.ExecuteNonQuery();
+                conn.Close();
             }
             catch (SQLiteException se)
             {
-
                 C_voice_core.speak($"SQL Error: {se.Message}");
-
                 IU.error = se.Message;
                 System.Windows.Forms.MessageBox.Show($"SQL Error: {se.Message}");
             }
@@ -126,11 +115,11 @@ namespace Instagram_Bot.Classes
                 SQLcommand.Parameters.AddWithValue("date_last_updated", DateTime.Now.ToString(SQLiteDateTimeFormat));
                 SQLcommand.Parameters.AddWithValue("SQLiteNullDateString", SQLiteNullDateString);
                 SQLcommand.ExecuteNonQuery();
+                conn.Close();
             }
             catch (Exception se)
             {
                 C_voice_core.speak($"SQL Error: {se.Message}");
-
                 IU.error = se.Message;
                 System.Windows.Forms.MessageBox.Show($"SQL Error: {se.Message}");
             }
@@ -139,7 +128,6 @@ namespace Instagram_Bot.Classes
 
         public InstaUser GetInstaUser(InstaUser IU)
         {
-
             try
             {
                 // IU passed in is just a username, populate all other fields then return
@@ -166,6 +154,7 @@ namespace Instagram_Bot.Classes
                             IU.error = "no record for user";
                             C_voice_core.speak(IU.error);
                         }
+                        conn.Close();
                     }
                 }
             }
@@ -223,7 +212,6 @@ namespace Instagram_Bot.Classes
             catch (Exception se)
             {
                 C_voice_core.speak($"SQL Error: {se.Message}");
-
                 System.Windows.Forms.MessageBox.Show($"SQL Error: {se.Message}");
             }
         }
@@ -234,7 +222,6 @@ namespace Instagram_Bot.Classes
             try
             {
                 // DO NOT ALTER TABLES
-
                 // create insta_users table
                 SQLiteCommand SQLcommand = new SQLiteCommand("" +
                 "CREATE TABLE IF NOT EXISTS " +
@@ -280,6 +267,8 @@ namespace Instagram_Bot.Classes
                        "datetime TEXT not null" +
                    ");", conn);
                 SQLcommand.ExecuteNonQuery();
+
+                conn.Close();
             }
             catch (Exception se)
             {
@@ -288,8 +277,5 @@ namespace Instagram_Bot.Classes
                 System.Windows.Forms.MessageBox.Show($"SQL Error: {se.Message}");
             }
         }
-
-
-
     }
 }

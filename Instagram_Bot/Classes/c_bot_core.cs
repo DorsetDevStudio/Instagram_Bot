@@ -210,7 +210,19 @@ namespace Instagram_Bot
 
                 if (enableVoices) C_voice_core.speak($"testing db");
 
-                new Classes.C_DataLayer().AddInstaUser(new Classes.InstaUser() { username = "test_user"});
+                try
+                {
+                    new Classes.C_DataLayer().AddInstaUser(new Classes.InstaUser() { username = "test_user" });
+                }
+                catch (InvalidOperationException ee)
+                {
+                    if (enableVoices) C_voice_core.speak($"SQLite invalid operation error {ee.Message}");
+                }
+                catch (Exception ee)
+                {
+                    if (enableVoices) C_voice_core.speak($"SQLite error {ee.Message}");
+                }
+
 
                 if (enableVoices) C_voice_core.speak($"db test passed");
 
