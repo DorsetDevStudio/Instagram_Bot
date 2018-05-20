@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Data.SQLite;
 using System.Deployment.Application;
+using System.IO;
 
 namespace Instagram_Bot.Classes
 {
@@ -22,18 +23,21 @@ namespace Instagram_Bot.Classes
 
         private void MakeConnection()
         {
-            if (!ApplicationDeployment.IsNetworkDeployed)
+
+            // create db file is not exists already
+            if (!File.Exists(SQLiteFile))
             {
-                // When debugging use the local debugging database
-                if (System.IO.File.Exists(@"c:\DebuggingData.db"))
-                {
-                    SQLiteFile = @"c:\DebuggingData.db";
-                }
+                SQLiteConnection.CreateFile(SQLiteFile);
             }
-            if (conn.State != System.Data.ConnectionState.Open)
+
+            try
             {
                 conn.ConnectionString = $"Data Source={SQLiteFile};Version=3;UseUTF16Encoding=True;";
                 conn.Open();
+            }
+            catch (SQLiteException se)
+            {
+                System.Windows.Forms.MessageBox.Show($"SQL Error: {se.Message}");
             }
         }
 
