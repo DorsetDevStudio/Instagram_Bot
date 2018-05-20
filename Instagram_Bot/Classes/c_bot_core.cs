@@ -39,9 +39,9 @@ namespace Instagram_Bot
             int minutesBetweenBulkActions_max = 15; // must be > minutesBetweenBulkActions_min
 
             // limits based on minimal research
-            int maxFollowsIn24Hours = int.TryParse(new Classes.C_DataLayer().GetConfigValueFor("dailyFollowLimit"), out int _a) ? _a : 500;
-            int maxCommentsIn24Hours = int.TryParse(new Classes.C_DataLayer().GetConfigValueFor("dailyCommentLimit"), out int _a2) ? _a2 : 500;
-            int maxLikesIn24Hours = (int)(maxFollowsIn24Hours * 1.2);
+            int maxFollowsIn24Hours = 100;// int.TryParse(new Classes.C_DataLayer().GetConfigValueFor("dailyFollowLimit"), out int _a) ? _a : 500;
+            int maxCommentsIn24Hours = 100;// int.TryParse(new Classes.C_DataLayer().GetConfigValueFor("dailyCommentLimit"), out int _a2) ? _a2 : 500;
+            int maxLikesIn24Hours = 100;// (int)(maxFollowsIn24Hours * 1.2);
 
             // Any value will work, trial and error
             int maxPostsPerSearch = 5;
