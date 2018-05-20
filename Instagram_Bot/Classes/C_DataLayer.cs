@@ -24,8 +24,7 @@ namespace Instagram_Bot.Classes
 
         private void MakeConnection()
         {
-
-           
+         
             // make sure we have a fresh db with latest schema
             //if (File.Exists(SQLiteConnString))
             //{
@@ -34,17 +33,15 @@ namespace Instagram_Bot.Classes
             //}
 
             // create db file is not exists already
-            if (!File.Exists(SQLiteConnString))
+            if (!File.Exists(SQLiteFile))
             {
                 try
                 {
                     C_voice_core.speak("db file not found, creating");
-                    SQLiteConnection.CreateFile(SQLiteConnString);
+                    SQLiteConnection.CreateFile(SQLiteFile);
                     C_voice_core.speak("done");
-
                     C_voice_core.speak("Initiate Database");
                     InitiateDatabase();
-
                 }
                 catch (Exception se)
                 {
