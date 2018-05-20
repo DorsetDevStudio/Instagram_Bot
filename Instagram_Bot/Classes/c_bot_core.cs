@@ -39,8 +39,8 @@ namespace Instagram_Bot
             int minutesBetweenBulkActions_max = 2; // must be > minutesBetweenBulkActions_min
 
             // limits based on minimal research
-            int maxFollowsIn24Hours = 100;// int.TryParse(new Classes.C_DataLayer().GetConfigValueFor("dailyFollowLimit"), out int _a) ? _a : 500;
-            int maxCommentsIn24Hours = 100;// int.TryParse(new Classes.C_DataLayer().GetConfigValueFor("dailyCommentLimit"), out int _a2) ? _a2 : 500;
+            int maxFollowsIn24Hours = 100;// int.TryParse(//new Classes.C_DataLayer().GetConfigValueFor("dailyFollowLimit"), out int _a) ? _a : 500;
+            int maxCommentsIn24Hours = 100;// int.TryParse(//new Classes.C_DataLayer().GetConfigValueFor("dailyCommentLimit"), out int _a2) ? _a2 : 500;
             int maxLikesIn24Hours = 100;// (int)(maxFollowsIn24Hours * 1.2);
 
             // Any value will work, trial and error
@@ -235,7 +235,7 @@ namespace Instagram_Bot
                 //            if (!obj.Text.ToLower().Trim().Contains("following"))
                 //            {
                 //                if (enableVoices) C_voice_core.speak($"following failed, I will stop following for {banLength} minutes.");
-                //                new Classes.C_DataLayer().SetConfigValueFor("stopFolowingUntilDate", DateTime.Now.AddMinutes(banLength).ToString(Classes.C_DataLayer.SQLiteDateTimeFormat));
+                //                //new Classes.C_DataLayer().SetConfigValueFor("stopFolowingUntilDate", DateTime.Now.AddMinutes(banLength).ToString(Classes.C_DataLayer.SQLiteDateTimeFormat));
                 //                break;
                 //            }
 
@@ -350,7 +350,7 @@ namespace Instagram_Bot
 
 
                     // testing new database functionality
-                    //  new Classes.C_DataLayer().AddInstaUser(IU: new Classes.InstaUser() { username = instagram_post_user.Replace(" ", "_") });
+                    //  //new Classes.C_DataLayer().AddInstaUser(IU: new Classes.InstaUser() { username = instagram_post_user.Replace(" ", "_") });
 
 
                     // if (enableVoices) c_voice_core.speak($"post {postCounter} of {postsToLike.Count} by user {instagram_post_user}");
@@ -393,12 +393,12 @@ namespace Instagram_Bot
                             if (obj.Text.ToUpper().Contains("FOLLOWING".ToUpper()))
                             {
                                 // testing new database functionality
-                                new Classes.C_DataLayer().SaveInstaUser(IU: new Classes.InstaUser() { username = instagram_post_user.Replace(" ", "_"), date_followed_them = DateTime.Now });
+                                //new Classes.C_DataLayer().SaveInstaUser(IU: new Classes.InstaUser() { username = instagram_post_user.Replace(" ", "_"), date_followed_them = DateTime.Now });
                             }
                             else
                             {
                                 if (enableVoices) C_voice_core.speak($"following failed, I will stop following for {banLength} minutes.");
-                                new Classes.C_DataLayer().SetConfigValueFor("stopFolowingUntilDate", DateTime.Now.AddMinutes(banLength).ToString(Classes.C_DataLayer.SQLiteDateTimeFormat));
+                                //new Classes.C_DataLayer().SetConfigValueFor("stopFolowingUntilDate", DateTime.Now.AddMinutes(banLength).ToString(Classes.C_DataLayer.SQLiteDateTimeFormat));
                                 Properties.Settings.Default.Save();
                             }
                             Thread.Sleep(2 * 1000); // wait and see it it worked, will change to following
@@ -512,7 +512,7 @@ namespace Instagram_Bot
 
                         if (enableVoices) C_voice_core.speak($"comment failed, I will stop commenting for {banLength} minutes.");
 
-                        new Classes.C_DataLayer().SetConfigValueFor("stopCommentingUntilDate", DateTime.Now.AddMinutes(banLength).ToString(Classes.C_DataLayer.SQLiteDateTimeFormat));
+                        //new Classes.C_DataLayer().SetConfigValueFor("stopCommentingUntilDate", DateTime.Now.AddMinutes(banLength).ToString(Classes.C_DataLayer.SQLiteDateTimeFormat));
 
 
                     }
@@ -520,7 +520,7 @@ namespace Instagram_Bot
                     {
 
                         // testing new database functionality
-                        new Classes.C_DataLayer().SaveInstaUser(IU: new Classes.InstaUser() { username = instagram_post_user.Replace(" ", "_"), date_last_commented = DateTime.Now });
+                        //new Classes.C_DataLayer().SaveInstaUser(IU: new Classes.InstaUser() { username = instagram_post_user.Replace(" ", "_"), date_last_commented = DateTime.Now });
                     }
 
                     // end COMMENT
@@ -541,7 +541,7 @@ namespace Instagram_Bot
 
 
                             // testing new database functionality
-                            new Classes.C_DataLayer().SaveInstaUser(IU: new Classes.InstaUser() { username = instagram_post_user.Replace(" ", "_"), date_last_liked = DateTime.Now });
+                            //new Classes.C_DataLayer().SaveInstaUser(IU: new Classes.InstaUser() { username = instagram_post_user.Replace(" ", "_"), date_last_liked = DateTime.Now });
 
                             Thread.Sleep(1 * 1000); // wait a amount of time for page to change
                             break;
@@ -601,7 +601,7 @@ namespace Instagram_Bot
 
                     //                if (enableVoices) C_voice_core.speak($"following failed, I will stop following for {banLength} minutes.");
 
-                    //                new Classes.C_DataLayer().SetConfigValueFor("stopFolowingUntilDate", DateTime.Now.AddMinutes(banLength).ToString(Classes.C_DataLayer.SQLiteDateTimeFormat));
+                    //                //new Classes.C_DataLayer().SetConfigValueFor("stopFolowingUntilDate", DateTime.Now.AddMinutes(banLength).ToString(Classes.C_DataLayer.SQLiteDateTimeFormat));
 
                     //                break;
                     //            }
@@ -668,7 +668,7 @@ namespace Instagram_Bot
 
 
 
-                    //                        new Classes.C_DataLayer().SetConfigValueFor("stopUnFollowingUntilDate", DateTime.Now.AddMinutes(banLength).ToString(Classes.C_DataLayer.SQLiteDateTimeFormat));
+                    //                        //new Classes.C_DataLayer().SetConfigValueFor("stopUnFollowingUntilDate", DateTime.Now.AddMinutes(banLength).ToString(Classes.C_DataLayer.SQLiteDateTimeFormat));
 
                     //                        break;
                     //                    }
