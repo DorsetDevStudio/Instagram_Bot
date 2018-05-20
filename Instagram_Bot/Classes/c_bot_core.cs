@@ -346,7 +346,7 @@ namespace Instagram_Bot
 
 
                     // testing new database functionality
-                    new Classes.C_DataLayer().AddInstaUser(IU: new Classes.InstaUser() { username = instagram_post_user.Replace(" ", "_") });
+                  //  new Classes.C_DataLayer().AddInstaUser(IU: new Classes.InstaUser() { username = instagram_post_user.Replace(" ", "_") });
 
 
                     // if (enableVoices) c_voice_core.speak($"post {postCounter} of {postsToLike.Count} by user {instagram_post_user}");
