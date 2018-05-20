@@ -126,7 +126,7 @@ namespace Instagram_Bot
                 IwebDriver.FindElement(By.Name("username")).SendKeys(username);
                 IwebDriver.FindElement(By.Name("password")).SendKeys(password);
                 IwebDriver.FindElement(By.TagName("form")).Submit();
-                Thread.Sleep(2 * 1000); // wait for page to change
+                Thread.Sleep(4 * 1000); // wait for page to change
                                         // end Log in to Instagram
             }
 
@@ -388,7 +388,7 @@ namespace Instagram_Bot
                     }
 
 
-                    if (enableVoices) C_voice_core.speak($"user {instagram_post_user}");
+                   // if (enableVoices) C_voice_core.speak($"user {instagram_post_user}");
 
 
                     // testing new database functionality
@@ -403,12 +403,12 @@ namespace Instagram_Bot
                     {
 
 
-                        if (enableVoices) C_voice_core.speak($"button  {obj.Text}");
+                        //if (enableVoices) C_voice_core.speak($"button  {obj.Text}");
 
 
                         if (obj.Text.ToUpper().Contains("FOLLOWING".ToUpper()))
                         {
-                            if (enableVoices) C_voice_core.speak($"already following");
+                           // if (enableVoices) C_voice_core.speak($"already following");
                             break;
                         }
                         else if (obj.Text.ToUpper().Contains("FOLLOW".ToUpper()) && followingBannedUntil > DateTime.Now)
