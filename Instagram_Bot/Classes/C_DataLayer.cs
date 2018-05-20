@@ -5,7 +5,7 @@ using System.IO;
 
 namespace Instagram_Bot.Classes
 {
-    internal class C_DataLayer : IDisposable
+    internal class C_DataLayer
     {
 
         public C_DataLayer()
@@ -24,8 +24,18 @@ namespace Instagram_Bot.Classes
         private void MakeConnection()
         {
 
+
+            // make sure we have a fresh db with latest schema
+            if (File.Exists(SQLiteFile))
+            {
+                File.Delete(SQLiteFile);
+
+            }
+
+
             // create db file is not exists already
             if (!File.Exists(SQLiteFile))
+
             {
                 try
                 {
@@ -33,18 +43,24 @@ namespace Instagram_Bot.Classes
                     SQLiteConnection.CreateFile(SQLiteFile);
                     C_voice_core.speak("done");
                 }
-                catch (SQLiteException se)
+                catch (Exception se)
                 {
                     System.Windows.Forms.MessageBox.Show($"SQL Error: {se.Message}");
                 }
+            }
+            else
+            {
+                C_voice_core.speak("db file not found");
             }
 
             try
             {
                 conn.ConnectionString = $"Data Source={SQLiteFile};Version=3;UseUTF16Encoding=True;";
                 conn.Open();
+                C_voice_core.speak("db connection open");
+
             }
-            catch (SQLiteException se)
+            catch (Exception se)
             {
                 System.Windows.Forms.MessageBox.Show($"SQL Error: {se.Message}");
             }
@@ -99,7 +115,7 @@ namespace Instagram_Bot.Classes
                 SQLcommand.Parameters.AddWithValue("SQLiteNullDateString", SQLiteNullDateString);
                 SQLcommand.ExecuteNonQuery();
             }
-            catch (SQLiteException se)
+            catch (Exception se)
             {
                 IU.error = se.Message;
                 System.Windows.Forms.MessageBox.Show($"SQL Error: {se.Message}");
@@ -109,29 +125,42 @@ namespace Instagram_Bot.Classes
 
         public InstaUser GetInstaUser(InstaUser IU)
         {
-            // IU passed in is just a username, populate all other fields then return
-            using (SQLiteCommand SQLcommand = new SQLiteCommand("select * from insta_users WHERE username = @username);", conn))
+
+            try
             {
-                SQLcommand.Parameters.AddWithValue("username", IU.username);
-                using (SQLiteDataReader rdr = SQLcommand.ExecuteReader())
+
+                // IU passed in is just a username, populate all other fields then return
+                using (SQLiteCommand SQLcommand = new SQLiteCommand("select * from insta_users WHERE username = @username);", conn))
                 {
-                    if (rdr.Read()) // there can only ever be 1 row
+                    SQLcommand.Parameters.AddWithValue("username", IU.username);
+                    using (SQLiteDataReader rdr = SQLcommand.ExecuteReader())
                     {
-                        if (DateTime.TryParse(rdr["date_created"].ToString(), out DateTime _date_created))
-                            IU.date_created = _date_created;
-                        if (DateTime.TryParse(rdr["date_followed_them"].ToString(), out DateTime _date_followed_them))
-                            IU.date_followed_them = _date_followed_them;
-                        if (DateTime.TryParse(rdr["date_followed_back_detected"].ToString(), out DateTime _date_followed_back_detected))
-                            IU.date_followed_back_detected = _date_followed_back_detected;
-                        if (DateTime.TryParse(rdr["date_last_commented"].ToString(), out DateTime _date_last_commented))
-                            IU.date_last_commented = _date_last_commented;
-                        if (DateTime.TryParse(rdr["date_last_liked"].ToString(), out DateTime _date_last_liked))
-                            IU.date_last_liked = _date_last_liked;
-                    }
-                    else {
-                        IU.error = "no record for user";
+                        if (rdr.Read()) // there can only ever be 1 row
+                        {
+                            if (DateTime.TryParse(rdr["date_created"].ToString(), out DateTime _date_created))
+                                IU.date_created = _date_created;
+                            if (DateTime.TryParse(rdr["date_followed_them"].ToString(), out DateTime _date_followed_them))
+                                IU.date_followed_them = _date_followed_them;
+                            if (DateTime.TryParse(rdr["date_followed_back_detected"].ToString(), out DateTime _date_followed_back_detected))
+                                IU.date_followed_back_detected = _date_followed_back_detected;
+                            if (DateTime.TryParse(rdr["date_last_commented"].ToString(), out DateTime _date_last_commented))
+                                IU.date_last_commented = _date_last_commented;
+                            if (DateTime.TryParse(rdr["date_last_liked"].ToString(), out DateTime _date_last_liked))
+                                IU.date_last_liked = _date_last_liked;
+                        }
+                        else
+                        {
+
+                            IU.error = "no record for user";
+
+                            C_voice_core.speak(IU.error);
+                        }
                     }
                 }
+            }
+            catch (Exception se)
+            {
+                System.Windows.Forms.MessageBox.Show($"SQL Error: {se.Message}");
             }
             return IU;
         }
@@ -147,12 +176,12 @@ namespace Instagram_Bot.Classes
                     {
                         if (rdr.Read()) // there can only ever be 1 row
                         {
-                            rdr["name"].ToString();
+                            return rdr["value"].ToString();
                         }
                     }
                 }
             }
-            catch (SQLiteException se)
+            catch (Exception se)
             {
                 System.Windows.Forms.MessageBox.Show($"SQL Error: {se.Message}");
             }
@@ -178,7 +207,7 @@ namespace Instagram_Bot.Classes
                     SQLcommand.ExecuteNonQuery();
                 }
             }
-            catch (SQLiteException se)
+            catch (Exception se)
             {
                 System.Windows.Forms.MessageBox.Show($"SQL Error: {se.Message}");
             }
@@ -237,24 +266,13 @@ namespace Instagram_Bot.Classes
                    ");", conn);
                 SQLcommand.ExecuteNonQuery();
             }
-            catch (SQLiteException se)
+            catch (Exception se)
             {
                 System.Windows.Forms.MessageBox.Show($"SQL Error: {se.Message}");
             }
         }
 
-        public void Dispose()
-        {
-            if (conn.State == System.Data.ConnectionState.Open)
-            {
-                try
-                {
-                    conn.Close();
-                    conn.Dispose();
-                }
-                catch { }
-            }
-        }
+
 
     }
 }
