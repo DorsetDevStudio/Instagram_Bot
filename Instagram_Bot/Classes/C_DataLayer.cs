@@ -21,28 +21,29 @@ namespace Instagram_Bot.Classes
 
         // db file in end users working directory, will be created if does not exist
         private static string SQLiteFile = "Data.db3";
+        private static string SQLiteConnString = $@"Data Source={SQLiteFile};Version=3;UTF8Encoding=True;";
         public readonly static string SQLiteDateTimeFormat = "yyyy-MM-dd HH:mm:ss";// DO NOT CHANGE
         private string SQLiteNullDateString = "0001-01-01 00:00:00";// DO NOT CHANGE
-        private static  SQLiteConnection conn = new SQLiteConnection(SQLiteFile,true);
+        private static  SQLiteConnection conn = new SQLiteConnection(SQLiteConnString, true);
 
         private void MakeConnection()
         {
 
            
             // make sure we have a fresh db with latest schema
-            if (File.Exists(SQLiteFile))
+            if (File.Exists(SQLiteConnString))
             {
-                File.Delete(SQLiteFile);
+                File.Delete(SQLiteConnString);
 
             }
 
             // create db file is not exists already
-            if (!File.Exists(SQLiteFile))
+            if (!File.Exists(SQLiteConnString))
             {
                 try
                 {
                     C_voice_core.speak("db file not found, creating");
-                    SQLiteConnection.CreateFile(SQLiteFile);
+                    SQLiteConnection.CreateFile(SQLiteConnString);
                     C_voice_core.speak("done");
                 }
                 catch (Exception se)
