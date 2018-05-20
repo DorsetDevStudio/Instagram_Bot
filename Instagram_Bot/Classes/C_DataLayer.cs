@@ -32,11 +32,11 @@ namespace Instagram_Bot.Classes
 
            
             // make sure we have a fresh db with latest schema
-            if (File.Exists(SQLiteConnString))
-            {
-                File.Delete(SQLiteConnString);
+            //if (File.Exists(SQLiteConnString))
+            //{
+            //    File.Delete(SQLiteConnString);
 
-            }
+            //}
 
             // create db file is not exists already
             if (!File.Exists(SQLiteConnString))

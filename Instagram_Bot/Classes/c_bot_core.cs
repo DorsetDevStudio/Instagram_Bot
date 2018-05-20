@@ -254,10 +254,8 @@ namespace Instagram_Bot
                             {
                                 if (enableVoices) C_voice_core.speak($"following failed, I will stop following for {banLength} minutes.");
                                 followingBannedUntil = DateTime.Now.AddMinutes(banLength);
-                                //new Classes.C_DataLayer().SetConfigValueFor("stopFolowingUntilDate", DateTime.Now.AddMinutes(banLength).ToString(Classes.C_DataLayer.SQLiteDateTimeFormat));
                                 break;
                             }
-
                         }
                         catch
                         {
@@ -281,10 +279,8 @@ namespace Instagram_Bot
                             {
                                 if (enableVoices) C_voice_core.speak($"following failed, I will stop following for {banLength} minutes.");
                                 followingBannedUntil = DateTime.Now.AddMinutes(banLength);
-                                //new Classes.C_DataLayer().SetConfigValueFor("stopFolowingUntilDate", DateTime.Now.AddMinutes(banLength).ToString(Classes.C_DataLayer.SQLiteDateTimeFormat));
                                 break;
                             }
-
                         }
                         catch
                         {
@@ -293,12 +289,6 @@ namespace Instagram_Bot
                     }
                 }
 
-
-
-                //  if (enableVoices) C_voice_core.speak($"debugging");
-
-
-                // Application.DoEvents(); // Prevent warnings during debugging.
                 var mySearch = thingsToSearch[new Random().Next(0, thingsToSearch.Count - 1)];
                 if (enableVoices) C_voice_core.speak($"Ok, let's get some followers");
 
@@ -320,10 +310,6 @@ namespace Instagram_Bot
                 if (enableVoices) C_voice_core.speak($"{postsToLike.Count} posts found");
 
                 int postCounter = 0;
-
-
-
-                
 
                 // load results in turn and like/follow them
                 foreach (var link in postsToLike)
@@ -384,7 +370,6 @@ namespace Instagram_Bot
                     Thread.Sleep(2 * 1000); // wait a short amount of time for page to change
 
 
-
                     // get the username of the owner of the current post
                     string instagram_post_user = "";
                     foreach (var obj in IwebDriver.FindElements(By.TagName("a")))
@@ -396,24 +381,12 @@ namespace Instagram_Bot
                         }
                     }
 
-
-                    // if (enableVoices) C_voice_core.speak($"user {instagram_post_user}");
-
-
                     // testing new database functionality
-                    //  //new Classes.C_DataLayer().AddInstaUser(IU: new Classes.InstaUser() { username = instagram_post_user.Replace(" ", "_") });
-
-
-                    // if (enableVoices) c_voice_core.speak($"post {postCounter} of {postsToLike.Count} by user {instagram_post_user}");
-
+                    new Classes.C_DataLayer().AddInstaUser(IU: new Classes.InstaUser() { username = instagram_post_user.Replace(" ", "_") });
 
                     // FOLLOW
                     foreach (var obj in IwebDriver.FindElements(By.TagName("button")))
                     {
-
-
-                        //if (enableVoices) C_voice_core.speak($"button  {obj.Text}");
-
 
                         if (obj.Text.ToUpper().Contains("FOLLOWING".ToUpper()))
                         {
@@ -444,36 +417,27 @@ namespace Instagram_Bot
                             if (obj.Text.ToUpper().Contains("FOLLOWING".ToUpper()))
                             {
                                 // testing new database functionality
-                                //new Classes.C_DataLayer().SaveInstaUser(IU: new Classes.InstaUser() { username = instagram_post_user.Replace(" ", "_"), date_followed_them = DateTime.Now });
+                                new Classes.C_DataLayer().SaveInstaUser(IU: new Classes.InstaUser() { username = instagram_post_user.Replace(" ", "_"), date_followed_them = DateTime.Now });
                             }
                             else
                             {
-
                                 commentingBannedUntil = DateTime.Now.AddMinutes(banLength);
                                 if (enableVoices) C_voice_core.speak($"following failed, I will stop following for {banLength} minutes.");
-                                //new Classes.C_DataLayer().SetConfigValueFor("stopFolowingUntilDate", DateTime.Now.AddMinutes(banLength).ToString(Classes.C_DataLayer.SQLiteDateTimeFormat));
-
                             }
                             Thread.Sleep(2 * 1000); // wait and see it it worked, will change to following
                             break;
                         }
-
-
-
                     }
                     // end FOLLOW
 
-                    //if (enableVoices) c_voice_core.speak($"{phrasesToComment.Count} comments to pick from");
-
-                    commentingBannedUntil = CommentOnPost(username, enableVoices, banLength, secondsBetweenActions_min, secondsBetweenActions_max, phrasesToComment, commentingBannedUntil);
+   
+                    commentingBannedUntil = CommentOnPost(username, enableVoices, banLength, secondsBetweenActions_min, secondsBetweenActions_max, phrasesToComment, commentingBannedUntil, instagram_post_user);
 
                     var _likeBanminutesLeft = (likingBannedUntil - DateTime.Now).Minutes;
                     var _likeBanSecondsLeft = (likingBannedUntil - DateTime.Now).Seconds;
 
-
                     if (_likeBanSecondsLeft > 0)
                     {
-
 
                         if (_likeBanSecondsLeft == 0) // must be a few seconds left 
                         {
@@ -497,7 +461,7 @@ namespace Instagram_Bot
                                 obj.Click();
                                 if (enableVoices) C_voice_core.speak($"done");
                                 // testing new database functionality
-                                //new Classes.C_DataLayer().SaveInstaUser(IU: new Classes.InstaUser() { username = instagram_post_user.Replace(" ", "_"), date_last_liked = DateTime.Now });
+                                new Classes.C_DataLayer().SaveInstaUser(IU: new Classes.InstaUser() { username = instagram_post_user.Replace(" ", "_"), date_last_liked = DateTime.Now });
                                 Thread.Sleep(1 * 1000); // wait a amount of time for page to change
                                 if (obj.Text.ToUpper().Contains("LIKE") && !obj.Text.ToUpper().Contains("UNLIKE"))
                                 {
@@ -696,7 +660,7 @@ namespace Instagram_Bot
 
 
 
-        private DateTime CommentOnPost(string username, bool enableVoices, int banLength, int secondsBetweenActions_min, int secondsBetweenActions_max, List<string> phrasesToComment, DateTime commentingBannedUntil)
+        private DateTime CommentOnPost(string username, bool enableVoices, int banLength, int secondsBetweenActions_min, int secondsBetweenActions_max, List<string> phrasesToComment, DateTime commentingBannedUntil, string instagram_post_user)
         {
             // START COMMENTING
             // check if we are banned from commenting
@@ -786,7 +750,14 @@ namespace Instagram_Bot
                         {
                             if (enableVoices) C_voice_core.speak($"comment failed, I will stop commenting for {banLength} minutes.");
                             commentingBannedUntil = DateTime.Now.AddMinutes(banLength);
-                            //new Classes.C_DataLayer().SetConfigValueFor("stopCommentingUntilDate", DateTime.Now.AddMinutes(banLength).ToString(Classes.C_DataLayer.SQLiteDateTimeFormat));
+                        }
+                        else {
+
+                            // commenting worked
+
+                            // testing new database functionality
+                            new Classes.C_DataLayer().SaveInstaUser(IU: new Classes.InstaUser() { username = instagram_post_user.Replace(" ", "_"), date_last_commented = DateTime.Now });
+
                         }
                         break;
                     }
@@ -795,13 +766,6 @@ namespace Instagram_Bot
             // END COMMENTING
             return commentingBannedUntil;
         }
-
-
-
-
-
-
-
 
 
 
