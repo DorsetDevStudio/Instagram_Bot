@@ -213,19 +213,19 @@ namespace Instagram_Bot
                 try
                 {
                     new Classes.C_DataLayer().AddInstaUser(new Classes.InstaUser() { username = "test_user" });
+                    if (enableVoices) C_voice_core.speak($"db test passed");
                 }
                 catch (InvalidOperationException ee)
-                {
-                    if (enableVoices) C_voice_core.speak($"SQLite invalid operation error {ee.Message}");
+                {                  
+                    if (enableVoices) C_voice_core.speak($"SQLite invalid operation error {ee.Message}",true);
+                    MessageBox.Show($"SQLite invalid operation error {ee.Message}");
                 }
                 catch (Exception ee)
                 {
-                    if (enableVoices) C_voice_core.speak($"SQLite error {ee.Message}");
+                    if (enableVoices) C_voice_core.speak($"SQLite error {ee.Message}",true);
+                    MessageBox.Show($"SQLite error {ee.Message}");
                 }
-
-
-                if (enableVoices) C_voice_core.speak($"db test passed");
-
+              
                 DateTime commentingBannedUntil = DateTime.Now;
                 DateTime followingBannedUntil = DateTime.Now;
                 DateTime unfollowingBannedUntil = DateTime.Now;
