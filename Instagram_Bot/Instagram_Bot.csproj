@@ -31,7 +31,7 @@
     <PublisherName>Dorset Dev Studio</PublisherName>
     <SuiteName>Instagram Bot</SuiteName>
     <OpenBrowserOnPublish>false</OpenBrowserOnPublish>
-    <ApplicationRevision>113</ApplicationRevision>
+    <ApplicationRevision>114</ApplicationRevision>
     <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
     <UseApplicationTrust>false</UseApplicationTrust>
     <CreateDesktopShortcut>true</CreateDesktopShortcut>
@@ -176,16 +176,15 @@
       <Install>false</Install>
     </BootstrapperPackage>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="Resources\Databases\" />
+  </ItemGroup>
   <ItemGroup>
     <Resource Include="Resources\Downloads\chromedriver.exe">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Resource>
     <Content Include="Resources\Images\Martin-Berube-Square-Animal-Pig.ico" />
     <Content Include="Resources\Images\screenshot.PNG" />
-    <None Include="Resources\Databases\Data.db">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
     <None Include="Resources\Images\Pig-icon.png" />
   </ItemGroup>
   <ItemGroup />

@@ -27,7 +27,16 @@ namespace Instagram_Bot.Classes
             // create db file is not exists already
             if (!File.Exists(SQLiteFile))
             {
-                SQLiteConnection.CreateFile(SQLiteFile);
+                try
+                {
+                    C_voice_core.speak("db file not found, creating");
+                    SQLiteConnection.CreateFile(SQLiteFile);
+                    C_voice_core.speak("done");
+                }
+                catch (SQLiteException se)
+                {
+                    System.Windows.Forms.MessageBox.Show($"SQL Error: {se.Message}");
+                }
             }
 
             try
