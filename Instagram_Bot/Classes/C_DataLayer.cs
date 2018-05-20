@@ -11,13 +11,8 @@ namespace Instagram_Bot.Classes
 
         public C_DataLayer()
         {
-
-            C_voice_core.speak("MakeConnection");
+            //C_voice_core.speak("MakeConnection");
             MakeConnection();
-
-
-            C_voice_core.speak("InitiateDatabase");
-            InitiateDatabase();// todo, only do this once
         }
 
         // db file in end users working directory, will be created if does not exist
@@ -46,6 +41,10 @@ namespace Instagram_Bot.Classes
                     C_voice_core.speak("db file not found, creating");
                     SQLiteConnection.CreateFile(SQLiteConnString);
                     C_voice_core.speak("done");
+
+                    C_voice_core.speak("Initiate Database");
+                    InitiateDatabase();
+
                 }
                 catch (Exception se)
                 {
@@ -54,13 +53,13 @@ namespace Instagram_Bot.Classes
             }
             else
             {
-                C_voice_core.speak("db file found");
+               // C_voice_core.speak("db file found");
             }
 
             try
             {
                 if (conn.State != System.Data.ConnectionState.Open) conn.Open();
-                C_voice_core.speak("db connection open");
+                //C_voice_core.speak("db connection open");
             }
             catch (InvalidOperationException se)
             {
