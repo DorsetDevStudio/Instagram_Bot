@@ -439,6 +439,12 @@ namespace Instagram_Bot
                             Thread.Sleep(2 * 1000); // wait and see it it worked, will change to following
                             if (obj.Text.ToUpper().Contains("FOLLOWING".ToUpper()))
                             {
+
+                                // testing new database functionality
+                                new Classes.C_DataLayer().SaveInstaUser(IU: new Classes.InstaUser(){ username = instagram_post_user.Replace(" ", "_"), date_followed_them = DateTime.Now });
+
+
+
                                 Properties.Settings.Default.totalFollowsSinceCountersStarted += 1;
                                 Properties.Settings.Default.Save();
                             }
@@ -569,6 +575,11 @@ namespace Instagram_Bot
                                 Properties.Settings.Default.Save();
 
                             }
+                            else {
+
+                                // testing new database functionality
+                                new Classes.C_DataLayer().SaveInstaUser(IU: new Classes.InstaUser() { username = instagram_post_user.Replace(" ", "_"), date_last_commented = DateTime.Now });
+                            }
 
                             // end COMMENT
 
@@ -585,6 +596,11 @@ namespace Instagram_Bot
                                 if (enableVoices) C_voice_core.speak($"liking");
                                 obj.Click();
                                 if (enableVoices) C_voice_core.speak($"done");
+
+
+                                // testing new database functionality
+                                new Classes.C_DataLayer().SaveInstaUser(IU: new Classes.InstaUser() { username = instagram_post_user.Replace(" ", "_"), date_last_liked = DateTime.Now });
+
                                 Thread.Sleep(1 * 1000); // wait a amount of time for page to change
                                 break;
                             }
