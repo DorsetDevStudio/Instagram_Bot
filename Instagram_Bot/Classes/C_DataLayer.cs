@@ -11,8 +11,11 @@ namespace Instagram_Bot.Classes
         public C_DataLayer()
         {
 
-            C_voice_core.speak("initiating DataLayer");
+            C_voice_core.speak("MakeConnection");
             MakeConnection();
+
+
+            C_voice_core.speak("InitiateDatabase");
             InitiateDatabase();// todo, only do this once
         }
 
@@ -25,7 +28,7 @@ namespace Instagram_Bot.Classes
         private void MakeConnection()
         {
 
-            C_voice_core.speak("making connection");
+           
             // make sure we have a fresh db with latest schema
             if (File.Exists(SQLiteFile))
             {
@@ -49,7 +52,7 @@ namespace Instagram_Bot.Classes
             }
             else
             {
-                C_voice_core.speak("db file not found");
+                C_voice_core.speak("db file found");
             }
 
             try
@@ -69,9 +72,11 @@ namespace Instagram_Bot.Classes
         {
             try
             {
+                C_voice_core.speak("db AddInstaUser");
+
+
                 // only add if not already there
-                SQLiteCommand SQLcommand = new SQLiteCommand("" +
-                "insert into insta_users (username, date_created,date_last_updated) select @username, @datetime, @date_last_updated " +
+                SQLiteCommand SQLcommand = new SQLiteCommand("insert into insta_users (username, date_created,date_last_updated) select @username, @datetime, @date_last_updated " +
                 "WHERE NOT EXISTS(SELECT 1 FROM insta_users WHERE username = @username);", conn);
                 SQLcommand.Parameters.AddWithValue("username", IU.username);
                 SQLcommand.Parameters.AddWithValue("datetime", DateTime.Now.ToString(SQLiteDateTimeFormat));
@@ -96,9 +101,11 @@ namespace Instagram_Bot.Classes
             AddInstaUser(IU);
             try
             {
+
+                C_voice_core.speak("db SaveInstaUser");
+
                 // now we know they exist, we can update all other fields
-                SQLiteCommand SQLcommand = new SQLiteCommand("" +
-                    "update insta_users set " +
+                SQLiteCommand SQLcommand = new SQLiteCommand("update insta_users set " +
                     "date_followed_them             = (case when @date_followed_them = @SQLiteNullDateString then date_followed_them else @date_followed_them end), " +
                     "date_followed_back_detected    = (case when @date_followed_back_detected = @SQLiteNullDateString then date_followed_back_detected else @date_followed_back_detected end), " +
                     "date_last_commented            = (case when @date_last_commented = @SQLiteNullDateString then date_last_commented else @date_last_commented end), " +
@@ -127,6 +134,9 @@ namespace Instagram_Bot.Classes
 
         public InstaUser GetInstaUser(InstaUser IU)
         {
+
+            C_voice_core.speak("db GetInstaUser");
+
             try
             {
                 // IU passed in is just a username, populate all other fields then return
@@ -166,6 +176,9 @@ namespace Instagram_Bot.Classes
 
         public string GetConfigValueFor(string name)
         {
+
+            C_voice_core.speak("db GetConfigValueFor");
+
             try
             {
                 using (SQLiteCommand SQLcommand = new SQLiteCommand("select value from config WHERE name=@name limit 1;", conn))
@@ -192,10 +205,14 @@ namespace Instagram_Bot.Classes
         //upserts a config value
         public void SetConfigValueFor(string name, string value)
         {
+
+
+
+            C_voice_core.speak("db SetConfigValueFor");
+
             try
             {
-                using (SQLiteCommand SQLcommand = new SQLiteCommand("" +
-                "insert into config (name, value, date_created) select @name, @value, @date " +
+                using (SQLiteCommand SQLcommand = new SQLiteCommand("insert into config (name, value, date_created) select @name, @value, @date " +
                 "where not exists (select 1 from config where name=@name); " +
                 "update config set value = @value, date_changed = @date where name=@name and value != @value; ", conn))
                 {
@@ -218,12 +235,16 @@ namespace Instagram_Bot.Classes
         //TODO: create database schema
         private void InitiateDatabase()
         {
+
+
+
+            C_voice_core.speak("db create table insta_users");
+
             try
             {
                 // DO NOT ALTER TABLES
                 // create insta_users table
-                SQLiteCommand SQLcommand = new SQLiteCommand("" +
-                "CREATE TABLE IF NOT EXISTS " +
+                SQLiteCommand SQLcommand = new SQLiteCommand("CREATE TABLE IF NOT EXISTS " +
                 "insta_users" +
                 "(" +
                     "id INTEGER PRIMARY KEY AUTOINCREMENT," +
@@ -240,10 +261,10 @@ namespace Instagram_Bot.Classes
                 ");", conn);
                 SQLcommand.ExecuteNonQuery();
 
+                C_voice_core.speak("db create table config");
 
                 // create config table (name / values)
-                SQLcommand = new SQLiteCommand("" +
-                   "CREATE TABLE IF NOT EXISTS " +
+                SQLcommand = new SQLiteCommand("CREATE TABLE IF NOT EXISTS " +
                    "config" +
                    "(" +
                        "name varchar(50) PRIMARY KEY not null," +
@@ -253,10 +274,9 @@ namespace Instagram_Bot.Classes
                    ");", conn);
                 SQLcommand.ExecuteNonQuery();
 
-
+                C_voice_core.speak("db create table stat_log");
                 // create stat_log
-                SQLcommand = new SQLiteCommand("" +
-                   "CREATE TABLE IF NOT EXISTS " +
+                SQLcommand = new SQLiteCommand("CREATE TABLE IF NOT EXISTS " +
                    "stat_log" +
                    "(" +
                        "id INTEGER PRIMARY KEY AUTOINCREMENT," +
