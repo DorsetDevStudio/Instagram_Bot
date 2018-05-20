@@ -1,7 +1,7 @@
 ﻿using System;
-using System.Data.SQLite;
 using System.Deployment.Application;
 using System.IO;
+using System.Data.SQLite;
 
 namespace Instagram_Bot.Classes
 {
