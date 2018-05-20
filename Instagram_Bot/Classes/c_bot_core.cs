@@ -355,6 +355,11 @@ namespace Instagram_Bot
                     // FOLLOW
                     foreach (var obj in IwebDriver.FindElements(By.TagName("button")))
                     {
+
+
+                        if (enableVoices) C_voice_core.speak($"button  {obj.Text}");
+
+
                         if (obj.Text.ToUpper().Contains("FOLLOWING".ToUpper()))
                         {
                             if (enableVoices) C_voice_core.speak($"already following");
