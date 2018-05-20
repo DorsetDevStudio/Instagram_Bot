@@ -61,7 +61,7 @@ namespace Instagram_Bot.Classes
                 conn.Open();
                 C_voice_core.speak("db connection open");
             }
-            catch (Exception se)
+            catch (InvalidOperationException se)
             {
                 C_voice_core.speak($"SQL Error: {se.Message}");
                 System.Windows.Forms.MessageBox.Show($"SQL Error: {se.Message}");
@@ -82,10 +82,11 @@ namespace Instagram_Bot.Classes
                 SQLcommand.Parameters.AddWithValue("username", IU.username);
                 SQLcommand.Parameters.AddWithValue("datetime", DateTime.Now.ToString(SQLiteDateTimeFormat));
                 SQLcommand.Parameters.AddWithValue("date_last_updated", DateTime.Now.ToString(SQLiteDateTimeFormat));
+                conn.Open();
                 SQLcommand.ExecuteNonQuery();
                 conn.Close();
             }
-            catch (SQLiteException se)
+            catch (InvalidOperationException se)
             {
                 C_voice_core.speak($"SQL Error: {se.Message}");
                 IU.error = se.Message;
@@ -121,10 +122,11 @@ namespace Instagram_Bot.Classes
                 SQLcommand.Parameters.AddWithValue("date_last_liked", IU.date_last_liked != null ? IU.date_last_liked.ToString(SQLiteDateTimeFormat) : "");
                 SQLcommand.Parameters.AddWithValue("date_last_updated", DateTime.Now.ToString(SQLiteDateTimeFormat));
                 SQLcommand.Parameters.AddWithValue("SQLiteNullDateString", SQLiteNullDateString);
+                conn.Open();
                 SQLcommand.ExecuteNonQuery();
                 conn.Close();
             }
-            catch (Exception se)
+            catch (InvalidOperationException se)
             {
                 C_voice_core.speak($"SQL Error: {se.Message}");
                 IU.error = se.Message;
@@ -144,6 +146,7 @@ namespace Instagram_Bot.Classes
                 using (SQLiteCommand SQLcommand = new SQLiteCommand("select * from insta_users WHERE username = @username);", conn))
                 {
                     SQLcommand.Parameters.AddWithValue("username", IU.username);
+                    conn.Open();
                     using (SQLiteDataReader rdr = SQLcommand.ExecuteReader())
                     {
                         if (rdr.Read()) // there can only ever be 1 row
@@ -168,7 +171,7 @@ namespace Instagram_Bot.Classes
                     }
                 }
             }
-            catch (Exception se)
+            catch (InvalidOperationException se)
             {
                 System.Windows.Forms.MessageBox.Show($"SQL Error: {se.Message}");
             }
@@ -185,6 +188,7 @@ namespace Instagram_Bot.Classes
                 using (SQLiteCommand SQLcommand = new SQLiteCommand("select value from config WHERE name=@name limit 1;", conn))
                 {
                     SQLcommand.Parameters.AddWithValue("name", name);
+                    conn.Open();
                     using (SQLiteDataReader rdr = SQLcommand.ExecuteReader())
                     {
                         if (rdr.Read()) // there can only ever be 1 row
@@ -194,7 +198,7 @@ namespace Instagram_Bot.Classes
                     }
                 }
             }
-            catch (Exception se)
+            catch (InvalidOperationException se)
             {
                 C_voice_core.speak($"SQL Error: {se.Message}");
 
@@ -223,10 +227,11 @@ namespace Instagram_Bot.Classes
                         SQLcommand.Parameters.AddWithValue("value", DBNull.Value);
                     else
                         SQLcommand.Parameters.AddWithValue("value", value);
+                    conn.Open();
                     SQLcommand.ExecuteNonQuery();
                 }
             }
-            catch (Exception se)
+            catch (InvalidOperationException se)
             {
                 C_voice_core.speak($"SQL Error: {se.Message}");
                 System.Windows.Forms.MessageBox.Show($"SQL Error: {se.Message}");
@@ -260,7 +265,9 @@ namespace Instagram_Bot.Classes
                     "times_unfollowed INTEGER DEFAULT 0," +
                     "date_last_updated TEXT not null" +
                 ");", conn);
+                conn.Open();
                 SQLcommand.ExecuteNonQuery();
+                conn.Close();
 
                 C_voice_core.speak("db create table config");
 
@@ -273,7 +280,9 @@ namespace Instagram_Bot.Classes
                        "date_created TEXT not null," +
                        "date_changed TEXT null" +
                    ");", conn);
+                conn.Open();
                 SQLcommand.ExecuteNonQuery();
+                conn.Close();
 
                 C_voice_core.speak("db create table stat_log");
                 // create stat_log
@@ -286,11 +295,12 @@ namespace Instagram_Bot.Classes
                        "posts INTEGER null," +
                        "datetime TEXT not null" +
                    ");", conn);
+                conn.Open();
                 SQLcommand.ExecuteNonQuery();
 
                 conn.Close();
             }
-            catch (Exception se)
+            catch (InvalidOperationException se)
             {
                 C_voice_core.speak($"SQL Error: {se.Message}");
 
