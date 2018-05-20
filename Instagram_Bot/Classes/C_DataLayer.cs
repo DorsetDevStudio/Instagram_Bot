@@ -17,10 +17,10 @@ namespace Instagram_Bot.Classes
         }
 
         // db file in end users working directory, will be created if does not exist
-        private static string SQLiteFile = "Data.db";
+        private static string SQLiteFile = "Data.db3";
         public readonly static string SQLiteDateTimeFormat = "yyyy-MM-dd HH:mm:ss";// DO NOT CHANGE
         private string SQLiteNullDateString = "0001-01-01 00:00:00";// DO NOT CHANGE
-        private static  SQLiteConnection conn = new SQLiteConnection(SQLiteFile);
+        private static  SQLiteConnection conn = new SQLiteConnection(SQLiteFile,true);
 
         private void MakeConnection()
         {
@@ -54,7 +54,6 @@ namespace Instagram_Bot.Classes
 
             try
             {
-
                 conn.Open();
                 C_voice_core.speak("db connection open");
             }
