@@ -41,6 +41,8 @@
             this.checkBoxStealthMode = new System.Windows.Forms.CheckBox();
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.numericUpDownBanLength = new System.Windows.Forms.NumericUpDown();
+            this.label7 = new System.Windows.Forms.Label();
             this.label5 = new System.Windows.Forms.Label();
             this.label6 = new System.Windows.Forms.Label();
             this.dateTimePicker3 = new System.Windows.Forms.DateTimePicker();
@@ -56,13 +58,11 @@
             this.notifyIcon1 = new System.Windows.Forms.NotifyIcon(this.components);
             this.contextMenuStripForNotifyIcon = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.exitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.label7 = new System.Windows.Forms.Label();
-            this.numericUpDownBanLength = new System.Windows.Forms.NumericUpDown();
             this.statusStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.groupBox1.SuspendLayout();
-            this.contextMenuStripForNotifyIcon.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownBanLength)).BeginInit();
+            this.contextMenuStripForNotifyIcon.SuspendLayout();
             this.SuspendLayout();
             // 
             // statusStrip1
@@ -181,6 +181,37 @@
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Settings";
             // 
+            // numericUpDownBanLength
+            // 
+            this.numericUpDownBanLength.Location = new System.Drawing.Point(216, 198);
+            this.numericUpDownBanLength.Maximum = new decimal(new int[] {
+            1440,
+            0,
+            0,
+            0});
+            this.numericUpDownBanLength.Minimum = new decimal(new int[] {
+            5,
+            0,
+            0,
+            0});
+            this.numericUpDownBanLength.Name = "numericUpDownBanLength";
+            this.numericUpDownBanLength.Size = new System.Drawing.Size(57, 20);
+            this.numericUpDownBanLength.TabIndex = 19;
+            this.numericUpDownBanLength.Value = new decimal(new int[] {
+            5,
+            0,
+            0,
+            0});
+            // 
+            // label7
+            // 
+            this.label7.AutoSize = true;
+            this.label7.Location = new System.Drawing.Point(24, 200);
+            this.label7.Name = "label7";
+            this.label7.Size = new System.Drawing.Size(186, 13);
+            this.label7.TabIndex = 18;
+            this.label7.Text = "Minutes to stop trying after an a failure";
+            // 
             // label5
             // 
             this.label5.AutoSize = true;
@@ -220,7 +251,7 @@
             this.dateTimePicker4.ShowUpDown = true;
             this.dateTimePicker4.Size = new System.Drawing.Size(65, 20);
             this.dateTimePicker4.TabIndex = 14;
-            this.dateTimePicker4.Value = new System.DateTime(2018, 5, 15, 23, 59, 59, 0);
+            this.dateTimePicker4.Value = new System.DateTime(2018, 5, 15, 22, 0, 0, 0);
             this.dateTimePicker4.ValueChanged += new System.EventHandler(this.dateTimePicker4_ValueChanged);
             // 
             // label4
@@ -250,7 +281,7 @@
             this.dateTimePicker2.ShowUpDown = true;
             this.dateTimePicker2.Size = new System.Drawing.Size(65, 20);
             this.dateTimePicker2.TabIndex = 11;
-            this.dateTimePicker2.Value = new System.DateTime(2018, 5, 15, 8, 0, 0, 0);
+            this.dateTimePicker2.Value = new System.DateTime(2018, 5, 15, 0, 0, 0, 0);
             this.dateTimePicker2.ValueChanged += new System.EventHandler(this.dateTimePicker2_ValueChanged);
             // 
             // dateTimePicker1
@@ -333,37 +364,6 @@
             this.exitToolStripMenuItem.Text = "&Exit";
             this.exitToolStripMenuItem.Click += new System.EventHandler(this.exitToolStripMenuItem_Click);
             // 
-            // label7
-            // 
-            this.label7.AutoSize = true;
-            this.label7.Location = new System.Drawing.Point(24, 200);
-            this.label7.Name = "label7";
-            this.label7.Size = new System.Drawing.Size(186, 13);
-            this.label7.TabIndex = 18;
-            this.label7.Text = "Minutes to stop trying after an a failure";
-            // 
-            // numericUpDownBanLength
-            // 
-            this.numericUpDownBanLength.Location = new System.Drawing.Point(216, 198);
-            this.numericUpDownBanLength.Maximum = new decimal(new int[] {
-            1440,
-            0,
-            0,
-            0});
-            this.numericUpDownBanLength.Minimum = new decimal(new int[] {
-            5,
-            0,
-            0,
-            0});
-            this.numericUpDownBanLength.Name = "numericUpDownBanLength";
-            this.numericUpDownBanLength.Size = new System.Drawing.Size(57, 20);
-            this.numericUpDownBanLength.TabIndex = 19;
-            this.numericUpDownBanLength.Value = new decimal(new int[] {
-            5,
-            0,
-            0,
-            0});
-            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -388,8 +388,8 @@
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
             this.groupBox1.ResumeLayout(false);
             this.groupBox1.PerformLayout();
-            this.contextMenuStripForNotifyIcon.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownBanLength)).EndInit();
+            this.contextMenuStripForNotifyIcon.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
 

@@ -53,6 +53,8 @@ namespace Instagram_Bot
             {
                 "summer", "chill", "hangover", "followme", "follow4follow", "followforfollow", "followback", "follow4Like", "like4follow",
                  DateTime.Now.ToString("dddd"), // today
+                 DateTime.Now.ToString("dddd") + "lunch",
+                 DateTime.Now.ToString("dddd") + "roast",
                  DateTime.Now.AddDays(-1).ToString("dddd"), // yesterday
                  "hate"+DateTime.Now.ToString("dddd")+"s",
                  "love"+DateTime.Now.ToString("dddd")+"s",
@@ -87,11 +89,10 @@ namespace Instagram_Bot
                 "#Perfection, almost looks professional! @" + username,
                 "#haha, interesting approach me thinks @" + username,
                 "Wish I could take #photos like yours! @" + username,
-                "#Perfection, that put a #smile on my face and made my " + DateTime.Now.ToString("dddd") + " :) @" + username,
+                // "#Perfection, that put a #smile on my face and made my " + DateTime.Now.ToString("dddd") + " :) @" + username,
                 "It's #" + DateTime.Now.ToString("dddd") + " people @" + username,
                 "#Happy " + DateTime.Now.ToString("dddd") + " everybody :) from @" + username,
-                "✔️ @" + username,
-                "Just what I needed to see this fine " + DateTime.Now.ToString("dddd")+ " " + (DateTime.Now.Hour >= 12 ? "afternoon" : "morning")   + " :) @" + username,
+                //"Just what I needed to see this fine " + DateTime.Now.ToString("dddd")+ " " + (DateTime.Now.Hour >= 12 ? "afternoon" : "morning")   + " :) @" + username,
             };
 
             //if (File.Exists(@"c:\comments.txt"))
@@ -212,6 +213,14 @@ namespace Instagram_Bot
             while (true)
             {
 
+
+                DateTime commentingBannedUntil = DateTime.Now;
+                DateTime followingBannedUntil = DateTime.Now;
+                DateTime unfollowingBannedUntil = DateTime.Now;
+                DateTime likingBannedUntil = DateTime.Now;
+
+
+
                 // maximise window after sleep period
                 if (chromeIsMinimised && !stealthMode)
                 {
@@ -220,32 +229,61 @@ namespace Instagram_Bot
                 }
 
 
-                //// before jumping into the search for posts by tags loop
-                //// let's follow all the suggect profiles that are suggected on the initial login page (if any), this list may only be visible for new accounts
-                //foreach (var obj in IwebDriver.FindElements(By.TagName("button")))
-                //{
-                //    if (obj.Text.ToLower().Trim().Contains("follow"))
-                //    {
-                //        try
-                //        {
-                //            obj.Click();
-                //            Thread.Sleep(new Random().Next(secondsBetweenActions_min, secondsBetweenActions_max) * 1000); // wait a short(random) amount of time between clicks
+                // before jumping into the search for posts by tags loop
+                // let's follow all the suggect profiles that are suggected on the initial login page (if any), this list may only be visible for new accounts
+                foreach (var obj in IwebDriver.FindElements(By.TagName("button")))
+                {
+                    if (obj.Text.ToLower().Trim().Contains("follow"))
+                    {
+                        try
+                        {
+                            obj.Click();
+                            Thread.Sleep(new Random().Next(secondsBetweenActions_min, secondsBetweenActions_max) * 1000); // wait a short(random) amount of time between clicks
 
-                //            // if following failed dont keep trying
-                //            if (!obj.Text.ToLower().Trim().Contains("following"))
-                //            {
-                //                if (enableVoices) C_voice_core.speak($"following failed, I will stop following for {banLength} minutes.");
-                //                //new Classes.C_DataLayer().SetConfigValueFor("stopFolowingUntilDate", DateTime.Now.AddMinutes(banLength).ToString(Classes.C_DataLayer.SQLiteDateTimeFormat));
-                //                break;
-                //            }
+                            // if following failed dont keep trying
+                            if (!obj.Text.ToLower().Trim().Contains("following"))
+                            {
+                                if (enableVoices) C_voice_core.speak($"following failed, I will stop following for {banLength} minutes.");
+                                followingBannedUntil = DateTime.Now.AddMinutes(banLength);
+                                //new Classes.C_DataLayer().SetConfigValueFor("stopFolowingUntilDate", DateTime.Now.AddMinutes(banLength).ToString(Classes.C_DataLayer.SQLiteDateTimeFormat));
+                                break;
+                            }
 
-                //        }
-                //        catch
-                //        {
-                //            if (enableVoices) C_voice_core.speak($"follow failed");
-                //        }
-                //    }
-                //}
+                        }
+                        catch
+                        {
+                            if (enableVoices) C_voice_core.speak($"follow failed");
+                        }
+                    }
+                }
+
+                //repeat to get more
+                foreach (var obj in IwebDriver.FindElements(By.TagName("button")))
+                {
+                    if (obj.Text.ToLower().Trim().Contains("follow"))
+                    {
+                        try
+                        {
+                            obj.Click();
+                            Thread.Sleep(new Random().Next(secondsBetweenActions_min, secondsBetweenActions_max) * 1000); // wait a short(random) amount of time between clicks
+
+                            // if following failed dont keep trying
+                            if (!obj.Text.ToLower().Trim().Contains("following"))
+                            {
+                                if (enableVoices) C_voice_core.speak($"following failed, I will stop following for {banLength} minutes.");
+                                followingBannedUntil = DateTime.Now.AddMinutes(banLength);
+                                //new Classes.C_DataLayer().SetConfigValueFor("stopFolowingUntilDate", DateTime.Now.AddMinutes(banLength).ToString(Classes.C_DataLayer.SQLiteDateTimeFormat));
+                                break;
+                            }
+
+                        }
+                        catch
+                        {
+                            if (enableVoices) C_voice_core.speak($"follow failed");
+                        }
+                    }
+                }
+
 
 
                 //  if (enableVoices) C_voice_core.speak($"debugging");
@@ -275,10 +313,7 @@ namespace Instagram_Bot
                 int postCounter = 0;
 
 
-                DateTime commentingBannedUntil = DateTime.Now;
-                DateTime followingBannedUntil = DateTime.Now;
-                DateTime unfollowingBannedUntil = DateTime.Now;
-                DateTime likingBannedUntil = DateTime.Now;
+
                 
 
                 // load results in turn and like/follow them

@@ -69,15 +69,15 @@ namespace Instagram_Bot
 
             // save users' settings for next time. (only works if running fully installed via click once)
             textBoxUsername.Text = textBoxUsername.Text.Trim().ToLower();
-            //Properties.Settings.Default.username = textBoxUsername.Text;
-            //Properties.Settings.Default.password = textBoxPassword.Text;
+            Properties.Settings.Default.username = textBoxUsername.Text;
+            Properties.Settings.Default.password = textBoxPassword.Text;
             //Properties.Settings.Default.sleepTimeSpan1_From = dateTimePicker1.Value;
             //Properties.Settings.Default.sleepTimeSpan1_To = dateTimePicker2.Value;
             //Properties.Settings.Default.sleepTimeSpan2_From = dateTimePicker3.Value;
             //Properties.Settings.Default.sleepTimeSpan2_To = dateTimePicker4.Value;
             //Properties.Settings.Default.banLength = (int)numericUpDownBanLength.Value;
 
-            //Properties.Settings.Default.Save();
+            Properties.Settings.Default.Save();
 
             Application.DoEvents();
             try
