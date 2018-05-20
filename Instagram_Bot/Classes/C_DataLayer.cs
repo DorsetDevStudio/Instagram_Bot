@@ -10,6 +10,8 @@ namespace Instagram_Bot.Classes
 
         public C_DataLayer()
         {
+
+            C_voice_core.speak("initiating DataLayer");
             MakeConnection();
             InitiateDatabase();// todo, only do this once
         }
@@ -24,7 +26,7 @@ namespace Instagram_Bot.Classes
         private void MakeConnection()
         {
 
-
+            C_voice_core.speak("making connection");
             // make sure we have a fresh db with latest schema
             if (File.Exists(SQLiteFile))
             {
@@ -32,10 +34,8 @@ namespace Instagram_Bot.Classes
 
             }
 
-
             // create db file is not exists already
             if (!File.Exists(SQLiteFile))
-
             {
                 try
                 {
@@ -55,13 +55,22 @@ namespace Instagram_Bot.Classes
 
             try
             {
-                conn.ConnectionString = $"Data Source={SQLiteFile};Version=3;UseUTF16Encoding=True;";
+                conn.ConnectionString = $"Data Source={SQLiteFile};Version=3;";
+
+
+
+                
+
                 conn.Open();
-                C_voice_core.speak("db connection open");
+
+               C_voice_core.speak("db connection open");
 
             }
             catch (Exception se)
             {
+
+                C_voice_core.speak($"SQL Error: {se.Message}");
+
                 System.Windows.Forms.MessageBox.Show($"SQL Error: {se.Message}");
             }
         }
@@ -82,6 +91,9 @@ namespace Instagram_Bot.Classes
             }
             catch (SQLiteException se)
             {
+
+                C_voice_core.speak($"SQL Error: {se.Message}");
+
                 IU.error = se.Message;
                 System.Windows.Forms.MessageBox.Show($"SQL Error: {se.Message}");
             }
@@ -117,6 +129,8 @@ namespace Instagram_Bot.Classes
             }
             catch (Exception se)
             {
+                C_voice_core.speak($"SQL Error: {se.Message}");
+
                 IU.error = se.Message;
                 System.Windows.Forms.MessageBox.Show($"SQL Error: {se.Message}");
             }
@@ -128,7 +142,6 @@ namespace Instagram_Bot.Classes
 
             try
             {
-
                 // IU passed in is just a username, populate all other fields then return
                 using (SQLiteCommand SQLcommand = new SQLiteCommand("select * from insta_users WHERE username = @username);", conn))
                 {
@@ -150,9 +163,7 @@ namespace Instagram_Bot.Classes
                         }
                         else
                         {
-
                             IU.error = "no record for user";
-
                             C_voice_core.speak(IU.error);
                         }
                     }
@@ -183,6 +194,8 @@ namespace Instagram_Bot.Classes
             }
             catch (Exception se)
             {
+                C_voice_core.speak($"SQL Error: {se.Message}");
+
                 System.Windows.Forms.MessageBox.Show($"SQL Error: {se.Message}");
             }
             return null;
@@ -209,6 +222,8 @@ namespace Instagram_Bot.Classes
             }
             catch (Exception se)
             {
+                C_voice_core.speak($"SQL Error: {se.Message}");
+
                 System.Windows.Forms.MessageBox.Show($"SQL Error: {se.Message}");
             }
         }
@@ -268,6 +283,8 @@ namespace Instagram_Bot.Classes
             }
             catch (Exception se)
             {
+                C_voice_core.speak($"SQL Error: {se.Message}");
+
                 System.Windows.Forms.MessageBox.Show($"SQL Error: {se.Message}");
             }
         }
