@@ -32,11 +32,11 @@ namespace Instagram_Bot
             /* CONFIG  */
 
             // Instagram throttling & bot detection avoidance - we randomise the time between actions (clicks) to `look` more `human`)
-            int secondsBetweenActions_min = 2;
-            int secondsBetweenActions_max = 3; // must be > secondsBetweenActions_min
+            int secondsBetweenActions_min = 1;
+            int secondsBetweenActions_max = 1; // must be > secondsBetweenActions_min
 
-            int minutesBetweenBulkActions_min = 5;
-            int minutesBetweenBulkActions_max = 15; // must be > minutesBetweenBulkActions_min
+            int minutesBetweenBulkActions_min = 1;
+            int minutesBetweenBulkActions_max = 2; // must be > minutesBetweenBulkActions_min
 
             // limits based on minimal research
             int maxFollowsIn24Hours = 100;// int.TryParse(new Classes.C_DataLayer().GetConfigValueFor("dailyFollowLimit"), out int _a) ? _a : 500;
@@ -330,8 +330,6 @@ namespace Instagram_Bot
                         IwebDriver.Navigate().GoToUrl("https://www.instagram.com/" + link);
                     }
 
-                    Thread.Sleep(new Random().Next(secondsBetweenActions_min, secondsBetweenActions_max) * 1000); // wait a short(random) amount of time for page to change
-
                     // get the username of the owner of the current post
                     string instagram_post_user = "";
                     foreach (var obj in IwebDriver.FindElements(By.TagName("a")))
@@ -342,6 +340,10 @@ namespace Instagram_Bot
                             break;
                         }
                     }
+
+
+                    if (enableVoices) C_voice_core.speak($"user {instagram_post_user}");
+
 
                     // testing new database functionality
                     new Classes.C_DataLayer().AddInstaUser(IU: new Classes.InstaUser() { username = instagram_post_user.Replace(" ", "_") });
