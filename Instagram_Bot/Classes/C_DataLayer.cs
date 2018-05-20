@@ -15,8 +15,8 @@ namespace Instagram_Bot.Classes
 
         // db file in end users working directory, will be created if does not exist
         private string SQLiteFile = "Data.db";
-        private string SQLiteDateTimeFormat = "yyyy-MM-dd HH:MM";// DO NOT CHALGE
-        private string SQLiteNullDateString = "0001-01-01 00:01";// DO NOT CHALGE
+        public readonly static string SQLiteDateTimeFormat = "yyyy-MM-dd HH:mm:ss";// DO NOT CHALGE
+        private string SQLiteNullDateString = "0001-01-01 00:00:00";// DO NOT CHALGE
 
         private SQLiteConnection conn = new SQLiteConnection();
 
@@ -59,9 +59,6 @@ namespace Instagram_Bot.Classes
             return true;
         }
 
-
-
-
         // REMEBER spaces at end of each line in SQL to avoid SQL error
 
         public bool SaveInstaUser(InstaUser IU)
@@ -97,7 +94,6 @@ namespace Instagram_Bot.Classes
             return true;
         }
 
-
         public InstaUser GetInstaUser(InstaUser IU)
         {
             // IU passed in is just a username, populate all other fields then return
@@ -127,18 +123,63 @@ namespace Instagram_Bot.Classes
             return IU;
         }
 
+        public string GetConfigValueFor(string name)
+        {
+            try
+            {
+                using (SQLiteCommand SQLcommand = new SQLiteCommand("select value from config WHERE name=@name limit 1;", conn))
+                {
+                    SQLcommand.Parameters.AddWithValue("name", name);
+                    using (SQLiteDataReader rdr = SQLcommand.ExecuteReader())
+                    {
+                        if (rdr.Read()) // there can only ever be 1 row
+                        {
+                            rdr["name"].ToString();
+                        }
+                    }
+                }
+            }
+            catch (SQLiteException se)
+            {
+                System.Windows.Forms.MessageBox.Show($"SQL Error: {se.Message}");
+            }
+            return null;
+        }
+
+        //upserts a config value
+        public void SetConfigValueFor(string name, string value)
+        {
+            try
+            {
+                using (SQLiteCommand SQLcommand = new SQLiteCommand("" +
+                "insert into config (name, value, date_created) select @name, @value, @date " +
+                "where not exists (select 1 from config where name=@name); " +
+                "update config set value = @value, date_changed = @date where name=@name and value != @value; ", conn))
+                {
+                    SQLcommand.Parameters.AddWithValue("name", name);
+                    SQLcommand.Parameters.AddWithValue("date", DateTime.Now.ToString(SQLiteDateTimeFormat));
+                    if (string.IsNullOrEmpty(value))
+                        SQLcommand.Parameters.AddWithValue("value", DBNull.Value);
+                    else
+                        SQLcommand.Parameters.AddWithValue("value", value);
+                    SQLcommand.ExecuteNonQuery();
+                }
+            }
+            catch (SQLiteException se)
+            {
+                System.Windows.Forms.MessageBox.Show($"SQL Error: {se.Message}");
+            }
+        }
+
         //TODO: create database schema
         private void InitiateDatabase()
         {
+            try
+            {
+                // DO NOT ALTER TABLES
 
-            // note: in sqlite INTEGER is not the same as INT in Sql Server, it can be and 8 byte long LONG.
-            // note: in sqlite there is not date type, use TEXT or INTEGER and save are formatted datetime string or unix style timestamp, we are using .ToString("YYYY-MM-DD HH:MM:SS.SSS"), 
-            // just dates. Except in log tables
-
-            // DO NOT ALTER TABLES
-
-            // create insta_users table
-            SQLiteCommand SQLcommand = new SQLiteCommand("" +
+                // create insta_users table
+                SQLiteCommand SQLcommand = new SQLiteCommand("" +
                 "CREATE TABLE IF NOT EXISTS " +
                 "insta_users" +
                 "(" +
@@ -154,41 +195,39 @@ namespace Instagram_Bot.Classes
                     "times_unfollowed INTEGER DEFAULT 0," +
                     "date_last_updated TEXT not null" +
                 ");", conn);
-            SQLcommand.ExecuteNonQuery();
+                SQLcommand.ExecuteNonQuery();
 
 
-            // create config table (name / values)
-            SQLcommand = new SQLiteCommand("" +
-               "CREATE TABLE IF NOT EXISTS " +
-               "config" +
-               "(" +
-                   "id INTEGER PRIMARY KEY AUTOINCREMENT," +
-                   "name varchar(255) not null," +
-                   "value varchar(255) not null," +
-                   "date_created TEXT not null," +
-                   "date_changed TEXT null" +
-               ");", conn);
-            SQLcommand.ExecuteNonQuery();
+                // create config table (name / values)
+                SQLcommand = new SQLiteCommand("" +
+                   "CREATE TABLE IF NOT EXISTS " +
+                   "config" +
+                   "(" +
+                       "name varchar(50) PRIMARY KEY not null," +
+                       "value varchar(255) not null," +
+                       "date_created TEXT not null," +
+                       "date_changed TEXT null" +
+                   ");", conn);
+                SQLcommand.ExecuteNonQuery();
 
 
-
-            // create stat_log
-            SQLcommand = new SQLiteCommand("" +
-               "CREATE TABLE IF NOT EXISTS " +
-               "stat_log" +
-               "(" +
-                   "id INTEGER PRIMARY KEY AUTOINCREMENT," +
-                   "followers INTEGER null," +
-                   "following INTEGER null," +
-                   "posts INTEGER null," +
-                   "datetime TEXT not null" +
-               ");", conn);
-            SQLcommand.ExecuteNonQuery();
-
-
-
-
-
+                // create stat_log
+                SQLcommand = new SQLiteCommand("" +
+                   "CREATE TABLE IF NOT EXISTS " +
+                   "stat_log" +
+                   "(" +
+                       "id INTEGER PRIMARY KEY AUTOINCREMENT," +
+                       "followers INTEGER null," +
+                       "following INTEGER null," +
+                       "posts INTEGER null," +
+                       "datetime TEXT not null" +
+                   ");", conn);
+                SQLcommand.ExecuteNonQuery();
+            }
+            catch (SQLiteException se)
+            {
+                System.Windows.Forms.MessageBox.Show($"SQL Error: {se.Message}");
+            }
         }
 
         public void Dispose()
