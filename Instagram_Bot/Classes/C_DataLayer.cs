@@ -15,8 +15,8 @@ namespace Instagram_Bot.Classes
 
         // db file in end users working directory, will be created if does not exist
         private string SQLiteFile = "Data.db";
-        public readonly static string SQLiteDateTimeFormat = "yyyy-MM-dd HH:mm:ss";// DO NOT CHALGE
-        private string SQLiteNullDateString = "0001-01-01 00:00:00";// DO NOT CHALGE
+        public readonly static string SQLiteDateTimeFormat = "yyyy-MM-dd HH:mm:ss";// DO NOT CHANGE
+        private string SQLiteNullDateString = "0001-01-01 00:00:00";// DO NOT CHANGE
 
         private SQLiteConnection conn = new SQLiteConnection();
 
