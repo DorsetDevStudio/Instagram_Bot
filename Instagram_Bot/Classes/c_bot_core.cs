@@ -220,32 +220,32 @@ namespace Instagram_Bot
                 }
 
 
-                // before jumping into the search for posts by tags loop
-                // let's follow all the suggect profiles that are suggected on the initial login page (if any), this list may only be visible for new accounts
-                foreach (var obj in IwebDriver.FindElements(By.TagName("button")))
-                {
-                    if (obj.Text.ToLower().Trim().Contains("follow"))
-                    {
-                        try
-                        {
-                            obj.Click();
-                            Thread.Sleep(new Random().Next(secondsBetweenActions_min, secondsBetweenActions_max) * 1000); // wait a short(random) amount of time between clicks
+                //// before jumping into the search for posts by tags loop
+                //// let's follow all the suggect profiles that are suggected on the initial login page (if any), this list may only be visible for new accounts
+                //foreach (var obj in IwebDriver.FindElements(By.TagName("button")))
+                //{
+                //    if (obj.Text.ToLower().Trim().Contains("follow"))
+                //    {
+                //        try
+                //        {
+                //            obj.Click();
+                //            Thread.Sleep(new Random().Next(secondsBetweenActions_min, secondsBetweenActions_max) * 1000); // wait a short(random) amount of time between clicks
 
-                            // if following failed dont keep trying
-                            if (!obj.Text.ToLower().Trim().Contains("following"))
-                            {
-                                if (enableVoices) C_voice_core.speak($"following failed, I will stop following for {banLength} minutes.");
-                                new Classes.C_DataLayer().SetConfigValueFor("stopFolowingUntilDate", DateTime.Now.AddMinutes(banLength).ToString(Classes.C_DataLayer.SQLiteDateTimeFormat));
-                                break;
-                            }
+                //            // if following failed dont keep trying
+                //            if (!obj.Text.ToLower().Trim().Contains("following"))
+                //            {
+                //                if (enableVoices) C_voice_core.speak($"following failed, I will stop following for {banLength} minutes.");
+                //                new Classes.C_DataLayer().SetConfigValueFor("stopFolowingUntilDate", DateTime.Now.AddMinutes(banLength).ToString(Classes.C_DataLayer.SQLiteDateTimeFormat));
+                //                break;
+                //            }
 
-                        }
-                        catch
-                        {
-                            if (enableVoices) C_voice_core.speak($"follow failed");
-                        }
-                    }
-                }
+                //        }
+                //        catch
+                //        {
+                //            if (enableVoices) C_voice_core.speak($"follow failed");
+                //        }
+                //    }
+                //}
 
 
                 //  if (enableVoices) C_voice_core.speak($"debugging");
@@ -282,42 +282,42 @@ namespace Instagram_Bot
                     // we may need to sleep, need to check if we should be bwtewwn each post
                     // handle `don't run between` times       
 
-                    if (!_sleeping) // check if we should be
-                    {
-                        foreach (timeSpans timeSpan in sleepTimes)
-                        {
-                            if (DateTime.Now.TimeOfDay > timeSpan.from.TimeOfDay
-                                && DateTime.Now.TimeOfDay < timeSpan.to.TimeOfDay)
-                            {
-                                _sleeping = true;
-                                if (enableVoices) C_voice_core.speak($"I'm tired, yawn, sleeping until {timeSpan.to.ToShortTimeString()}");
-                                break;
-                            }
-                        }
+                    //if (!_sleeping) // check if we should be
+                    //{
+                    //    foreach (timeSpans timeSpan in sleepTimes)
+                    //    {
+                    //        if (DateTime.Now.TimeOfDay > timeSpan.from.TimeOfDay
+                    //            && DateTime.Now.TimeOfDay < timeSpan.to.TimeOfDay)
+                    //        {
+                    //            _sleeping = true;
+                    //            if (enableVoices) C_voice_core.speak($"I'm tired, yawn, sleeping until {timeSpan.to.ToShortTimeString()}");
+                    //            break;
+                    //        }
+                    //    }
 
-                    }
+                    //}
 
 
-                    while (_sleeping) // check if we shouldnt be
-                    {
-                        bool _sleep = false;
-                        foreach (timeSpans timeSpan in sleepTimes)
-                        {
-                            if (DateTime.Now.TimeOfDay > timeSpan.from.TimeOfDay
-                                && DateTime.Now.TimeOfDay < timeSpan.to.TimeOfDay)
-                            {
-                                _sleep = true;
-                                break;
-                            }
-                        }
-                        if (!_sleep) // just woke up
-                        {
-                            if (enableVoices) C_voice_core.speak($"Nap over, damn it");
-                            _sleeping = false;
-                        }
-                        Thread.Sleep(1 * 1000);// sleep 1 second
-                        Application.DoEvents();
-                    }
+                    //while (_sleeping) // check if we shouldnt be
+                    //{
+                    //    bool _sleep = false;
+                    //    foreach (timeSpans timeSpan in sleepTimes)
+                    //    {
+                    //        if (DateTime.Now.TimeOfDay > timeSpan.from.TimeOfDay
+                    //            && DateTime.Now.TimeOfDay < timeSpan.to.TimeOfDay)
+                    //        {
+                    //            _sleep = true;
+                    //            break;
+                    //        }
+                    //    }
+                    //    if (!_sleep) // just woke up
+                    //    {
+                    //        if (enableVoices) C_voice_core.speak($"Nap over, damn it");
+                    //        _sleeping = false;
+                    //    }
+                    //    Thread.Sleep(1 * 1000);// sleep 1 second
+                    //    Application.DoEvents();
+                    //}
 
                     postCounter++;
 
@@ -394,12 +394,7 @@ namespace Instagram_Bot
                             Thread.Sleep(new Random().Next(secondsBetweenActions_min, secondsBetweenActions_max) * 1000); // wait a short(random) amount of time for page to change
                             break;
                         }
-                        else
-                        {
-                            if (enableVoices) C_voice_core.speak($"error locating follow button");
-                            break;
-                        }
-
+                       
                     }
                     // end FOLLOW
 
@@ -586,35 +581,35 @@ namespace Instagram_Bot
                 //}
                 //else
                 //{
-                    IwebDriver.Navigate().GoToUrl($"https://www.instagram.com/accounts/activity/");
-                    Thread.Sleep(new Random().Next(secondsBetweenActions_min, secondsBetweenActions_max) * 1000); // wait a short(random) amount of time for page to change
+                    //IwebDriver.Navigate().GoToUrl($"https://www.instagram.com/accounts/activity/");
+                    //Thread.Sleep(new Random().Next(secondsBetweenActions_min, secondsBetweenActions_max) * 1000); // wait a short(random) amount of time for page to change
 
-                    foreach (var obj in IwebDriver.FindElements(By.TagName("button")))
-                    {
-                        if (obj.Text.ToLower().Trim().Contains("follow"))
-                        {
-                            try
-                            {
-                                obj.Click();
-                                Thread.Sleep(new Random().Next(secondsBetweenActions_min, secondsBetweenActions_max) * 1000); // wait a short(random) amount of time between clicks
+                    //foreach (var obj in IwebDriver.FindElements(By.TagName("button")))
+                    //{
+                    //    if (obj.Text.ToLower().Trim().Contains("follow"))
+                    //    {
+                    //        try
+                    //        {
+                    //            obj.Click();
+                    //            Thread.Sleep(new Random().Next(secondsBetweenActions_min, secondsBetweenActions_max) * 1000); // wait a short(random) amount of time between clicks
 
-                                // if following failed dont keep trying
-                                if (!obj.Text.ToLower().Trim().Contains("following") && !obj.Text.ToLower().Trim().Contains("requested"))
-                                {
+                    //            // if following failed dont keep trying
+                    //            if (!obj.Text.ToLower().Trim().Contains("following") && !obj.Text.ToLower().Trim().Contains("requested"))
+                    //            {
 
-                                    if (enableVoices) C_voice_core.speak($"following failed, I will stop following for {banLength} minutes.");
+                    //                if (enableVoices) C_voice_core.speak($"following failed, I will stop following for {banLength} minutes.");
                            
-                                    new Classes.C_DataLayer().SetConfigValueFor("stopFolowingUntilDate", DateTime.Now.AddMinutes(banLength).ToString(Classes.C_DataLayer.SQLiteDateTimeFormat));
+                    //                new Classes.C_DataLayer().SetConfigValueFor("stopFolowingUntilDate", DateTime.Now.AddMinutes(banLength).ToString(Classes.C_DataLayer.SQLiteDateTimeFormat));
 
-                                    break;
-                                }
-                            }
-                            catch
-                            {
-                                if (enableVoices) C_voice_core.speak($"follow failed");
-                            }
-                        }
-                    }
+                    //                break;
+                    //            }
+                    //        }
+                    //        catch
+                    //        {
+                    //            if (enableVoices) C_voice_core.speak($"follow failed");
+                    //        }
+                    //    }
+                    //}
                // }
 
                 // end go to activity page and follow back anyone that followed us
@@ -643,50 +638,50 @@ namespace Instagram_Bot
                 // find link with followers in text and click it
                 // scan page for a tags with following in the text and click to unfollow
 
-                IwebDriver.Navigate().GoToUrl($"https://www.instagram.com/{username}");
-                Thread.Sleep(4 * 1000); // wait a amount of time for page to change
+                //IwebDriver.Navigate().GoToUrl($"https://www.instagram.com/{username}");
+                //Thread.Sleep(4 * 1000); // wait a amount of time for page to change
 
-                foreach (var obj in IwebDriver.FindElements(By.TagName("a")))
-                {
-                    if (obj.GetAttribute("href").Contains("following")
-                        && obj.GetAttribute("href").ToLower().Contains(username))
-                    {
-                        obj.Click(); // bring up follow list
-                        Thread.Sleep(2 * 1000); // wait a amount of time for page to change
+                //foreach (var obj in IwebDriver.FindElements(By.TagName("a")))
+                //{
+                //    if (obj.GetAttribute("href").Contains("following")
+                //        && obj.GetAttribute("href").ToLower().Contains(username))
+                //    {
+                //        obj.Click(); // bring up follow list
+                //        Thread.Sleep(2 * 1000); // wait a amount of time for page to change
 
-                        foreach (var obj2 in IwebDriver.FindElements(By.TagName("button")))
-                        {
-                            if (obj2.Text.ToLower().Trim().Contains("following"))
-                            {
-                                try
-                                {
-                                    obj2.Click();
-                                    Thread.Sleep(new Random().Next(secondsBetweenActions_min, secondsBetweenActions_max) * 1000); // wait a short(random) amount of time between clicks
+                //        foreach (var obj2 in IwebDriver.FindElements(By.TagName("button")))
+                //        {
+                //            if (obj2.Text.ToLower().Trim().Contains("following"))
+                //            {
+                //                try
+                //                {
+                //                    obj2.Click();
+                //                    Thread.Sleep(new Random().Next(secondsBetweenActions_min, secondsBetweenActions_max) * 1000); // wait a short(random) amount of time between clicks
 
-                                    // if unfollow failed dont keep trying
-                                    if (obj2.Text.ToLower().Trim().Contains("following"))
-                                    {
+                //                    // if unfollow failed dont keep trying
+                //                    if (obj2.Text.ToLower().Trim().Contains("following"))
+                //                    {
 
-                                        if (enableVoices) C_voice_core.speak($"unfollow failed, I will stop unfollowing for {banLength} minutes.");
-
-
-
-                                        new Classes.C_DataLayer().SetConfigValueFor("stopUnFollowingUntilDate", DateTime.Now.AddMinutes(banLength).ToString(Classes.C_DataLayer.SQLiteDateTimeFormat));
-
-                                        break;
-                                    }
-                                }
-                                catch
-                                {
-                                    if (enableVoices) C_voice_core.speak($"unfollow failed");
-                                }
-                            }
-                        }
+                //                        if (enableVoices) C_voice_core.speak($"unfollow failed, I will stop unfollowing for {banLength} minutes.");
 
 
-                        break;
-                    }
-                }
+
+                //                        new Classes.C_DataLayer().SetConfigValueFor("stopUnFollowingUntilDate", DateTime.Now.AddMinutes(banLength).ToString(Classes.C_DataLayer.SQLiteDateTimeFormat));
+
+                //                        break;
+                //                    }
+                //                }
+                //                catch
+                //                {
+                //                    if (enableVoices) C_voice_core.speak($"unfollow failed");
+                //                }
+                //            }
+                //        }
+
+
+                //        break;
+                //    }
+                //}
                 // }
 
                 // end unfollow people that dont follow back
