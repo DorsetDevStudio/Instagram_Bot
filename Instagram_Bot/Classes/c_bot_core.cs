@@ -8,7 +8,7 @@ using System.Windows.Forms;
 namespace Instagram_Bot
 {
 
-    public class C_bot_core : IC_bot_core
+    public class C_bot_core : IC_bot_core, IDisposable
     {
 
         IWebDriver IwebDriver;
@@ -218,7 +218,7 @@ namespace Instagram_Bot
                 catch (InvalidOperationException ee)
                 {                  
                     if (enableVoices) C_voice_core.speak($"SQLite invalid operation error {ee.Message}",true);
-                    MessageBox.Show($"SQLite invalid operation error {ee.Message}");
+                    MessageBox.Show($"SQLite invalid operation error {ee.InnerException.ToString()}");
                 }
                 catch (Exception ee)
                 {
@@ -812,6 +812,11 @@ namespace Instagram_Bot
         {
             try { IwebDriver.Close(); } catch { }
             try { IwebDriver.Quit(); } catch { }
+        }
+
+        public void Dispose()
+        {
+            
         }
     }
 }
