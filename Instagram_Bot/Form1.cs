@@ -104,8 +104,9 @@ namespace Instagram_Bot
         private void Form1_Load(object sender, EventArgs e)
         {
 
-            //textBoxUsername.Text = Properties.Settings.Default.username;
-            //textBoxPassword.Text = Properties.Settings.Default.password;
+
+            textBoxUsername.Text = Properties.Settings.Default.username;
+            textBoxPassword.Text = Properties.Settings.Default.password;
 
             //try // load `don't run between times` from user settings , could fail on first load
             //{

@@ -274,6 +274,13 @@ namespace Instagram_Bot
 
                 int postCounter = 0;
 
+
+                DateTime commentingBannedUntil = DateTime.Now;
+                DateTime followingBannedUntil = DateTime.Now;
+                DateTime unfollowingBannedUntil = DateTime.Now;
+                DateTime likingBannedUntil = DateTime.Now;
+                
+
                 // load results in turn and like/follow them
                 foreach (var link in postsToLike)
                 {
@@ -369,22 +376,22 @@ namespace Instagram_Bot
                             if (enableVoices) C_voice_core.speak($"already following");
                             break;
                         }
-                        //else if (obj.Text.ToUpper().Contains("FOLLOW".ToUpper()) && Properties.Settings.Default.stopFolowingUntilDate > DateTime.Now)
-                        //{
+                        else if (obj.Text.ToUpper().Contains("FOLLOW".ToUpper()) && followingBannedUntil > DateTime.Now)
+                        {
 
-                        //    var _minutesLeft = (Properties.Settings.Default.stopFolowingUntilDate - DateTime.Now).Minutes;
-                        //    var _secondsLeft = (Properties.Settings.Default.stopFolowingUntilDate - DateTime.Now).Seconds;
+                            var _minutesLeft = (followingBannedUntil - DateTime.Now).Minutes;
+                            var _secondsLeft = (followingBannedUntil - DateTime.Now).Seconds;
 
-                        //    if (_minutesLeft == 0) // must be a few seconds left 
-                        //    {
-                        //        if (enableVoices) C_voice_core.speak($"follow ban in place for {_secondsLeft} more seconds");
-                        //    }
-                        //    else
-                        //    {
-                        //        if (enableVoices) C_voice_core.speak($"follow ban in place for {_minutesLeft} more minute{(_minutesLeft > 1 ? "s" : "")}");
-                        //    }
-                        //    break;
-                        //}
+                            if (_minutesLeft == 0) // must be a few seconds left 
+                            {
+                                if (enableVoices) C_voice_core.speak($"follow ban in place for {_secondsLeft} more seconds");
+                            }
+                            else
+                            {
+                                if (enableVoices) C_voice_core.speak($"follow ban in place for {_minutesLeft} more minute{(_minutesLeft > 1 ? "s" : "")}");
+                            }
+                            break;
+                        }
                         else if (obj.Text.ToUpper().Contains("FOLLOW".ToUpper()))
                         {
                             if (enableVoices) C_voice_core.speak($"following");
@@ -397,174 +404,179 @@ namespace Instagram_Bot
                             }
                             else
                             {
+
+                                commentingBannedUntil = DateTime.Now.AddMinutes(banLength);                              
                                 if (enableVoices) C_voice_core.speak($"following failed, I will stop following for {banLength} minutes.");
                                 //new Classes.C_DataLayer().SetConfigValueFor("stopFolowingUntilDate", DateTime.Now.AddMinutes(banLength).ToString(Classes.C_DataLayer.SQLiteDateTimeFormat));
-                                Properties.Settings.Default.Save();
+
                             }
                             Thread.Sleep(2 * 1000); // wait and see it it worked, will change to following
                             break;
                         }
 
+                       
+
                     }
                     // end FOLLOW
 
-
                     //if (enableVoices) c_voice_core.speak($"{phrasesToComment.Count} comments to pick from");
 
+                    // check if we are banned from commenting
+
+                    var _commentBanminutesLeft = (commentingBannedUntil - DateTime.Now).Minutes;
+                    var _commentBanSecondsLeft = (commentingBannedUntil - DateTime.Now).Seconds;
 
 
-
-                    //// check if we are banned from commenting
-
-                    //var _commentBanminutesLeft = (Properties.Settings.Default.stopCommentingUntilDate - DateTime.Now).Minutes;
-                    //var _commentBanSecondsLeft = (Properties.Settings.Default.stopCommentingUntilDate - DateTime.Now).Seconds;
-
-
-                    //if (_commentBanSecondsLeft > 0)
-                    //{
-
-
-                    //    if (_commentBanminutesLeft == 0) // must be a few seconds left 
-                    //    {
-                    //        if (enableVoices) C_voice_core.speak($"comment ban in place for {_commentBanSecondsLeft} more seconds");
-                    //    }
-                    //    else
-                    //    {
-                    //        if (enableVoices) C_voice_core.speak($"comment ban in place for {_commentBanminutesLeft} more minute{(_commentBanminutesLeft > 1 ? "s" : "")}");
-                    //    }
-
-                    //}
-                    //else
-                    //{
-
-
-                    // COMMENT - this is usually the first thing to be blocked if you reduce time delays, you will see "posting fialed" at bottom of screen.
-                    // pick a random comment
-                    // {USERNAME} get's replaced with @USERNAME
-                    // {DAY} get's replaced with today's day .g: MONDAY, TUESDAY etc..
-
-                    var myComment = phrasesToComment[new Random().Next(0, phrasesToComment.Count - 1)].Replace("{USERNAME}", "@" + username.Replace("{DAY}", "@" + DateTime.Now.ToString("dddd")));
-
-
-                    // click the comment icon so the comment textarea will work (REQUIRED)
-                    foreach (var obj in IwebDriver.FindElements(By.TagName("a")))
+                    if (_commentBanSecondsLeft > 0)
                     {
-                        if (obj.Text.ToUpper().Contains("COMMENT".ToUpper()))
+
+
+                        if (_commentBanSecondsLeft == 0) // must be a few seconds left 
                         {
-                            obj.Click(); // click comment icon
-                            Thread.Sleep(new Random().Next(secondsBetweenActions_min, secondsBetweenActions_max) * 1000); // wait a short(random) amount of time for page to change
-                            break;
+                            if (enableVoices) C_voice_core.speak($"comment ban in place for {_commentBanSecondsLeft} more seconds");
                         }
-                    }
-                    // make the comment
-                    foreach (var obj in IwebDriver.FindElements(By.TagName("textarea")))
-                    {
-                        if (obj.GetAttribute("placeholder").ToUpper().Contains("COMMENT".ToUpper()))
+                        else
                         {
-                            if (enableVoices) C_voice_core.speak($"commenting");
-                            bool sendKeysFailed = true;// must start as true
-
-                            int attempsToComment = 0;
-                            while (sendKeysFailed && attempsToComment < 3)
-                            {
-                                attempsToComment++;
-                                try
-                                {
-                                    obj.SendKeys(myComment); // put comment in textarea
-                                    break;
-                                }
-                                catch (Exception e)
-                                {
-
-                                    if (e.Message.Contains("element not visible"))
-                                    { // comments disbaled on post, nothing to wory about
-
-                                    }
-                                    else if (e.Message.Contains("character"))
-                                    {
-                                        if (enableVoices) C_voice_core.speak($"The comment {myComment} contains an unsupported character, i'll remove it from the list.");
-                                        sendKeysFailed = true; // some characters are not supported by chrome driver (some emojis for example)
-                                        phrasesToComment.Remove(myComment); // remove offending comment
-                                    }
-                                    else
-                                    {   // other unknown error, relay full error message but dont remove comment from list as it may be perfectly fine.
-                                        if (enableVoices) C_voice_core.speak($"error with a comment, the error was {e.Message}. The comment {myComment} will be removed from the list.");
-                                        sendKeysFailed = true; // some characters are not supported by chrome driver (some emojis for example)
-                                    }
-
-                                    if (phrasesToComment.Count == 0)
-                                    {
-                                        break;
-                                    }
-                                    myComment = phrasesToComment[new Random().Next(0, phrasesToComment.Count - 1)]; // select another comments and try again
-                                }
-                            }
-                            Thread.Sleep(1 * 1000);// wait for comment to type
-                            IwebDriver.FindElement(By.TagName("form")).Submit(); // Only one form on page, so submit it to comment.
-                            Thread.Sleep(3 * 1000); // wait a short(random) amount of time for page to change
-                            break;
+                            if (enableVoices) C_voice_core.speak($"comment ban in place for {_commentBanminutesLeft} more minute{(_commentBanminutesLeft > 1 ? "s" : "")}");
                         }
-                    }
-
-                    // check if comment failed, if yes remove that comment from our comments list
-                    if (IwebDriver.PageSource.ToUpper().Contains("couldn't post comment".ToUpper()))
-                    {
-
-                        if (enableVoices) C_voice_core.speak($"comment failed, I will stop commenting for {banLength} minutes.");
-
-                        //new Classes.C_DataLayer().SetConfigValueFor("stopCommentingUntilDate", DateTime.Now.AddMinutes(banLength).ToString(Classes.C_DataLayer.SQLiteDateTimeFormat));
-
 
                     }
                     else
                     {
 
-                        // testing new database functionality
-                        //new Classes.C_DataLayer().SaveInstaUser(IU: new Classes.InstaUser() { username = instagram_post_user.Replace(" ", "_"), date_last_commented = DateTime.Now });
-                    }
 
-                    // end COMMENT
+                        // COMMENT - this is usually the first thing to be blocked if you reduce time delays, you will see "posting fialed" at bottom of screen.
+                        // pick a random comment
+                        // {USERNAME} get's replaced with @USERNAME
+                        // {DAY} get's replaced with today's day .g: MONDAY, TUESDAY etc..
 
-
-
-
+                        var myComment = phrasesToComment[new Random().Next(0, phrasesToComment.Count - 1)].Replace("{USERNAME}", "@" + username.Replace("{DAY}", "@" + DateTime.Now.ToString("dddd")));
 
 
-                    // LIKE (do last as it opens a popup that stops us seeing the commenting in action)
-                    foreach (var obj in IwebDriver.FindElements(By.TagName("a")))
-                    {
-                        if (obj.Text.ToUpper().Contains("LIKE") && !obj.Text.ToUpper().Contains("UNLIKE"))
+                        // click the comment icon so the comment textarea will work (REQUIRED)
+                        foreach (var obj in IwebDriver.FindElements(By.TagName("a")))
                         {
-                            if (enableVoices) C_voice_core.speak($"liking");
-                            obj.Click();
-                            if (enableVoices) C_voice_core.speak($"done");
+                            if (obj.Text.ToUpper().Contains("COMMENT".ToUpper()))
+                            {
+                                obj.Click(); // click comment icon
+                                Thread.Sleep(new Random().Next(secondsBetweenActions_min, secondsBetweenActions_max) * 1000); // wait a short(random) amount of time for page to change
+                                break;
+                            }
+                        }
+                        // make the comment
+                        foreach (var obj in IwebDriver.FindElements(By.TagName("textarea")))
+                        {
+                            if (obj.GetAttribute("placeholder").ToUpper().Contains("COMMENT".ToUpper()))
+                            {
+                                if (enableVoices) C_voice_core.speak($"commenting");
+                                bool sendKeysFailed = true;// must start as true
 
+                                int attempsToComment = 0;
+                                while (sendKeysFailed && attempsToComment < 3)
+                                {
+                                    attempsToComment++;
+                                    try
+                                    {
+                                        obj.SendKeys(myComment); // put comment in textarea
+                                        break;
+                                    }
+                                    catch (Exception e)
+                                    {
+
+                                        if (e.Message.Contains("element not visible"))
+                                        { // comments disbaled on post, nothing to wory about
+
+                                        }
+                                        else if (e.Message.Contains("character"))
+                                        {
+                                            if (enableVoices) C_voice_core.speak($"The comment {myComment} contains an unsupported character, i'll remove it from the list.");
+                                            sendKeysFailed = true; // some characters are not supported by chrome driver (some emojis for example)
+                                            phrasesToComment.Remove(myComment); // remove offending comment
+                                        }
+                                        else
+                                        {   // other unknown error, relay full error message but dont remove comment from list as it may be perfectly fine.
+                                            if (enableVoices) C_voice_core.speak($"error with a comment, the error was {e.Message}. The comment {myComment} will be removed from the list.");
+                                            sendKeysFailed = true; // some characters are not supported by chrome driver (some emojis for example)
+                                        }
+
+                                        if (phrasesToComment.Count == 0)
+                                        {
+                                            break;
+                                        }
+                                        myComment = phrasesToComment[new Random().Next(0, phrasesToComment.Count - 1)]; // select another comments and try again
+                                    }
+                                }
+                                Thread.Sleep(1 * 1000);// wait for comment to type
+                                IwebDriver.FindElement(By.TagName("form")).Submit(); // Only one form on page, so submit it to comment.
+                                Thread.Sleep(3 * 1000); // wait a short(random) amount of time for page to change
+                                break;
+                            }
+                        }
+
+                        // check if comment failed, if yes remove that comment from our comments list
+                        if (IwebDriver.PageSource.ToUpper().Contains("couldn't post comment".ToUpper()))
+                        {
+
+                            if (enableVoices) C_voice_core.speak($"comment failed, I will stop commenting for {banLength} minutes.");
+                            commentingBannedUntil = DateTime.Now.AddMinutes(banLength);
+                            //new Classes.C_DataLayer().SetConfigValueFor("stopCommentingUntilDate", DateTime.Now.AddMinutes(banLength).ToString(Classes.C_DataLayer.SQLiteDateTimeFormat));
+
+
+                        }
+                        else
+                        {
 
                             // testing new database functionality
-                            //new Classes.C_DataLayer().SaveInstaUser(IU: new Classes.InstaUser() { username = instagram_post_user.Replace(" ", "_"), date_last_liked = DateTime.Now });
-
-                            Thread.Sleep(1 * 1000); // wait a amount of time for page to change
-                            break;
+                            //new Classes.C_DataLayer().SaveInstaUser(IU: new Classes.InstaUser() { username = instagram_post_user.Replace(" ", "_"), date_last_commented = DateTime.Now });
                         }
+
+                        // end COMMENT
+
                     }
 
 
-
-                    // end LIKE
-
-
-                    // }// end already following or no comments left
-
-                    //    else
-                    //    {
-
-                    //    // if (enableVoices) c_voice_core.speak($"not attempting to comment, there are {phrasesToComment.Count} comments to pick from and {(!alreadyFollowing ? "not" : "")} already following them");
+                    var _likeBanminutesLeft = (likingBannedUntil - DateTime.Now).Minutes;
+                    var _likeBanSecondsLeft = (likingBannedUntil - DateTime.Now).Seconds;
 
 
+                    if (_likeBanSecondsLeft > 0)
+                    {
 
 
+                        if (_likeBanSecondsLeft == 0) // must be a few seconds left 
+                        {
+                            if (enableVoices) C_voice_core.speak($"like ban in place for {_likeBanSecondsLeft} more seconds");
+                        }
+                        else
+                        {
+                            if (enableVoices) C_voice_core.speak($"like ban in place for {_likeBanminutesLeft} more minute{(_likeBanminutesLeft > 1 ? "s" : "")}");
+                        }
 
+                    }
+                    else
+                    {
 
+                        // LIKE (do last as it opens a popup that stops us seeing the commenting in action)
+                        foreach (var obj in IwebDriver.FindElements(By.TagName("a")))
+                        {
+                            if (obj.Text.ToUpper().Contains("LIKE") && !obj.Text.ToUpper().Contains("UNLIKE"))
+                            {
+                                if (enableVoices) C_voice_core.speak($"liking");
+                                obj.Click();
+                                if (enableVoices) C_voice_core.speak($"done");
+                                // testing new database functionality
+                                //new Classes.C_DataLayer().SaveInstaUser(IU: new Classes.InstaUser() { username = instagram_post_user.Replace(" ", "_"), date_last_liked = DateTime.Now });
+                                Thread.Sleep(1 * 1000); // wait a amount of time for page to change
+                                if (obj.Text.ToUpper().Contains("LIKE") && !obj.Text.ToUpper().Contains("UNLIKE"))
+                                {
+                                    // like failed
+                                    if (enableVoices) C_voice_core.speak($"like failed, I will stop liking for {banLength} minutes.");
+                                    likingBannedUntil = DateTime.Now.AddMinutes(banLength);
+                                }
+                                break;
+                            }
+                        }
+                    }
 
 
                     //// go to activity page and follow back anyone that followed us
@@ -687,7 +699,7 @@ namespace Instagram_Bot
 
 
 
-                }//
+                }
 
                 // end unfollow people that dont follow back
 
