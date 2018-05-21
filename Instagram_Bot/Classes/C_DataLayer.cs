@@ -39,7 +39,8 @@ namespace Instagram_Bot.Classes
                 {
                     C_voice_core.speak("db file not found, creating");
                     SQLiteConnection.CreateFile(SQLiteFile);
-                    C_voice_core.speak("done");
+                    // C_voice_core.speak("done");
+
                     C_voice_core.speak("Initiate Database");
                     InitiateDatabase();
                 }
@@ -70,7 +71,7 @@ namespace Instagram_Bot.Classes
         {
             try
             {
-                C_voice_core.speak("db AddInstaUser");
+               // C_voice_core.speak("db AddInstaUser");
 
 
                 // only add if not already there
@@ -102,7 +103,7 @@ namespace Instagram_Bot.Classes
             try
             {
 
-                C_voice_core.speak("db SaveInstaUser");
+               // C_voice_core.speak("db SaveInstaUser");
 
                 // now we know they exist, we can update all other fields
                 SQLiteCommand SQLcommand = new SQLiteCommand("update insta_users set " +
@@ -242,7 +243,7 @@ namespace Instagram_Bot.Classes
 
 
 
-            C_voice_core.speak("db create table insta_users");
+           // C_voice_core.speak("db create table insta_users");
 
             try
             {
@@ -267,7 +268,7 @@ namespace Instagram_Bot.Classes
                 SQLcommand.ExecuteNonQuery();
                 conn.Close();
 
-                C_voice_core.speak("db create table config");
+              //  C_voice_core.speak("db create table config");
 
                 // create config table (name / values)
                 SQLcommand = new SQLiteCommand("CREATE TABLE IF NOT EXISTS " +
@@ -282,7 +283,7 @@ namespace Instagram_Bot.Classes
                 SQLcommand.ExecuteNonQuery();
                 conn.Close();
 
-                C_voice_core.speak("db create table stat_log");
+              //  C_voice_core.speak("db create table stat_log");
                 // create stat_log
                 SQLcommand = new SQLiteCommand("CREATE TABLE IF NOT EXISTS " +
                    "stat_log" +
