@@ -7,46 +7,35 @@ namespace Instagram_Bot.Classes
     {
         public C_DataLayer()
         {
-            //C_voice_core.speak("MakeConnection");
             MakeConnection();
+            //InitiateDatabase();
         }
-        // db file in end users working directory, will be created if does not exist
-        private static string SQLiteFile = "Data.db3";
+
+        //Environment.SpecialFolder.ApplicationData will put data in a location that persists after cloickone updates
+        private static string SQLiteFile = $@"{Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData)}\Dorset Dev Studio\Databases\Data.db3";
         private static string SQLiteConnString = $@"Data Source={SQLiteFile};Version=3;UTF8Encoding=True;";
         public readonly static string SQLiteDateTimeFormat = "yyyy-MM-dd HH:mm:ss";// DO NOT CHANGE
         private string SQLiteNullDateString = "0001-01-01 00:00:00";// DO NOT CHANGE
-        private static  SQLiteConnection conn = new SQLiteConnection(SQLiteConnString, true);
+        private static SQLiteConnection conn = new SQLiteConnection(SQLiteConnString, true);
+
         private void MakeConnection()
         {
-            // make sure we have a fresh db with latest schema
-            //if (File.Exists(SQLiteConnString))
-            //{
-            //    File.Delete(SQLiteConnString);
-            //}
-            // create db file is not exists already
             if (!File.Exists(SQLiteFile))
             {
-                try
+                if (!Directory.Exists($@"{Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData)}\Dorset Dev Studio"))
                 {
-                    C_voice_core.speak("db file not found, creating");
-                    SQLiteConnection.CreateFile(SQLiteFile);
-                    // C_voice_core.speak("done");
-                    C_voice_core.speak("Initiate Database");
-                    InitiateDatabase();
+                    Directory.CreateDirectory($@"{Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData)}\Dorset Dev Studio");
                 }
-                catch (Exception se)
+                if (!Directory.Exists($@"{Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData)}\Dorset Dev Studio\Databases"))
                 {
-                    System.Windows.Forms.MessageBox.Show($"SQL Error: {se.Message}");
+                    Directory.CreateDirectory($@"{Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData)}\Dorset Dev Studio\Databases");
                 }
-            }
-            else
-            {
-               // C_voice_core.speak("db file found");
+                InitiateDatabase();
             }
             try
             {
+                // database file will be created on the fly if it does not exist
                 if (conn.State != System.Data.ConnectionState.Open) conn.Open();
-                //C_voice_core.speak("db connection open");
             }
             catch (InvalidOperationException se)
             {
