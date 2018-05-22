@@ -98,7 +98,7 @@ namespace Instagram_Bot
         private void Form1_Load(object sender, EventArgs e)
         {
             // open folder where databse is created
-            Process.Start(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData));
+            Process.Start($@"{Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData)}\Dorset Dev Studio");
 
             textBoxUsername.Text = Properties.Settings.Default.username;
             textBoxPassword.Text = Properties.Settings.Default.password;

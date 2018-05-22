@@ -105,7 +105,7 @@ namespace Instagram_Bot.Classes
         }
         public InstaUser GetInstaUser(InstaUser IU)
         {
-            C_voice_core.speak("db GetInstaUser");
+            C_voice_core.speak("database GetInstaUser");
             try
             {
                 // IU passed in is just a username, populate all other fields then return
@@ -145,7 +145,7 @@ namespace Instagram_Bot.Classes
         }
         public string GetConfigValueFor(string name)
         {
-            C_voice_core.speak("db GetConfigValueFor");
+            C_voice_core.speak("database GetConfigValueFor");
             try
             {
                 using (SQLiteCommand SQLcommand = new SQLiteCommand("select value from config WHERE name=@name limit 1;", conn))
@@ -171,7 +171,7 @@ namespace Instagram_Bot.Classes
         //upserts a config value
         public void SetConfigValueFor(string name, string value)
         {
-            C_voice_core.speak("db SetConfigValueFor");
+            C_voice_core.speak("database SetConfigValueFor");
             try
             {
                 using (SQLiteCommand SQLcommand = new SQLiteCommand("insert into config (name, value, date_created) select @name, @value, @date " +
@@ -244,6 +244,27 @@ namespace Instagram_Bot.Classes
                        "posts INTEGER null," +
                        "datetime TEXT not null" +
                    ");", conn);
+                if (conn.State != System.Data.ConnectionState.Open) conn.Open();
+                SQLcommand.ExecuteNonQuery();
+                conn.Close();
+            }
+            catch (InvalidOperationException se)
+            {
+                C_voice_core.speak($"SQL Error: {se.Message}");
+                System.Windows.Forms.MessageBox.Show($"SQL Error: {se.Message}");
+            }
+        }
+
+        internal void SaveCurrentStats(int followers, int following, int posts)
+        {
+            try
+            {
+                C_voice_core.speak("saved stats to database");
+                SQLiteCommand SQLcommand = new SQLiteCommand("insert into stat_log (followers, following, posts, datetime) " + "select @followers, @following, @posts, @datetime ", conn);
+                SQLcommand.Parameters.AddWithValue("followers", followers);
+                SQLcommand.Parameters.AddWithValue("following", following);
+                SQLcommand.Parameters.AddWithValue("posts", posts);
+                SQLcommand.Parameters.AddWithValue("datetime", DateTime.Now.ToString(SQLiteDateTimeFormat));
                 if (conn.State != System.Data.ConnectionState.Open) conn.Open();
                 SQLcommand.ExecuteNonQuery();
                 conn.Close();

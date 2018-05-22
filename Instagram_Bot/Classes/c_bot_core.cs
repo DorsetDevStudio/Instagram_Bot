@@ -166,6 +166,12 @@ namespace Instagram_Bot
             bool chromeIsMinimised = false;
             bool _sleeping = false;
             /* MAIN LOOP */
+
+
+            // record stats before we start so we can monitor performance for every session the bot is runing
+            GetStats(username, enableVoices);
+
+
             // loop forever, performing a new search and then following, liking and spamming the hell out of everyone.
             while (true)
             {
@@ -176,13 +182,13 @@ namespace Instagram_Bot
                     if (enableVoices) C_voice_core.speak($"db test passed");
                 }
                 catch (InvalidOperationException ee)
-                {                  
-                    if (enableVoices) C_voice_core.speak($"SQLite invalid operation error {ee.InnerException.Message}",true);
+                {
+                    if (enableVoices) C_voice_core.speak($"SQLite invalid operation error {ee.InnerException.Message}", true);
                     MessageBox.Show($"SQLite invalid operation error {ee.InnerException.Message}");
                 }
                 catch (Exception ee)
                 {
-                    if (enableVoices) C_voice_core.speak($"SQLite error {ee.InnerException.Message}",true);
+                    if (enableVoices) C_voice_core.speak($"SQLite error {ee.InnerException.Message}", true);
                     MessageBox.Show($"SQLite error {ee.InnerException.Message}");
                 }
                 DateTime commentingBannedUntil = DateTime.Now;
@@ -497,37 +503,72 @@ namespace Instagram_Bot
                     //}
                 }
                 // end unfollow people that dont follow back
-                if (enableVoices) C_voice_core.speak($"all done {user}, let's check your stats");
-                // Return to users profile page so they can see their stats while we wait for next search to start
-                IwebDriver.Navigate().GoToUrl($"https://www.instagram.com/{username}");
-                //TODO: when testing on a new account with no profile image (may be unrelated) the stats below are not found, need to figure out why. Have increased wait to from 3 to 4 seconds to see if that helps.
-                Thread.Sleep(4 * 1000); // wait a amount of time for page to change
-                string followers = "";
-                foreach (var obj in IwebDriver.FindElements(By.TagName("a")))
-                {
-                    if (obj.GetAttribute("href").Contains("followers")
-                        && obj.GetAttribute("href").ToLower().Contains(username))
-                    {
-                        followers = obj.FindElement(By.TagName("span")).Text.Replace(",", "").Replace(" ", "").Replace("followers", "");
-                        break;
-                    }
-                }
-                string following = "";
-                foreach (var obj in IwebDriver.FindElements(By.TagName("a")))
-                {
-                    if (obj.GetAttribute("href").Contains("following")
-                        && obj.GetAttribute("href").ToLower().Contains(username))
-                    {
-                        following = obj.FindElement(By.TagName("span")).Text.Replace(",", "").Replace(" ", "").Replace("following", "");
-                        break;
-                    }
-                }
-                if (enableVoices) C_voice_core.speak($"You have {followers} followers and are following {following}. Well done, but I take all the credit.");
+
+
+                GetStats(username, enableVoices);
+
+
                 if (enableVoices) C_voice_core.speak($"Let's take a short break.");
+
                 Thread.Sleep(new Random().Next(minutesBetweenBulkActions_min, minutesBetweenBulkActions_max) * 60000);// wait between each bulk action
             }
             /* end of MAIN LOOP */
         }
+
+        private void GetStats(string username, bool enableVoices)
+        {
+            // start get stats
+            if (enableVoices) C_voice_core.speak($"ok {user}, let's check your stats");
+            // Return to users profile page so they can see their stats while we wait for next search to start
+            IwebDriver.Navigate().GoToUrl($"https://www.instagram.com/{username}");
+            //TODO: when testing on a new account with no profile image (may be unrelated) the stats below are not found, need to figure out why. Have increased wait to from 3 to 4 seconds to see if that helps.
+            Thread.Sleep(4 * 1000); // wait a amount of time for page to change
+            string followers = "";
+            foreach (var obj in IwebDriver.FindElements(By.TagName("a")))
+            {
+                if (obj.GetAttribute("href").Contains("followers")
+                    && obj.GetAttribute("href").ToLower().Contains(username))
+                {
+                    followers = obj.FindElement(By.TagName("span")).Text.Replace(",", "").Replace(" ", "").Replace("followers", "");
+                    break;
+                }
+            }
+            string following = "";
+            foreach (var obj in IwebDriver.FindElements(By.TagName("a")))
+            {
+                if (obj.GetAttribute("href").Contains("following")
+                    && obj.GetAttribute("href").ToLower().Contains(username))
+                {
+                    following = obj.FindElement(By.TagName("span")).Text.Replace(",", "").Replace(" ", "").Replace("following", "");
+                    break;
+                }
+            }
+
+            string posts = "";
+            foreach (var obj in IwebDriver.FindElements(By.TagName("li")))
+            {
+                if (obj.Text.Contains(" posts"))
+                {
+                    posts = obj.Text.Replace(",", "").Replace(" ", "").Replace("posts", "");
+                    break;
+                }
+            }
+
+
+            // check scraped stat/followers/following data is valid
+            if (int.TryParse(followers, out int _followers)
+                && int.TryParse(following, out int _following)
+                && int.TryParse(posts, out int _posts)
+                )
+            {
+                // testing new database functionality
+                new Classes.C_DataLayer().SaveCurrentStats(followers: _followers, following: _following, posts: _posts);
+            }
+
+            if (enableVoices) C_voice_core.speak($"You have a total of {posts} posts, {followers} followers and are following {following}. Well done, but I take all the credit.");
+            // end get stats
+        }
+
         private DateTime CommentOnPost(string username, bool enableVoices, int banLength, int secondsBetweenActions_min, int secondsBetweenActions_max, List<string> phrasesToComment, DateTime commentingBannedUntil, string instagram_post_user)
         {
             // START COMMENTING
