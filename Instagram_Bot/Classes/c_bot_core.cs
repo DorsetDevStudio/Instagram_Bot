@@ -29,25 +29,59 @@ namespace Instagram_Bot
             int secondsBetweenActions_max = 1; // must be > secondsBetweenActions_min
             int minutesBetweenBulkActions_min = 1;
             int minutesBetweenBulkActions_max = 2; // must be > minutesBetweenBulkActions_min
-            // limits based on minimal research
-            int maxFollowsIn24Hours = 100;// int.TryParse(//new Classes.C_DataLayer().GetConfigValueFor("dailyFollowLimit"), out int _a) ? _a : 500;
-            int maxCommentsIn24Hours = 100;// int.TryParse(//new Classes.C_DataLayer().GetConfigValueFor("dailyCommentLimit"), out int _a2) ? _a2 : 500;
-            int maxLikesIn24Hours = 100;// (int)(maxFollowsIn24Hours * 1.2);
+
             // Any value will work, trial and error
             int maxPostsPerSearch = 10;
+
             // General interests to target:
             // values from c:\hashtags.txt also loaded at startup. 
             // Values from c:\ignore_hashtags.txt will be ignored.
             var thingsToSearch = new List<string>()
             {
-                "summer", "chill", "hangover", "followme", "follow4follow", "followforfollow", "followback", "follow4Like", "like4follow",
-                 DateTime.Now.ToString("dddd"), // today
-                 DateTime.Now.ToString("dddd") + "lunch",
-                 DateTime.Now.ToString("dddd") + "roast",
-                 DateTime.Now.AddDays(-1).ToString("dddd"), // yesterday
-                 "hate"+DateTime.Now.ToString("dddd")+"s",
-                 "love"+DateTime.Now.ToString("dddd")+"s",
+                "summer", "chill","youtube","content","vlogger","losangeles","travel","interesting",
+                "newcontent","moresoon","funvideo","sofun","discover","adventure","videowhat","avgeek","aviation",
+                "work","life","beauty","snow","winter","michigan","fly","awesomehow","fashion","star",
+                "style","film","me","swagger","photooftheday","instamood"
             };
+
+
+            // add tags based of the current day
+            if (DateTime.Now.ToString("dddd").ToLower() == "sunday")
+            {
+                thingsToSearch.AddRange(
+                    new List<string> {
+                        DateTime.Now.ToString("dddd") + "lunch",
+                        DateTime.Now.ToString("dddd") + "roast"
+                    });
+            }
+            if (DateTime.Now.ToString("dddd").ToLower() == "wednesday")
+            {
+                thingsToSearch.AddRange(
+                    new List<string> {
+                         "humpday",
+                    });
+            }
+            if (DateTime.Now.ToString("dddd").ToLower() == "friday")
+            {
+                thingsToSearch.AddRange(
+                    new List<string> {
+                         "fridayfeeling",
+
+                    });
+            }
+            if (DateTime.Now.ToString("dddd").ToLower() == "monday")
+            {
+                thingsToSearch.AddRange(
+                    new List<string> {
+                         "hatemondays",
+
+                    });
+            }
+            // end add tags based of the current day
+
+
+
+
             if (File.Exists(@"c:\hashtags.txt"))
             {
                 thingsToSearch.Clear();// just use users hashtags
@@ -68,14 +102,22 @@ namespace Instagram_Bot
                 "#nice :) @" + username,
                 "#interesting, where is that? @" + username,
                 "#Perfection, you should be a #photographer! @" + username,
-                "#Perfection, you've missed your calling! @" + username,
-                "#Perfection, almost looks professional! @" + username,
-                "#haha, interesting approach me thinks @" + username,
+                "Perfection, you've missed your calling! @" + username,
+                "#Perfection, almost looks #professional! @" + username,
+                "interesting approach me thinks @" + username,
                 "Wish I could take #photos like yours! @" + username,
-                // "#Perfection, that put a #smile on my face and made my " + DateTime.Now.ToString("dddd") + " :) @" + username,
                 "It's #" + DateTime.Now.ToString("dddd") + " people @" + username,
                 "#Happy " + DateTime.Now.ToString("dddd") + " everybody :) from @" + username,
-                //"Just what I needed to see this fine " + DateTime.Now.ToString("dddd")+ " " + (DateTime.Now.Hour >= 12 ? "afternoon" : "morning")   + " :) @" + username,
+                "I likes it!",
+                "#nice :)",
+                "#interesting, where is that?",
+                "Perfection, you should be a #photographer!",
+                "#Perfection, you've missed your calling!",
+                "#Perfection, almost looks professional!",
+                "haha, interesting approach me thinks",
+                "Wish I could take #photos like yours!",
+                "It's #" + DateTime.Now.ToString("dddd") + " people",
+                "#Happy " + DateTime.Now.ToString("dddd") + " everybody :)",
             };
             if (File.Exists(@"c:\comments.txt"))
             {
