@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Deployment.Application;
 using System.Diagnostics;
+using System.IO;
 using System.Net;
 using System.Threading;
 using System.Threading.Tasks;
@@ -11,10 +12,9 @@ namespace Instagram_Bot
 {
 
 
-
-
     public partial class Form1 : Form
     {
+  
         // To install just run https://github.com/DorsetDevStudio/Instagram_Bot/raw/master/Instagram_Bot/publish/setup.exe
         // or go to http://tinyurl.com/dorsetdevbot
 
@@ -30,16 +30,16 @@ namespace Instagram_Bot
          */
 
         // SIGNING must be OFF as WebDriver.dll is not signed which results in click ones deployment errors if the main app is signed.
-
+        
         public Form1()
         {
             InitializeComponent();
         }
+
         C_bot_core botCore;
         Thread th = null;
         private void button1_Click(object sender, EventArgs e)
         {
-
 
             // package up `don't run between times` so we can pass to bot_core as a list of class timeSpans
             var sleepTimes = new List<timeSpans>();
@@ -53,9 +53,6 @@ namespace Instagram_Bot
             }
             // end package up `don't run between times`
 
-
-
-
             if (textBoxUsername.Text.Length < 4)
             {
                 MessageBox.Show("You need to enter your Instagram user" +
@@ -65,17 +62,15 @@ namespace Instagram_Bot
 
             WindowState = FormWindowState.Minimized;
 
-
-
             // save users' settings for next time. (only works if running fully installed via click once)
             textBoxUsername.Text = textBoxUsername.Text.Trim().ToLower();
             Properties.Settings.Default.username = textBoxUsername.Text;
             Properties.Settings.Default.password = textBoxPassword.Text;
-            //Properties.Settings.Default.sleepTimeSpan1_From = dateTimePicker1.Value;
-            //Properties.Settings.Default.sleepTimeSpan1_To = dateTimePicker2.Value;
-            //Properties.Settings.Default.sleepTimeSpan2_From = dateTimePicker3.Value;
-            //Properties.Settings.Default.sleepTimeSpan2_To = dateTimePicker4.Value;
-            //Properties.Settings.Default.banLength = (int)numericUpDownBanLength.Value;
+            Properties.Settings.Default.sleepTimeSpan1_From = dateTimePicker1.Value;
+            Properties.Settings.Default.sleepTimeSpan1_To = dateTimePicker2.Value;
+            Properties.Settings.Default.sleepTimeSpan2_From = dateTimePicker3.Value;
+            Properties.Settings.Default.sleepTimeSpan2_To = dateTimePicker4.Value;
+            Properties.Settings.Default.banLength = (int)numericUpDownBanLength.Value;
 
             Properties.Settings.Default.Save();
 
@@ -91,7 +86,6 @@ namespace Instagram_Bot
                 buttonStopBot.Enabled = true;
 
                 //notifyIcon1.ShowBalloonTip(3 * 1000, "Running", "", ToolTipIcon.None);
-
 
             }
             catch (Exception ee)
@@ -109,19 +103,15 @@ namespace Instagram_Bot
             textBoxUsername.Text = Properties.Settings.Default.username;
             textBoxPassword.Text = Properties.Settings.Default.password;
 
-            //try // load `don't run between times` from user settings , could fail on first load
-            //{
-            //    dateTimePicker1.Value = Properties.Settings.Default.sleepTimeSpan1_From;
-            //    dateTimePicker2.Value = Properties.Settings.Default.sleepTimeSpan1_To;
-
-            //    dateTimePicker3.Value = Properties.Settings.Default.sleepTimeSpan2_From;
-            //    dateTimePicker4.Value = Properties.Settings.Default.sleepTimeSpan2_To;
-
-
-            //    numericUpDownBanLength.Value = Properties.Settings.Default.banLength;
-
-            //}
-            //catch { }
+            try // load `don't run between times` from user settings , could fail on first load
+            {
+                dateTimePicker1.Value = Properties.Settings.Default.sleepTimeSpan1_From;
+                dateTimePicker2.Value = Properties.Settings.Default.sleepTimeSpan1_To;
+                dateTimePicker3.Value = Properties.Settings.Default.sleepTimeSpan2_From;
+                dateTimePicker4.Value = Properties.Settings.Default.sleepTimeSpan2_To;
+                numericUpDownBanLength.Value = Properties.Settings.Default.banLength;
+            }
+            catch { }
 
             buttonStopBot.Enabled = false;
 
@@ -131,7 +121,7 @@ namespace Instagram_Bot
             ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12;
 
             // This file must be in the working directory but does not like to be deployed with app
-            if (!System.IO.File.Exists("chromedriver.exe"))
+            if (!File.Exists("chromedriver.exe"))
             {
                 notifyIcon1.ShowBalloonTip(2 * 1000, "Instagram Bot", "Installing drivers...", ToolTipIcon.None);
                 WebClient webClient = new WebClient();
@@ -143,13 +133,10 @@ namespace Instagram_Bot
 
             MessageBox.Show("Please ensure your sound is turned up.","Instagram Bot is talking to you!");
 
-
             C_voice_core.speak(
                 "Enter your Instagram username and password and then click start. If prompted by Instagram you should follow the security challenge and enter the pin.", 
                 async: true);
             
-
-
         }
 
         private void textBoxPassword_KeyUp(object sender, KeyEventArgs e)
@@ -241,13 +228,11 @@ namespace Instagram_Bot
         }
     }
 
-
     //TODO Move to own file
     public class timeSpans
     {
         public DateTime from;
         public DateTime to;
     }
-
 
 }
