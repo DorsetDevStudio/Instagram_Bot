@@ -6,7 +6,7 @@ namespace Instagram_Bot
 {
     static class Program
     {
-        [SecurityPermission(SecurityAction.Demand, Flags = SecurityPermissionFlag.AllFlags)]
+
         [STAThread]
         static void Main()
         {
