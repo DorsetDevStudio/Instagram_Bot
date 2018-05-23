@@ -9,16 +9,18 @@ namespace Instagram_Bot
 {
     public class C_bot_core : IC_bot_core, IDisposable
     {
+
+
         IWebDriver IwebDriver;
         string user = Environment.UserName.Replace(".", " ").Replace(@"\", "");
-        public C_bot_core(string username, string password, bool stealthMode = false, bool enableVoices = true, List<timeSpans> sleepTimes = null, int banLength = 5)
+        public C_bot_core(int bot_id,string username, string password, bool stealthMode = false, bool enableVoices = true, List<timeSpans> sleepTimes = null, int banLength = 5)
         {
             // pretend to be an android mobile app so we can upload image/create posts
             //ChromeOptions options = new ChromeOptions();
             // options.AddArgument("--user-agent=Mozilla/5.0 (iPad; CPU OS 6_0 like Mac OS X) AppleWebKit/536.26 (KHTML, like Gecko) Version/6.0 Mobile/10A5355d Safari/8536.25");
             //options.UnhandledPromptBehavior = UnhandledPromptBehavior.Dismiss;
             IwebDriver = new ChromeDriver();
-            IwebDriver.Manage().Window.Maximize();
+            //IwebDriver.Manage().Window.Maximize();
             if (user.Contains(""))
             { // use just the first name of pc username to be more personable
                 user = user.Split(' ')[0];

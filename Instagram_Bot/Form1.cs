@@ -4,6 +4,7 @@ using System.Deployment.Application;
 using System.Diagnostics;
 using System.IO;
 using System.Net;
+using System.Runtime.InteropServices;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -36,8 +37,14 @@ namespace Instagram_Bot
             InitializeComponent();
         }
 
-        C_bot_core botCore;
-        Thread th = null;
+
+        [DllImport("user32.dll")]
+        static extern bool ShowWindow(IntPtr hWnd, int nCmdShow);
+
+
+
+
+        List<Task> Tasks = new List<Task>();
         private void button1_Click(object sender, EventArgs e)
         {
 
@@ -75,18 +82,29 @@ namespace Instagram_Bot
             Properties.Settings.Default.Save();
 
             Application.DoEvents();
+
             try
             {
-                Task.Factory.StartNew(() =>
+                int bot_id = 0;
+                while (Tasks.Count < numericUpDownTotalBots.Value)
                 {
-                    th = Thread.CurrentThread;
-                    botCore = new C_bot_core(textBoxUsername.Text.Trim(), textBoxPassword.Text.Trim(), checkBoxStealthMode.Checked, !checkBoxDisableVoices.Checked, sleepTimes, (int)numericUpDownBanLength.Value);
-                });
+                    bot_id++;
+                    Tasks.Add(Task.Factory.StartNew(() =>
+                    {
+                        new C_bot_core(bot_id, textBoxUsername.Text.Trim(), textBoxPassword.Text.Trim(), checkBoxStealthMode.Checked, !checkBoxDisableVoices.Checked, sleepTimes, (int)numericUpDownBanLength.Value);
+                    }));
+                    Thread.Sleep(2000);// delay between launch each bot
+                }
                 buttonStartBot.Enabled = false;
                 buttonStopBot.Enabled = true;
-
                 //notifyIcon1.ShowBalloonTip(3 * 1000, "Running", "", ToolTipIcon.None);
 
+                foreach (var p in Process.GetProcessesByName("chromedriver"))
+                {
+                    // Minimises the window
+                    ShowWindow(Process.GetProcessById(p.Id).MainWindowHandle, 2);                   
+                }
+  
             }
             catch (Exception ee)
             {
@@ -168,8 +186,9 @@ namespace Instagram_Bot
         {
             try
             {
-                //TODO: stopping bot does not close the instance of chrome, but at least it stops and does not lock up UI
-                th.Abort();
+                foreach (var t in Tasks)
+                    t.Dispose();
+                Tasks.Clear();
                 foreach (var process in Process.GetProcessesByName("chromedriver"))
                 {
                     process.Kill();
@@ -182,7 +201,6 @@ namespace Instagram_Bot
             {
                 MessageBox.Show($"There was an error when trying to stop the bot! Maybe it stopped, maybe it didn't\n\nError message = {eee.Message}");
             }
-
         }
 
         private void exitToolStripMenuItem_Click(object sender, EventArgs e)
@@ -225,6 +243,13 @@ namespace Instagram_Bot
         {
             dateTimePicker2.MaxDate = dateTimePicker3.Value;
             dateTimePicker4.MinDate = dateTimePicker3.Value;
+        }
+
+        private void numericUpDownTotalBots_ValueChanged(object sender, EventArgs e)
+        {
+            //voices are annoying when more than 1 bot running
+            if (numericUpDownTotalBots.Value > 1)
+                checkBoxDisableVoices.Checked = true;
         }
     }
 

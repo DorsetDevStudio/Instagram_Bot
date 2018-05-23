@@ -58,18 +58,21 @@
             this.notifyIcon1 = new System.Windows.Forms.NotifyIcon(this.components);
             this.contextMenuStripForNotifyIcon = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.exitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.numericUpDownTotalBots = new System.Windows.Forms.NumericUpDown();
+            this.label8 = new System.Windows.Forms.Label();
             this.statusStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.groupBox1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownBanLength)).BeginInit();
             this.contextMenuStripForNotifyIcon.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownTotalBots)).BeginInit();
             this.SuspendLayout();
             // 
             // statusStrip1
             // 
             this.statusStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.toolStripStatusLabel1});
-            this.statusStrip1.Location = new System.Drawing.Point(0, 309);
+            this.statusStrip1.Location = new System.Drawing.Point(0, 303);
             this.statusStrip1.Name = "statusStrip1";
             this.statusStrip1.Size = new System.Drawing.Size(603, 22);
             this.statusStrip1.TabIndex = 2;
@@ -118,9 +121,9 @@
             // buttonStartBot
             // 
             this.buttonStartBot.BackColor = System.Drawing.Color.PaleGreen;
-            this.buttonStartBot.Location = new System.Drawing.Point(472, 271);
+            this.buttonStartBot.Location = new System.Drawing.Point(514, 265);
             this.buttonStartBot.Name = "buttonStartBot";
-            this.buttonStartBot.Size = new System.Drawing.Size(109, 23);
+            this.buttonStartBot.Size = new System.Drawing.Size(73, 35);
             this.buttonStartBot.TabIndex = 2;
             this.buttonStartBot.Text = "Start";
             this.buttonStartBot.UseVisualStyleBackColor = false;
@@ -310,9 +313,9 @@
             // buttonStopBot
             // 
             this.buttonStopBot.BackColor = System.Drawing.Color.OrangeRed;
-            this.buttonStopBot.Location = new System.Drawing.Point(318, 271);
+            this.buttonStopBot.Location = new System.Drawing.Point(292, 265);
             this.buttonStopBot.Name = "buttonStopBot";
-            this.buttonStopBot.Size = new System.Drawing.Size(109, 23);
+            this.buttonStopBot.Size = new System.Drawing.Size(73, 35);
             this.buttonStopBot.TabIndex = 11;
             this.buttonStopBot.Text = "Stop";
             this.buttonStopBot.UseVisualStyleBackColor = false;
@@ -364,11 +367,45 @@
             this.exitToolStripMenuItem.Text = "&Exit";
             this.exitToolStripMenuItem.Click += new System.EventHandler(this.exitToolStripMenuItem_Click);
             // 
+            // numericUpDownTotalBots
+            // 
+            this.numericUpDownTotalBots.Location = new System.Drawing.Point(464, 274);
+            this.numericUpDownTotalBots.Maximum = new decimal(new int[] {
+            3,
+            0,
+            0,
+            0});
+            this.numericUpDownTotalBots.Minimum = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
+            this.numericUpDownTotalBots.Name = "numericUpDownTotalBots";
+            this.numericUpDownTotalBots.Size = new System.Drawing.Size(38, 20);
+            this.numericUpDownTotalBots.TabIndex = 20;
+            this.numericUpDownTotalBots.Value = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
+            this.numericUpDownTotalBots.ValueChanged += new System.EventHandler(this.numericUpDownTotalBots_ValueChanged);
+            // 
+            // label8
+            // 
+            this.label8.AutoSize = true;
+            this.label8.Location = new System.Drawing.Point(375, 276);
+            this.label8.Name = "label8";
+            this.label8.Size = new System.Drawing.Size(83, 13);
+            this.label8.TabIndex = 20;
+            this.label8.Text = "Number of Bots:";
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(603, 331);
+            this.ClientSize = new System.Drawing.Size(603, 325);
+            this.Controls.Add(this.label8);
+            this.Controls.Add(this.numericUpDownTotalBots);
             this.Controls.Add(this.linkLabel2);
             this.Controls.Add(this.linkLabel1);
             this.Controls.Add(this.buttonStopBot);
@@ -390,6 +427,7 @@
             this.groupBox1.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownBanLength)).EndInit();
             this.contextMenuStripForNotifyIcon.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownTotalBots)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -424,6 +462,8 @@
         private System.Windows.Forms.DateTimePicker dateTimePicker4;
         private System.Windows.Forms.NumericUpDown numericUpDownBanLength;
         private System.Windows.Forms.Label label7;
+        private System.Windows.Forms.NumericUpDown numericUpDownTotalBots;
+        private System.Windows.Forms.Label label8;
     }
 }
 
