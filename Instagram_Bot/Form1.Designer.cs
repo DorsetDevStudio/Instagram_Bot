@@ -60,6 +60,7 @@
             this.exitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.numericUpDownTotalBots = new System.Windows.Forms.NumericUpDown();
             this.label8 = new System.Windows.Forms.Label();
+            this.checkBoxJustUnfollow = new System.Windows.Forms.CheckBox();
             this.statusStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.groupBox1.SuspendLayout();
@@ -132,7 +133,7 @@
             // checkBoxDisableVoices
             // 
             this.checkBoxDisableVoices.AutoSize = true;
-            this.checkBoxDisableVoices.Location = new System.Drawing.Point(152, 99);
+            this.checkBoxDisableVoices.Location = new System.Drawing.Point(177, 99);
             this.checkBoxDisableVoices.Name = "checkBoxDisableVoices";
             this.checkBoxDisableVoices.Size = new System.Drawing.Size(96, 17);
             this.checkBoxDisableVoices.TabIndex = 7;
@@ -142,7 +143,7 @@
             // checkBoxStealthMode
             // 
             this.checkBoxStealthMode.AutoSize = true;
-            this.checkBoxStealthMode.Location = new System.Drawing.Point(42, 99);
+            this.checkBoxStealthMode.Location = new System.Drawing.Point(27, 99);
             this.checkBoxStealthMode.Name = "checkBoxStealthMode";
             this.checkBoxStealthMode.Size = new System.Drawing.Size(100, 17);
             this.checkBoxStealthMode.TabIndex = 8;
@@ -160,6 +161,7 @@
             // 
             // groupBox1
             // 
+            this.groupBox1.Controls.Add(this.checkBoxJustUnfollow);
             this.groupBox1.Controls.Add(this.numericUpDownBanLength);
             this.groupBox1.Controls.Add(this.label7);
             this.groupBox1.Controls.Add(this.label5);
@@ -186,7 +188,7 @@
             // 
             // numericUpDownBanLength
             // 
-            this.numericUpDownBanLength.Location = new System.Drawing.Point(216, 198);
+            this.numericUpDownBanLength.Location = new System.Drawing.Point(216, 185);
             this.numericUpDownBanLength.Maximum = new decimal(new int[] {
             1440,
             0,
@@ -209,7 +211,7 @@
             // label7
             // 
             this.label7.AutoSize = true;
-            this.label7.Location = new System.Drawing.Point(24, 200);
+            this.label7.Location = new System.Drawing.Point(24, 187);
             this.label7.Name = "label7";
             this.label7.Size = new System.Drawing.Size(186, 13);
             this.label7.TabIndex = 18;
@@ -399,6 +401,16 @@
             this.label8.TabIndex = 20;
             this.label8.Text = "Number of Bots:";
             // 
+            // checkBoxJustUnfollow
+            // 
+            this.checkBoxJustUnfollow.AutoSize = true;
+            this.checkBoxJustUnfollow.Location = new System.Drawing.Point(187, 219);
+            this.checkBoxJustUnfollow.Name = "checkBoxJustUnfollow";
+            this.checkBoxJustUnfollow.Size = new System.Drawing.Size(89, 17);
+            this.checkBoxJustUnfollow.TabIndex = 20;
+            this.checkBoxJustUnfollow.Text = "Just Unfollow";
+            this.checkBoxJustUnfollow.UseVisualStyleBackColor = true;
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -464,6 +476,7 @@
         private System.Windows.Forms.Label label7;
         private System.Windows.Forms.NumericUpDown numericUpDownTotalBots;
         private System.Windows.Forms.Label label8;
+        private System.Windows.Forms.CheckBox checkBoxJustUnfollow;
     }
 }
 

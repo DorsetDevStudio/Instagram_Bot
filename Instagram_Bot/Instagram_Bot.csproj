@@ -122,10 +122,12 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Classes\C_Bot_Common.cs" />
     <Compile Include="Classes\C_bot_core.cs" />
     <Compile Include="Classes\C_DataLayer.cs" />
     <Compile Include="Classes\C_InstaUsers.cs" />
     <Compile Include="Classes\C_log_core.cs" />
+    <Compile Include="Classes\C_Unfollow_bot.cs" />
     <Compile Include="Classes\C_voice_core.cs" />
     <Compile Include="GlobalSuppressions.cs" />
     <Compile Include="Interfaces\IC_bot_core.cs" />

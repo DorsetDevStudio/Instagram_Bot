@@ -5,39 +5,32 @@ using System.Collections.Generic;
 using System.IO;
 using System.Threading;
 using System.Windows.Forms;
+using Instagram_Bot.Classes;
+
+
 namespace Instagram_Bot
 {
     public class C_bot_core : IC_bot_core, IDisposable
     {
 
-
         IWebDriver IwebDriver;
-        string user = Environment.UserName.Replace(".", " ").Replace(@"\", "");
+        string user = Environment.UserName.Replace(".", " ").Replace(@"\", "").Split(' ')[0];
+        int secondsBetweenActions_min = 1;
+        int secondsBetweenActions_max = 1;
+        int minutesBetweenBulkActions_min = 1;
+        int minutesBetweenBulkActions_max = 2;
+        int maxPostsPerSearch = 10;
+
+
         public C_bot_core(int bot_id,string username, string password, bool stealthMode = false, bool enableVoices = true, List<timeSpans> sleepTimes = null, int banLength = 5)
         {
-            // pretend to be an android mobile app so we can upload image/create posts
-            //ChromeOptions options = new ChromeOptions();
-            // options.AddArgument("--user-agent=Mozilla/5.0 (iPad; CPU OS 6_0 like Mac OS X) AppleWebKit/536.26 (KHTML, like Gecko) Version/6.0 Mobile/10A5355d Safari/8536.25");
-            //options.UnhandledPromptBehavior = UnhandledPromptBehavior.Dismiss;
-            IwebDriver = new ChromeDriver();
-            //IwebDriver.Manage().Window.Maximize();
-            if (user.Contains(""))
-            { // use just the first name of pc username to be more personable
-                user = user.Split(' ')[0];
-            }
-            /* CONFIG  */
-            // Instagram throttling & bot detection avoidance - we randomise the time between actions (clicks) to `look` more `human`)
-            int secondsBetweenActions_min = 1;
-            int secondsBetweenActions_max = 1; // must be > secondsBetweenActions_min
-            int minutesBetweenBulkActions_min = 1;
-            int minutesBetweenBulkActions_max = 2; // must be > minutesBetweenBulkActions_min
 
-            // Any value will work, trial and error
-            int maxPostsPerSearch = 10;
+            ChromeOptions options = new ChromeOptions();
+            options.AddArgument("--user-agent=Mozilla/5.0 (iPad; CPU OS 6_0 like Mac OS X) AppleWebKit/536.26 (KHTML, like Gecko) Version/6.0 Mobile/10A5355d Safari/8536.25");
 
-            // General interests to target:
-            // values from c:\hashtags.txt also loaded at startup. 
-            // Values from c:\ignore_hashtags.txt will be ignored.
+            IwebDriver = new ChromeDriver(options);
+            var core = new C_Bot_Common(IwebDriver);
+
             var thingsToSearch = new List<string>()
             {
                 "summer", "chill","youtube","content","vlogger","losangeles","travel","interesting",
@@ -45,7 +38,6 @@ namespace Instagram_Bot
                 "work","life","beauty","snow","winter","michigan","fly","awesomehow","fashion","star",
                 "style","film","me","swagger","photooftheday","instamood"
             };
-
 
             // add tags based of the current day
             if (DateTime.Now.ToString("dddd").ToLower() == "sunday")
@@ -80,8 +72,6 @@ namespace Instagram_Bot
                     });
             }
             // end add tags based of the current day
-
-
 
 
             if (File.Exists(@"c:\hashtags.txt"))
@@ -133,36 +123,11 @@ namespace Instagram_Bot
                 foreach (var line in File.ReadLines(@"c:\ignore_comments.txt"))
                     phrasesToComment.Remove(line);
             /* END CONFIG */
-            IwebDriver.Navigate().GoToUrl("https://www.instagram.com/accounts/login/");
-            // if (enableVoices) c_voice_core.speak($"let's connect to Instagram");
-            if (password.Length < 4)
-            {
-                if (enableVoices) C_voice_core.speak($"Please login now {user}");
-            }
-            else
-            {
-                // Log in to Instagram               
-                Thread.Sleep(1 * 1000); // wait for page to change
-                IwebDriver.FindElement(By.Name("username")).SendKeys(username);
-                IwebDriver.FindElement(By.Name("password")).SendKeys(password);
-                IwebDriver.FindElement(By.TagName("form")).Submit();
-                Thread.Sleep(4 * 1000); // wait for page to change
-                                        // end Log in to Instagram
-            }
-            if (IwebDriver.PageSource.Contains("your password was incorrect"))
-            {
-                if (enableVoices) C_voice_core.speak($"You have one minute to complete login");
-                Thread.Sleep(60 * 1000); // wait for page to change
-            }
-            else if (IwebDriver.PageSource.Contains("security") || IwebDriver.PageSource.Contains("Unusual"))
-            {
-                if (enableVoices) C_voice_core.speak($"You have one minute to complete login");
-                Thread.Sleep(60 * 1000); // wait for page to change
-            }
-            else
-            {
-                if (enableVoices) C_voice_core.speak($"We are in, awesome");
-            }
+
+
+            core.LogInToInstagram(username, password, enableVoices);
+
+
             if (stealthMode)
             {
                 if (enableVoices) C_voice_core.speak($"Entering stealth mode");
@@ -214,7 +179,7 @@ namespace Instagram_Bot
 
 
             // record stats before we start so we can monitor performance for every session the bot is runing
-            GetStats(username, enableVoices);
+            core.GetStats(username, enableVoices);
 
 
             // loop forever, performing a new search and then following, liking and spamming the hell out of everyone.
@@ -413,7 +378,7 @@ namespace Instagram_Bot
                         }
                     }
                     // end FOLLOW
-                    commentingBannedUntil = CommentOnPost(username, enableVoices, banLength, secondsBetweenActions_min, secondsBetweenActions_max, phrasesToComment, commentingBannedUntil, instagram_post_user);
+                    commentingBannedUntil = core.CommentOnPost(username, enableVoices, banLength, secondsBetweenActions_min, secondsBetweenActions_max, phrasesToComment, commentingBannedUntil, instagram_post_user);
                     var _likeBanminutesLeft = (likingBannedUntil - DateTime.Now).Minutes;
                     var _likeBanSecondsLeft = (likingBannedUntil - DateTime.Now).Seconds;
                     if (_likeBanSecondsLeft > 0)
@@ -550,7 +515,7 @@ namespace Instagram_Bot
                 // end unfollow people that dont follow back
 
 
-                GetStats(username, enableVoices);
+                core.GetStats(username, enableVoices);
 
 
                 if (enableVoices) C_voice_core.speak($"Let's take a short break.");
@@ -560,157 +525,31 @@ namespace Instagram_Bot
             /* end of MAIN LOOP */
         }
 
-        private void GetStats(string username, bool enableVoices)
-        {
-            // start get stats
-            if (enableVoices) C_voice_core.speak($"ok {user}, let's check your stats");
-            // Return to users profile page so they can see their stats while we wait for next search to start
-            IwebDriver.Navigate().GoToUrl($"https://www.instagram.com/{username}");
-            //TODO: when testing on a new account with no profile image (may be unrelated) the stats below are not found, need to figure out why. Have increased wait to from 3 to 4 seconds to see if that helps.
-            Thread.Sleep(4 * 1000); // wait a amount of time for page to change
-            string followers = "";
-            foreach (var obj in IwebDriver.FindElements(By.TagName("a")))
-            {
-                if (obj.GetAttribute("href").Contains("followers")
-                    && obj.GetAttribute("href").ToLower().Contains(username))
-                {
-                    followers = obj.FindElement(By.TagName("span")).Text.Replace(",", "").Replace(" ", "").Replace("followers", "");
-                    break;
-                }
-            }
-            string following = "";
-            foreach (var obj in IwebDriver.FindElements(By.TagName("a")))
-            {
-                if (obj.GetAttribute("href").Contains("following")
-                    && obj.GetAttribute("href").ToLower().Contains(username))
-                {
-                    following = obj.FindElement(By.TagName("span")).Text.Replace(",", "").Replace(" ", "").Replace("following", "");
-                    break;
-                }
-            }
-
-            string posts = "";
-            foreach (var obj in IwebDriver.FindElements(By.TagName("li")))
-            {
-                if (obj.Text.Contains(" posts"))
-                {
-                    posts = obj.Text.Replace(",", "").Replace(" ", "").Replace("posts", "");
-                    break;
-                }
-            }
 
 
-            // check scraped stat/followers/following data is valid
-            if (int.TryParse(followers, out int _followers)
-                && int.TryParse(following, out int _following)
-                && int.TryParse(posts, out int _posts)
-                )
-            {
-                // testing new database functionality
-                new Classes.C_DataLayer().SaveCurrentStats(followers: _followers, following: _following, posts: _posts);
-            }
 
-            if (enableVoices) C_voice_core.speak($"You have a total of {posts} posts, {followers} followers and are following {following}. Well done, but I take all the credit.");
-            // end get stats
-        }
 
-        private DateTime CommentOnPost(string username, bool enableVoices, int banLength, int secondsBetweenActions_min, int secondsBetweenActions_max, List<string> phrasesToComment, DateTime commentingBannedUntil, string instagram_post_user)
-        {
-            // START COMMENTING
-            // check if we are banned from commenting
-            var _commentBanminutesLeft = (commentingBannedUntil - DateTime.Now).Minutes;
-            var _commentBanSecondsLeft = (commentingBannedUntil - DateTime.Now).Seconds;
-            if (_commentBanSecondsLeft > 0)
-            {
-                if (_commentBanSecondsLeft == 0) // must be a few seconds left 
-                {
-                    if (enableVoices) C_voice_core.speak($"comment ban in place for {_commentBanSecondsLeft} more seconds");
-                }
-                else
-                {
-                    if (enableVoices) C_voice_core.speak($"comment ban in place for {_commentBanminutesLeft} more minute{(_commentBanminutesLeft > 1 ? "s" : "")}");
-                }
-            }
-            else
-            {
-                // COMMENT - this is usually the first thing to be blocked if you reduce time delays, you will see "posting fialed" at bottom of screen.
-                // pick a random comment
-                // {USERNAME} get's replaced with @USERNAME
-                // {DAY} get's replaced with today's day .g: MONDAY, TUESDAY etc..
-                var myComment = phrasesToComment[new Random().Next(0, phrasesToComment.Count - 1)].Replace("{USERNAME}", "@" + username.Replace("{DAY}", "@" + DateTime.Now.ToString("dddd")));
-                // click the comment icon so the comment textarea will work (REQUIRED)
-                foreach (var obj in IwebDriver.FindElements(By.TagName("a")))
-                {
-                    if (obj.Text.ToUpper().Contains("COMMENT".ToUpper()))
-                    {
-                        obj.Click(); // click comment icon
-                        Thread.Sleep(new Random().Next(secondsBetweenActions_min, secondsBetweenActions_max) * 1000); // wait a short(random) amount of time for page to change
-                        break;
-                    }
-                }
-                //TODO: posts with comments disabled cause the bot to stall
-                // make the comment
-                foreach (var obj in IwebDriver.FindElements(By.TagName("textarea")))
-                {
-                    if (obj.GetAttribute("placeholder").ToUpper().Contains("COMMENT".ToUpper()))
-                    {
-                        if (enableVoices) C_voice_core.speak($"commenting");
-                        bool sendKeysFailed = true;// must start as true
-                        int attempsToComment = 0;
-                        while (sendKeysFailed && attempsToComment < 3)
-                        {
-                            attempsToComment++;
-                            try
-                            {
-                                obj.SendKeys(myComment); // put comment in textarea
-                                break;
-                            }
-                            catch (Exception e)
-                            {
-                                if (e.Message.Contains("element not visible"))
-                                { // comments disbaled on post, nothing to wory about
 
-                                }
-                                else if (e.Message.Contains("character"))
-                                {
-                                    if (enableVoices) C_voice_core.speak($"The comment {myComment} contains an unsupported character, i'll remove it from the list.");
-                                    sendKeysFailed = true; // some characters are not supported by chrome driver (some emojis for example)
-                                    phrasesToComment.Remove(myComment); // remove offending comment
-                                }
-                                else
-                                {   // other unknown error, relay full error message but dont remove comment from list as it may be perfectly fine.
-                                    if (enableVoices) C_voice_core.speak($"error with a comment, the error was {e.Message}. The comment {myComment} will be removed from the list.");
-                                    sendKeysFailed = true; // some characters are not supported by chrome driver (some emojis for example)
-                                }
-                                if (phrasesToComment.Count == 0)
-                                {
-                                    break;
-                                }
-                                myComment = phrasesToComment[new Random().Next(0, phrasesToComment.Count - 1)]; // select another comments and try again
-                            }
-                        }
-                        Thread.Sleep(1 * 1000);// wait for comment to type
-                        IwebDriver.FindElement(By.TagName("form")).Submit(); // Only one form on page, so submit it to comment.
-                        Thread.Sleep(3 * 1000); // wait a short(random) amount of time for page to change
-                        //TODO: posts with comments disabled cause the bot to stall, moving this here should fix it
-                        // check if comment failed, if yes remove that comment from our comments list
-                        if (IwebDriver.PageSource.ToUpper().Contains("couldn't post comment".ToUpper()))
-                        {
-                            if (enableVoices) C_voice_core.speak($"comment failed, I will stop commenting for {banLength} minutes.");
-                            commentingBannedUntil = DateTime.Now.AddMinutes(banLength);
-                        }
-                        else {
-                            // commenting worked
-                            // testing new database functionality
-                            new Classes.C_DataLayer().SaveInstaUser(IU: new Classes.InstaUser() { username = instagram_post_user.Replace(" ", "_"), date_last_commented = DateTime.Now });
-                        }
-                        break;
-                    }
-                }
-            }
-            // END COMMENTING
-            return commentingBannedUntil;
-        }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
         public void TerminateBot()
         {
             try { IwebDriver.Close(); } catch { }
