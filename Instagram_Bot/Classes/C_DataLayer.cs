@@ -1,6 +1,10 @@
 ﻿using System;
 using System.IO;
 using System.Data.SQLite;
+using System.Windows.Forms;
+using System.Threading;
+using OpenQA.Selenium;
+
 namespace Instagram_Bot.Classes
 {
     internal class C_DataLayer
@@ -301,5 +305,26 @@ namespace Instagram_Bot.Classes
                 System.Windows.Forms.MessageBox.Show($"SQL Error: {se.Message}");
             }
         }
+
+        public static void TestDatabase(bool enableVoices)
+        {
+            if (enableVoices) C_voice_core.speak($"testing db");
+            try
+            {
+                new Classes.C_DataLayer().AddInstaUser(new Classes.InstaUser() { username = "test_user" });
+                if (enableVoices) C_voice_core.speak($"db test passed");
+            }
+            catch (InvalidOperationException ee)
+            {
+                if (enableVoices) C_voice_core.speak($"SQLite invalid operation error {ee.InnerException.Message}", true);
+                MessageBox.Show($"SQLite invalid operation error {ee.InnerException.Message}");
+            }
+            catch (Exception ee)
+            {
+                if (enableVoices) C_voice_core.speak($"SQLite error {ee.InnerException.Message}", true);
+                MessageBox.Show($"SQLite error {ee.InnerException.Message}");
+            }
+        }
+    
     }
 }

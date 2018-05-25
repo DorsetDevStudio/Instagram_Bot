@@ -20,7 +20,10 @@ namespace Instagram_Bot.Classes
         {
             _IwebDriver = iwebDriver;
         }
-
+        public C_Bot_Common()
+        {
+            throw new Exception("You can't do that, use C_Bot_Common(IWebDriver iwebDriver)");
+        }
         public void LogInToInstagram(string username, string password, bool enableVoices)
         {
             _IwebDriver.Navigate().GoToUrl("https://www.instagram.com/accounts/login/");
@@ -206,6 +209,215 @@ namespace Instagram_Bot.Classes
             }
             // END COMMENTING
             return commentingBannedUntil;
+        }
+
+        public void CreateInstagramPost(bool enableVoices)
+        {
+            foreach (var obj1 in _IwebDriver.FindElements(By.TagName("input")))
+            {
+                if (obj1.GetAttribute("type") == "file")
+                {
+                    if (enableVoices) C_voice_core.speak($"setting image");
+                    obj1.SendKeys(@"C:\test.png");
+                    Thread.Sleep(5 * 1000); // wait for page to change
+                    if (enableVoices) C_voice_core.speak($"uploading");
+                    _IwebDriver.FindElement(By.TagName("form")).Submit();  // seems to submit but image does not apear on page, maybe it's the wrong form.
+                    Thread.Sleep(5 * 1000); // wait for page to change
+                    foreach (var obj2 in _IwebDriver.FindElements(By.TagName("button")))
+                    {
+                        if (obj2.Text.ToUpper().Contains("next"))
+                        {
+                            if (enableVoices) C_voice_core.speak($"next");
+                            obj2.Click();
+                            Thread.Sleep(5 * 1000); // wait for page to change
+                        }
+                        else if (obj2.Text.ToUpper().Contains("share"))
+                        {
+                            if (enableVoices) C_voice_core.speak($"share");
+                            obj2.Click();
+                            Thread.Sleep(5 * 1000); // wait for page to change
+                            break;
+                        }
+                    }
+                    break;
+                }
+            }
+            if (enableVoices) C_voice_core.speak($"done");
+            Thread.Sleep(60 * 1000); // wait for page to change     
+        }
+
+        public void BulkUnfollow(string username, bool enableVoices, int banLength)
+        {
+            _IwebDriver.Navigate().GoToUrl($"https://www.instagram.com/{username}");
+            Thread.Sleep(4 * 1000); // wait a amount of time for page to change
+            foreach (var obj in _IwebDriver.FindElements(By.TagName("a")))
+            {
+                if (obj.GetAttribute("href").Contains("following")
+                    && obj.GetAttribute("href").ToLower().Contains(username))
+                {
+                    obj.Click(); // bring up follow list
+                    Thread.Sleep(2 * 1000); // wait a amount of time for page to change
+                    foreach (var obj2 in _IwebDriver.FindElements(By.TagName("button")))
+                    {
+                        if (obj2.Text.ToLower().Trim().Contains("following"))
+                        {
+                            try
+                            {
+                                obj2.Click();
+                                Thread.Sleep(1 * 1000); // wait a short amount of time between clicks
+                                // if unfollow failed dont keep trying
+                                if (obj2.Text.ToLower().Trim().Contains("following"))
+                                {
+                                    if (enableVoices) C_voice_core.speak($"unfollow failed 1");
+                                    break;
+                                }
+                            }
+                            catch
+                            {
+                                if (enableVoices) C_voice_core.speak($"unfollow failed error");
+                            }
+                        }
+                    }
+                    break;
+                }
+            }
+        }
+
+        public void FollowSuggected(bool enableVoices, int banLength, DateTime followingBannedUntil)
+        {
+            foreach (var obj in _IwebDriver.FindElements(By.TagName("button")))
+            {
+                if (obj.Text.ToLower().Trim().Contains("follow"))
+                {
+                    try
+                    {
+                        obj.Click();
+                        Thread.Sleep(2 * 1000);
+                        if (!obj.Text.ToLower().Trim().Contains("following"))
+                        {
+                            if (enableVoices) C_voice_core.speak($"following failed, I will stop following for {banLength} minutes.");
+                            followingBannedUntil = DateTime.Now.AddMinutes(banLength);
+                            break;
+                        }
+                    }
+                    catch
+                    {
+                        if (enableVoices) C_voice_core.speak($"follow failed");
+                    }
+                }
+            }
+        }
+
+        public void LikePost(bool enableVoices, int banLength, DateTime likingBannedUntil, string instagram_post_user)
+        {
+            foreach (var obj in _IwebDriver.FindElements(By.TagName("a")))
+            {
+                if (obj.Text.ToUpper().Contains("LIKE") && !obj.Text.ToUpper().Contains("UNLIKE"))
+                {
+                    if (enableVoices) C_voice_core.speak($"liking");
+                    obj.Click();
+                    if (enableVoices) C_voice_core.speak($"done");
+                    new Classes.C_DataLayer().SaveInstaUser(IU: new Classes.InstaUser() { username = instagram_post_user.Replace(" ", "_"), date_last_liked = DateTime.Now });
+                    Thread.Sleep(1 * 1000);
+                    if (obj.Text.ToUpper().Contains("LIKE") && !obj.Text.ToUpper().Contains("UNLIKE"))
+                    {
+                        // like failed, or another window popped up
+                        if (enableVoices) C_voice_core.speak($"like failed, I will stop liking for {banLength} minutes.");
+                        likingBannedUntil = DateTime.Now.AddMinutes(banLength);
+                    }
+                    break;
+                }
+            }
+        }
+
+        public void BulkFollowBack(bool enableVoices, int banLength, DateTime followingBannedUntil)
+        {
+            // go to activity page and follow back anyone that followed us
+            var minutesLeft = (followingBannedUntil - DateTime.Now).Minutes;
+            var secondsLeft = (followingBannedUntil - DateTime.Now).Seconds;
+            if (secondsLeft > 0)
+            {
+                if (minutesLeft == 0) // must be a few seconds left 
+                {
+                    if (enableVoices) C_voice_core.speak($"follow ban in place for {secondsLeft} more seconds");
+                }
+                else
+                {
+                    if (enableVoices) C_voice_core.speak($"follow ban in place for {minutesLeft} more minute{(minutesLeft > 1 ? "s" : "")}");
+                }
+            }
+            else
+            {
+                _IwebDriver.Navigate().GoToUrl($"https://www.instagram.com/accounts/activity/");
+                Thread.Sleep(2 * 1000);
+                foreach (var obj in _IwebDriver.FindElements(By.TagName("button")))
+                {
+                    if (obj.Text.ToLower().Trim().Contains("follow"))
+                    {
+                        try
+                        {
+                            obj.Click();
+                            Thread.Sleep(2 * 1000);
+                            // if following failed dont keep trying
+                            if (!obj.Text.ToLower().Trim().Contains("following") && !obj.Text.ToLower().Trim().Contains("requested"))
+                            {
+                                if (enableVoices) C_voice_core.speak($"following failed");
+                                break;
+                            }
+                        }
+                        catch
+                        {
+                            if (enableVoices) C_voice_core.speak($"follow failed error");
+                        }
+                    }
+                }
+            }
+        }
+
+        public void FollowPostUser(bool enableVoices, int banLength, DateTime commentingBannedUntil, DateTime followingBannedUntil, string instagram_post_user)
+        {
+            // FOLLOW
+            foreach (var obj in _IwebDriver.FindElements(By.TagName("button")))
+            {
+                if (obj.Text.ToUpper().Contains("FOLLOWING".ToUpper()))
+                {
+                    // if (enableVoices) C_voice_core.speak($"already following");
+                    break;
+                }
+                else if (obj.Text.ToUpper().Contains("FOLLOW".ToUpper()) && followingBannedUntil > DateTime.Now)
+                {
+                    var _minutesLeft = (followingBannedUntil - DateTime.Now).Minutes;
+                    var _secondsLeft = (followingBannedUntil - DateTime.Now).Seconds;
+                    if (_minutesLeft == 0) // must be a few seconds left 
+                    {
+                        if (enableVoices) C_voice_core.speak($"follow ban in place for {_secondsLeft} more seconds");
+                    }
+                    else
+                    {
+                        if (enableVoices) C_voice_core.speak($"follow ban in place for {_minutesLeft} more minute{(_minutesLeft > 1 ? "s" : "")}");
+                    }
+                    break;
+                }
+                else if (obj.Text.ToUpper().Contains("FOLLOW".ToUpper()))
+                {
+                    if (enableVoices) C_voice_core.speak($"following");
+                    obj.Click();
+                    Thread.Sleep(2 * 1000); // wait and see it it worked, will change to following
+                    if (obj.Text.ToUpper().Contains("FOLLOWING".ToUpper()))
+                    {
+                        // testing new database functionality
+                        new Classes.C_DataLayer().SaveInstaUser(IU: new Classes.InstaUser() { username = instagram_post_user.Replace(" ", "_"), date_followed_them = DateTime.Now });
+                    }
+                    else
+                    {
+                        commentingBannedUntil = DateTime.Now.AddMinutes(banLength);
+                        if (enableVoices) C_voice_core.speak($"following failed, I will stop following for {banLength} minutes.");
+                    }
+                    Thread.Sleep(2 * 1000); // wait and see it it worked, will change to following
+                    break;
+                }
+            }
+            // end FOLLOW
         }
 
     }
