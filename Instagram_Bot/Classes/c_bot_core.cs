@@ -27,7 +27,7 @@ namespace Instagram_Bot
 
             var profiledir = $@"C:\Users\{Environment.UserName}\AppData\Local\Google\Chrome\User Data\Default";
 
-            System.Diagnostics.Process.Start(profiledir);
+            //System.Diagnostics.Process.Start(profiledir);
 
             options.AddArgument($@"user-data-dir={profiledir}");
 
