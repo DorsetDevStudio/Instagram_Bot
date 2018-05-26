@@ -2,8 +2,6 @@
 using System.IO;
 using System.Data.SQLite;
 using System.Windows.Forms;
-using System.Threading;
-using OpenQA.Selenium;
 
 namespace Instagram_Bot.Classes
 {

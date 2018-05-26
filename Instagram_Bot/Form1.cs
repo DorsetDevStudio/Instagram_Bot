@@ -12,7 +12,6 @@ using System.Windows.Forms;
 namespace Instagram_Bot
 {
 
-
     public partial class Form1 : Form
     {
   
@@ -37,12 +36,8 @@ namespace Instagram_Bot
             InitializeComponent();
         }
 
-
         [DllImport("user32.dll")]
         static extern bool ShowWindow(IntPtr hWnd, int nCmdShow);
-
-
-
 
         List<Task> Tasks = new List<Task>();
         private void button1_Click(object sender, EventArgs e)

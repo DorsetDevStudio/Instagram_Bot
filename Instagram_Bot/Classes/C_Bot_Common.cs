@@ -1,10 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading;
-using System.Threading.Tasks;
-using Instagram_Bot.Classes;
 using OpenQA.Selenium;
 
 namespace Instagram_Bot.Classes
@@ -247,43 +243,44 @@ namespace Instagram_Bot.Classes
         }
 
         public void BulkUnfollow(string username, bool enableVoices, int banLength)
-        {
-            _IwebDriver.Navigate().GoToUrl($"https://www.instagram.com/{username}");
-            Thread.Sleep(2 * 1000); // wait a amount of time for page to change
-            foreach (var obj in _IwebDriver.FindElements(By.TagName("a")))
+        {     
+            while (true)
             {
-                if (obj.GetAttribute("href").Contains("following")
-                    && obj.GetAttribute("href").ToLower().Contains(username))
+                _IwebDriver.Navigate().GoToUrl($"https://www.instagram.com/{username}");
+                Thread.Sleep(2 * 1000); // wait a amount of time for page to change
+                foreach (var obj in _IwebDriver.FindElements(By.TagName("a")))
                 {
-                    obj.Click(); // bring up follow list
-                    Thread.Sleep(2 * 1000); // wait a amount of time for page to change
-                    foreach (var obj2 in _IwebDriver.FindElements(By.TagName("button")))
+                    if (obj.GetAttribute("href").Contains("following") && obj.GetAttribute("href").ToLower().Contains(username))
                     {
-                        if (obj2.Text.ToLower().Trim().Contains("following"))
+                        obj.Click(); // bring up follow list
+                        Thread.Sleep(1 * 1000); // wait a amount of time for page to change
+                        foreach (var obj2 in _IwebDriver.FindElements(By.TagName("button")))
                         {
-                            try
+                            if (obj2.Text.ToLower().Trim().Contains("following"))
                             {
-                                obj2.Click();
-                                Thread.Sleep(1 * 500); // wait a short amount of time between clicks
-                                // if unfollow failed dont keep trying
-                                if (obj2.Text.ToLower().Trim().Contains("following"))
+                                try
                                 {
-                                    if (enableVoices) C_voice_core.speak($"unfollow failed 1");
-                                    break;
+                                    obj2.Click();
+                                    Thread.Sleep(1 * 1000); // wait a short amount of time between clicks
+                                    if (obj2.Text.ToLower().Trim().Contains("following"))
+                                    {
+                                        if (enableVoices) C_voice_core.speak($"unfollow failed 1");
+                                        break;
+                                    }
+                                }
+                                catch
+                                {
+                                    if (enableVoices) C_voice_core.speak($"unfollow failed error");
                                 }
                             }
-                            catch
-                            {
-                                if (enableVoices) C_voice_core.speak($"unfollow failed error");
-                            }
                         }
+                        break;
                     }
-                    break;
                 }
             }
         }
 
-        public void FollowSuggected(bool enableVoices, int banLength, DateTime followingBannedUntil)
+        public void FollowSuggested(bool enableVoices, int banLength, DateTime followingBannedUntil)
         {
             foreach (var obj in _IwebDriver.FindElements(By.TagName("button")))
             {

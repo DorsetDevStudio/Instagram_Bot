@@ -4,9 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Threading;
-using System.Windows.Forms;
 using Instagram_Bot.Classes;
-
 
 namespace Instagram_Bot
 {
