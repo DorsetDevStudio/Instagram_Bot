@@ -32,7 +32,7 @@ namespace Instagram_Bot.Classes
             else
             {
                 // Log in to Instagram               
-                Thread.Sleep(1 * 1000); // wait for page to change
+                Thread.Sleep(2 * 1000); // wait for page to change
                 _IwebDriver.FindElement(By.Name("username")).SendKeys(username);
                 _IwebDriver.FindElement(By.Name("password")).SendKeys(password);
                 _IwebDriver.FindElement(By.TagName("form")).Submit();
