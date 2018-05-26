@@ -10,7 +10,6 @@ namespace Instagram_Bot
 {
     public class C_bot_core : IC_bot_core, IDisposable
     {
-
         IWebDriver IwebDriver;
         string user = Environment.UserName.Replace(".", " ").Replace(@"\", "").Split(' ')[0];
         int secondsBetweenActions_min = 1;
@@ -18,19 +17,27 @@ namespace Instagram_Bot
         int minutesBetweenBulkActions_min = 1;
         int minutesBetweenBulkActions_max = 2;
         int maxPostsPerSearch = 10;
-
-
         public enum bot_mode { search_follow_comment_like, follow, comment, like, unfollow, post, direct_message}
 
         public C_bot_core(int bot_id, bot_mode mode, string username, string password, bool stealthMode = false, bool enableVoices = true, List<timeSpans> sleepTimes = null, int banLength = 5)
         {
-
             ChromeOptions options = new ChromeOptions();
-            options.AddArgument("--user-agent=Mozilla/5.0 (iPad; CPU OS 6_0 like Mac OS X) AppleWebKit/536.26 (KHTML, like Gecko) Version/6.0 Mobile/10A5355d Safari/8536.25");
+
+            //options.AddArgument("--user-agent=Mozilla/5.0 (iPad; CPU OS 6_0 like Mac OS X) AppleWebKit/536.26 (KHTML, like Gecko) Version/6.0 Mobile/10A5355d Safari/8536.25");
+
+            var profiledir = $@"C:\Users\{Environment.UserName}\AppData\Local\Google\Chrome\User Data\Default";
+
+            System.Diagnostics.Process.Start(profiledir);
+
+            options.AddArgument($@"user-data-dir={profiledir}");
 
             IwebDriver = new ChromeDriver(options);
-            var core = new C_Bot_Common(IwebDriver);
 
+            if (bot_id == 1 && mode == bot_mode.unfollow)
+            {
+                IwebDriver.Manage().Window.Maximize();
+            }
+            var core = new C_Bot_Common(IwebDriver);
             var thingsToSearch = new List<string>()
             {
                 "summer", "chill","youtube","content","vlogger","losangeles","travel","interesting",
@@ -38,7 +45,6 @@ namespace Instagram_Bot
                 "work","life","beauty","snow","winter","michigan","fly","awesomehow","fashion","star",
                 "style","film","me","swagger","photooftheday","instamood"
             };
-
             // add tags based of the current day
             if (DateTime.Now.ToString("dddd").ToLower() == "sunday")
             {
@@ -72,8 +78,6 @@ namespace Instagram_Bot
                     });
             }
             // end add tags based of the current day
-
-
             if (File.Exists(@"c:\hashtags.txt"))
             {
                 thingsToSearch.Clear();// just use users hashtags
@@ -123,17 +127,11 @@ namespace Instagram_Bot
                 foreach (var line in File.ReadLines(@"c:\ignore_comments.txt"))
                     phrasesToComment.Remove(line);
             /* END CONFIG */
-
             core.LogInToInstagram(username, password, enableVoices);
-
             //core.CreateInstagramPost(enableVoices);
-
-
             /* MAIN LOOP */
-
             // record stats before we start so we can monitor performance for every session the bot is runing
             core.GetStats(username, enableVoices);
-
             if (mode == bot_mode.unfollow)
             {
                 while (true)
@@ -143,26 +141,20 @@ namespace Instagram_Bot
             }
             if (mode == bot_mode.unfollow)
             {
-
                 // loop forever, performing a new search and then following, liking and spamming the hell out of everyone.
                 while (true)
                 {
-
                     C_DataLayer.TestDatabase(enableVoices);
-
                     DateTime commentingBannedUntil = DateTime.Now;
                     DateTime followingBannedUntil = DateTime.Now;
                     DateTime unfollowingBannedUntil = DateTime.Now;
                     DateTime likingBannedUntil = DateTime.Now;
-
                     //core.FollowSuggected(enableVoices, banLength, followingBannedUntil);
-
                     var mySearch = thingsToSearch[new Random().Next(0, thingsToSearch.Count - 1)];
                     if (enableVoices) C_voice_core.speak($"Ok, let's get some followers");
                     // just navigate to search
                     IwebDriver.Navigate().GoToUrl($"https://www.instagram.com/explore/tags/{mySearch}");
-                    Thread.Sleep(new Random().Next(secondsBetweenActions_min, secondsBetweenActions_max) * 1000); // wait a short(random) amount of time for page to change
-                                                                                                                  // save results
+                    Thread.Sleep(new Random().Next(secondsBetweenActions_min, secondsBetweenActions_max) * 1000); // wait a short(random) amount of time for page to change                                                                                                                // save results
                     var postsToLike = new List<string>();
                     foreach (var link in IwebDriver.FindElements(By.TagName("a")))
                     {
@@ -175,7 +167,6 @@ namespace Instagram_Bot
                     }
                     if (enableVoices) C_voice_core.speak($"{postsToLike.Count} posts found");
                     int postCounter = 0;
-
                     // load results in turn and like/follow them
                     foreach (var link in postsToLike)
                     {
@@ -215,7 +206,6 @@ namespace Instagram_Bot
                         //    Thread.Sleep(1 * 1000);// sleep 1 second
                         //    Application.DoEvents();
                         //}
-
                         postCounter++;
                         if (link.Contains("https://www.instagram.com/"))
                         {
@@ -226,7 +216,6 @@ namespace Instagram_Bot
                             IwebDriver.Navigate().GoToUrl("https://www.instagram.com/" + link);
                         }
                         Thread.Sleep(2 * 1000); // wait a short amount of time for page to change
-
                         // get the username of the owner of the current post
                         string instagram_post_user = "";
                         foreach (var obj in IwebDriver.FindElements(By.TagName("a")))
@@ -237,14 +226,9 @@ namespace Instagram_Bot
                                 break;
                             }
                         }
-
-
                         // testing new database functionality
                         new Classes.C_DataLayer().AddInstaUser(IU: new Classes.InstaUser() { username = instagram_post_user.Replace(" ", "_") });
-
-
                         core.FollowPostUser(enableVoices, banLength, commentingBannedUntil, followingBannedUntil, instagram_post_user);
-
                         commentingBannedUntil = core.CommentOnPost(username, enableVoices, banLength, secondsBetweenActions_min, secondsBetweenActions_max, phrasesToComment, commentingBannedUntil, instagram_post_user);
                         var _likeBanminutesLeft = (likingBannedUntil - DateTime.Now).Minutes;
                         var _likeBanSecondsLeft = (likingBannedUntil - DateTime.Now).Seconds;
@@ -266,26 +250,16 @@ namespace Instagram_Bot
                         core.BulkFollowBack(enableVoices, banLength, followingBannedUntil);
                     }
                     // end unfollow people that dont follow back
-
-
                     core.GetStats(username, enableVoices);
-
-
                     if (enableVoices) C_voice_core.speak($"Let's take a short break.");
-
                     Thread.Sleep(new Random().Next(minutesBetweenBulkActions_min, minutesBetweenBulkActions_max) * 60000);// wait between each bulk action
-
-
                 }
                 /* end of MAIN LOOP */
             }
             else {
                 throw new Exception("bot mode not implemented");
             }
-
         }
-
- 
         public void TerminateBot()
         {
             try { IwebDriver.Close(); } catch { }

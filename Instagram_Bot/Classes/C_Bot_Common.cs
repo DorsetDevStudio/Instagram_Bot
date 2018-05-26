@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Threading;
 using OpenQA.Selenium;
 
@@ -250,28 +251,51 @@ namespace Instagram_Bot.Classes
                 Thread.Sleep(2 * 1000); // wait a amount of time for page to change
                 foreach (var obj in _IwebDriver.FindElements(By.TagName("a")))
                 {
-                    if (obj.GetAttribute("href").Contains("following") && obj.GetAttribute("href").ToLower().Contains(username))
+                    if (obj.GetAttribute("href").Contains("following") && obj.GetAttribute("href").ToLower().Contains(username)) // find the `following` link
                     {
                         obj.Click(); // bring up follow list
                         Thread.Sleep(1 * 1000); // wait a amount of time for page to change
-                        foreach (var obj2 in _IwebDriver.FindElements(By.TagName("button")))
+                        foreach (var _li in _IwebDriver.FindElements(By.TagName("li")))
                         {
-                            if (obj2.Text.ToLower().Trim().Contains("following"))
+                            //if (enableVoices) C_voice_core.speak($"l i found");
+                            try
                             {
-                                try
+                                if (!_li.FindElement(By.TagName("button")).Text.ToLower().Trim().Contains("following"))
                                 {
-                                    obj2.Click();
-                                    Thread.Sleep(1 * 1000); // wait a short amount of time between clicks
-                                    if (obj2.Text.ToLower().Trim().Contains("following"))
+                                    //if (enableVoices) C_voice_core.speak($"no following button");
+                                    continue;
+                                }
+                                else
+                                {
+                                    //if (enableVoices) C_voice_core.speak($"li found");
+                                    var _unfollow_button = _li.FindElement(By.TagName("button"));
+                                    if (_unfollow_button.Text.ToLower().Trim().Contains("following"))
                                     {
-                                        if (enableVoices) C_voice_core.speak($"unfollow failed 1");
-                                        break;
-                                    }
+                                        //if (enableVoices) C_voice_core.speak($"following button found");
+                                        try
+                                        {
+                                            // get username
+                                            var _insta_user_name = _li.FindElement(By.TagName("a")).GetAttribute("href").Replace("https://www.instagram.com", "").ToLower().Replace("/", "").ToLower().Trim();
+                                            if (enableVoices) C_voice_core.speak($"unfollowing {_insta_user_name}");
+                                            _unfollow_button.Click();
+                                            Thread.Sleep(1 * 1000); // wait a short amount of time between clicks
+                                            if (_unfollow_button.Text.ToLower().Trim().Contains("following"))
+                                            {
+                                                if (enableVoices) C_voice_core.speak($"unfollow failed");
+                                                break;
+                                            }
+                                            new C_DataLayer().SaveInstaUser(IU: new InstaUser() { username = _insta_user_name, date_unfollowed = DateTime.Now });
+                                        }
+                                        catch
+                                        {
+                                            if (enableVoices) C_voice_core.speak($"unfollow failed error");
+                                        }
+                                    }                                    
                                 }
-                                catch
-                                {
-                                    if (enableVoices) C_voice_core.speak($"unfollow failed error");
-                                }
+                            }
+                            catch (NoSuchElementException ne)
+                            {
+                                Debug.Print(ne.Message);
                             }
                         }
                         break;

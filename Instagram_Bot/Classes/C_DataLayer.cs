@@ -12,13 +12,11 @@ namespace Instagram_Bot.Classes
             CreateAppFolder();
             //InitiateDatabase();
         }
-
         //Environment.SpecialFolder.ApplicationData will put data in a location that persists after clicckone updates
         private static string SQLiteFile = $@"{Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData)}\Dorset Dev Studio\Databases\Data.db3";
         private static string SQLiteConnString = $@"Data Source={SQLiteFile};Version=3;UTF8Encoding=True;";
         public readonly static string SQLiteDateTimeFormat = "yyyy-MM-dd HH:mm:ss";// DO NOT CHANGE
         private string SQLiteNullDateString = "0001-01-01 00:00:00";// DO NOT CHANGE
-
         private void CreateAppFolder()
         {
             if (!File.Exists(SQLiteFile))
@@ -76,6 +74,7 @@ namespace Instagram_Bot.Classes
                     // now we know they exist, we can update all other fields
                     using (SQLiteCommand SQLcommand = new SQLiteCommand("update insta_users set " +
                     "date_followed_them             = (case when @date_followed_them = @SQLiteNullDateString then date_followed_them else @date_followed_them end), " +
+                    "date_unfollowed_them           = (case when @date_unfollowed_them = @SQLiteNullDateString then date_unfollowed_them else @date_unfollowed_them end), " +
                     "date_followed_back_detected    = (case when @date_followed_back_detected = @SQLiteNullDateString then date_followed_back_detected else @date_followed_back_detected end), " +
                     "date_last_commented            = (case when @date_last_commented = @SQLiteNullDateString then date_last_commented else @date_last_commented end), " +
                     "date_last_liked                = (case when @date_last_liked = @SQLiteNullDateString then date_last_liked else @date_last_liked end), " +
@@ -85,6 +84,7 @@ namespace Instagram_Bot.Classes
                     {
                         SQLcommand.Parameters.AddWithValue("username", IU.username);
                         SQLcommand.Parameters.AddWithValue("date_followed_them", IU.date_followed_them != null ? IU.date_followed_them.ToString(SQLiteDateTimeFormat) : "");
+                        SQLcommand.Parameters.AddWithValue("date_unfollowed_them", IU.date_unfollowed != null ? IU.date_unfollowed.ToString(SQLiteDateTimeFormat) : "");
                         SQLcommand.Parameters.AddWithValue("date_followed_back_detected", IU.date_followed_back_detected != null ? IU.date_followed_back_detected.ToString(SQLiteDateTimeFormat) : "");
                         SQLcommand.Parameters.AddWithValue("date_last_commented", IU.date_last_commented != null ? IU.date_last_commented.ToString(SQLiteDateTimeFormat) : "");
                         SQLcommand.Parameters.AddWithValue("date_last_liked", IU.date_last_liked != null ? IU.date_last_liked.ToString(SQLiteDateTimeFormat) : "");
@@ -276,7 +276,6 @@ namespace Instagram_Bot.Classes
                 System.Windows.Forms.MessageBox.Show($"SQL Error: {se.Message}");
             }
         }
-
         internal void SaveCurrentStats(int followers, int following, int posts)
         {
             try
@@ -303,7 +302,6 @@ namespace Instagram_Bot.Classes
                 System.Windows.Forms.MessageBox.Show($"SQL Error: {se.Message}");
             }
         }
-
         public static void TestDatabase(bool enableVoices)
         {
             if (enableVoices) C_voice_core.speak($"testing db");
@@ -323,6 +321,5 @@ namespace Instagram_Bot.Classes
                 MessageBox.Show($"SQLite error {ee.InnerException.Message}");
             }
         }
-    
     }
 }
