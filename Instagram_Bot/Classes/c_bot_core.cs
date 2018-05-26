@@ -22,7 +22,9 @@ namespace Instagram_Bot
         int maxPostsPerSearch = 10;
 
 
-        public C_bot_core(int bot_id,string username, string password, bool stealthMode = false, bool enableVoices = true, List<timeSpans> sleepTimes = null, int banLength = 5)
+        public enum bot_mode { search_follow_comment_like, follow, comment, like, unfollow, post, direct_message}
+
+        public C_bot_core(int bot_id, bot_mode mode, string username, string password, bool stealthMode = false, bool enableVoices = true, List<timeSpans> sleepTimes = null, int banLength = 5)
         {
 
             ChromeOptions options = new ChromeOptions();
@@ -126,152 +128,163 @@ namespace Instagram_Bot
 
             core.LogInToInstagram(username, password, enableVoices);
 
-            core.CreateInstagramPost(enableVoices);
+            //core.CreateInstagramPost(enableVoices);
 
-            bool chromeIsMinimised = false;
-            bool _sleeping = false;
+
             /* MAIN LOOP */
 
             // record stats before we start so we can monitor performance for every session the bot is runing
             core.GetStats(username, enableVoices);
 
-            // loop forever, performing a new search and then following, liking and spamming the hell out of everyone.
-            while (true)
+            if (mode == bot_mode.unfollow)
+            {
+                while (true)
+                {
+                    core.BulkUnfollow(username, enableVoices, banLength);
+                }
+            }
+            if (mode == bot_mode.unfollow)
             {
 
-                C_DataLayer.TestDatabase(enableVoices);
-
-                DateTime commentingBannedUntil = DateTime.Now;
-                DateTime followingBannedUntil = DateTime.Now;
-                DateTime unfollowingBannedUntil = DateTime.Now;
-                DateTime likingBannedUntil = DateTime.Now;
-
-                core.FollowSuggected(enableVoices, banLength, followingBannedUntil);
-
-                var mySearch = thingsToSearch[new Random().Next(0, thingsToSearch.Count - 1)];
-                if (enableVoices) C_voice_core.speak($"Ok, let's get some followers");
-                // just navigate to search
-                IwebDriver.Navigate().GoToUrl($"https://www.instagram.com/explore/tags/{mySearch}");
-                Thread.Sleep(new Random().Next(secondsBetweenActions_min, secondsBetweenActions_max) * 1000); // wait a short(random) amount of time for page to change
-                // save results
-                var postsToLike = new List<string>();
-                foreach (var link in IwebDriver.FindElements(By.TagName("a")))
-                {
-                    if (link.GetAttribute("href").ToUpper().Contains($"TAGGED={mySearch}".ToUpper()))
-                    {
-                        postsToLike.Add(link.GetAttribute("href"));
-                    }
-                    if (postsToLike.Count >= maxPostsPerSearch) // limit per search
-                        break;
-                }
-                if (enableVoices) C_voice_core.speak($"{postsToLike.Count} posts found");
-                int postCounter = 0;
-                // load results in turn and like/follow them
-                foreach (var link in postsToLike)
+                // loop forever, performing a new search and then following, liking and spamming the hell out of everyone.
+                while (true)
                 {
 
-                    // we may need to sleep, need to check if we should be bwtewwn each post
-                    // handle `don't run between` times       
-                    //if (!_sleeping) // check if we should be
-                    //{
-                    //    foreach (timeSpans timeSpan in sleepTimes)
-                    //    {
-                    //        if (DateTime.Now.TimeOfDay > timeSpan.from.TimeOfDay
-                    //            && DateTime.Now.TimeOfDay < timeSpan.to.TimeOfDay)
-                    //        {
-                    //            _sleeping = true;
-                    //            if (enableVoices) C_voice_core.speak($"I'm tired, yawn, sleeping until {timeSpan.to.ToShortTimeString()}");
-                    //            break;
-                    //        }
-                    //    }
-                    //}
-                    //while (_sleeping) // check if we shouldnt be
-                    //{
-                    //    bool _sleep = false;
-                    //    foreach (timeSpans timeSpan in sleepTimes)
-                    //    {
-                    //        if (DateTime.Now.TimeOfDay > timeSpan.from.TimeOfDay
-                    //            && DateTime.Now.TimeOfDay < timeSpan.to.TimeOfDay)
-                    //        {
-                    //            _sleep = true;
-                    //            break;
-                    //        }
-                    //    }
-                    //    if (!_sleep) // just woke up
-                    //    {
-                    //        if (enableVoices) C_voice_core.speak($"Nap over, damn it");
-                    //        _sleeping = false;
-                    //    }
-                    //    Thread.Sleep(1 * 1000);// sleep 1 second
-                    //    Application.DoEvents();
-                    //}
+                    C_DataLayer.TestDatabase(enableVoices);
 
-                    postCounter++;
-                    if (link.Contains("https://www.instagram.com/"))
+                    DateTime commentingBannedUntil = DateTime.Now;
+                    DateTime followingBannedUntil = DateTime.Now;
+                    DateTime unfollowingBannedUntil = DateTime.Now;
+                    DateTime likingBannedUntil = DateTime.Now;
+
+                    //core.FollowSuggected(enableVoices, banLength, followingBannedUntil);
+
+                    var mySearch = thingsToSearch[new Random().Next(0, thingsToSearch.Count - 1)];
+                    if (enableVoices) C_voice_core.speak($"Ok, let's get some followers");
+                    // just navigate to search
+                    IwebDriver.Navigate().GoToUrl($"https://www.instagram.com/explore/tags/{mySearch}");
+                    Thread.Sleep(new Random().Next(secondsBetweenActions_min, secondsBetweenActions_max) * 1000); // wait a short(random) amount of time for page to change
+                                                                                                                  // save results
+                    var postsToLike = new List<string>();
+                    foreach (var link in IwebDriver.FindElements(By.TagName("a")))
                     {
-                        IwebDriver.Navigate().GoToUrl(link);
-                    }
-                    else
-                    {
-                        IwebDriver.Navigate().GoToUrl("https://www.instagram.com/" + link);
-                    }
-                    Thread.Sleep(2 * 1000); // wait a short amount of time for page to change
-                            
-                    // get the username of the owner of the current post
-                    string instagram_post_user = "";
-                    foreach (var obj in IwebDriver.FindElements(By.TagName("a")))
-                    {
-                        if (obj.GetAttribute("title").ToUpper() == obj.Text.ToUpper() && obj.Text.Length > 5)
+                        if (link.GetAttribute("href").ToUpper().Contains($"TAGGED={mySearch}".ToUpper()))
                         {
-                            instagram_post_user = obj.Text.Replace("_", " ").ToLower().Trim();
-                            break;
+                            postsToLike.Add(link.GetAttribute("href"));
                         }
+                        if (postsToLike.Count >= maxPostsPerSearch) // limit per search
+                            break;
                     }
+                    if (enableVoices) C_voice_core.speak($"{postsToLike.Count} posts found");
+                    int postCounter = 0;
 
-
-                    // testing new database functionality
-                    new Classes.C_DataLayer().AddInstaUser(IU: new Classes.InstaUser() { username = instagram_post_user.Replace(" ", "_") });
-
-
-                    core.FollowPostUser(enableVoices, banLength, commentingBannedUntil, followingBannedUntil, instagram_post_user);
-
-                    commentingBannedUntil = core.CommentOnPost(username, enableVoices, banLength, secondsBetweenActions_min, secondsBetweenActions_max, phrasesToComment, commentingBannedUntil, instagram_post_user);
-                    var _likeBanminutesLeft = (likingBannedUntil - DateTime.Now).Minutes;
-                    var _likeBanSecondsLeft = (likingBannedUntil - DateTime.Now).Seconds;
-                    if (_likeBanSecondsLeft > 0)
+                    // load results in turn and like/follow them
+                    foreach (var link in postsToLike)
                     {
-                        if (_likeBanSecondsLeft == 0) // must be a few seconds left 
+
+                        // we may need to sleep, need to check if we should be bwtewwn each post
+                        // handle `don't run between` times       
+                        //if (!_sleeping) // check if we should be
+                        //{
+                        //    foreach (timeSpans timeSpan in sleepTimes)
+                        //    {
+                        //        if (DateTime.Now.TimeOfDay > timeSpan.from.TimeOfDay
+                        //            && DateTime.Now.TimeOfDay < timeSpan.to.TimeOfDay)
+                        //        {
+                        //            _sleeping = true;
+                        //            if (enableVoices) C_voice_core.speak($"I'm tired, yawn, sleeping until {timeSpan.to.ToShortTimeString()}");
+                        //            break;
+                        //        }
+                        //    }
+                        //}
+                        //while (_sleeping) // check if we shouldnt be
+                        //{
+                        //    bool _sleep = false;
+                        //    foreach (timeSpans timeSpan in sleepTimes)
+                        //    {
+                        //        if (DateTime.Now.TimeOfDay > timeSpan.from.TimeOfDay
+                        //            && DateTime.Now.TimeOfDay < timeSpan.to.TimeOfDay)
+                        //        {
+                        //            _sleep = true;
+                        //            break;
+                        //        }
+                        //    }
+                        //    if (!_sleep) // just woke up
+                        //    {
+                        //        if (enableVoices) C_voice_core.speak($"Nap over, damn it");
+                        //        _sleeping = false;
+                        //    }
+                        //    Thread.Sleep(1 * 1000);// sleep 1 second
+                        //    Application.DoEvents();
+                        //}
+
+                        postCounter++;
+                        if (link.Contains("https://www.instagram.com/"))
                         {
-                            if (enableVoices) C_voice_core.speak($"like ban in place for {_likeBanSecondsLeft} more seconds");
+                            IwebDriver.Navigate().GoToUrl(link);
                         }
                         else
                         {
-                            if (enableVoices) C_voice_core.speak($"like ban in place for {_likeBanminutesLeft} more minute{(_likeBanminutesLeft > 1 ? "s" : "")}");
+                            IwebDriver.Navigate().GoToUrl("https://www.instagram.com/" + link);
                         }
-                    }
-                    else
-                    {
-                        core.LikePost(enableVoices, banLength, likingBannedUntil, instagram_post_user);
-                    }
+                        Thread.Sleep(2 * 1000); // wait a short amount of time for page to change
 
-                    core.BulkFollowBack(enableVoices, banLength, followingBannedUntil);
+                        // get the username of the owner of the current post
+                        string instagram_post_user = "";
+                        foreach (var obj in IwebDriver.FindElements(By.TagName("a")))
+                        {
+                            if (obj.GetAttribute("title").ToUpper() == obj.Text.ToUpper() && obj.Text.Length > 5)
+                            {
+                                instagram_post_user = obj.Text.Replace("_", " ").ToLower().Trim();
+                                break;
+                            }
+                        }
 
-                    core.BulkUnfollow(username, enableVoices, banLength);
+
+                        // testing new database functionality
+                        new Classes.C_DataLayer().AddInstaUser(IU: new Classes.InstaUser() { username = instagram_post_user.Replace(" ", "_") });
+
+
+                        core.FollowPostUser(enableVoices, banLength, commentingBannedUntil, followingBannedUntil, instagram_post_user);
+
+                        commentingBannedUntil = core.CommentOnPost(username, enableVoices, banLength, secondsBetweenActions_min, secondsBetweenActions_max, phrasesToComment, commentingBannedUntil, instagram_post_user);
+                        var _likeBanminutesLeft = (likingBannedUntil - DateTime.Now).Minutes;
+                        var _likeBanSecondsLeft = (likingBannedUntil - DateTime.Now).Seconds;
+                        if (_likeBanSecondsLeft > 0)
+                        {
+                            if (_likeBanSecondsLeft == 0) // must be a few seconds left 
+                            {
+                                if (enableVoices) C_voice_core.speak($"like ban in place for {_likeBanSecondsLeft} more seconds");
+                            }
+                            else
+                            {
+                                if (enableVoices) C_voice_core.speak($"like ban in place for {_likeBanminutesLeft} more minute{(_likeBanminutesLeft > 1 ? "s" : "")}");
+                            }
+                        }
+                        else
+                        {
+                            core.LikePost(enableVoices, banLength, likingBannedUntil, instagram_post_user);
+                        }
+                        core.BulkFollowBack(enableVoices, banLength, followingBannedUntil);
+                    }
+                    // end unfollow people that dont follow back
+
+
+                    core.GetStats(username, enableVoices);
+
+
+                    if (enableVoices) C_voice_core.speak($"Let's take a short break.");
+
+                    Thread.Sleep(new Random().Next(minutesBetweenBulkActions_min, minutesBetweenBulkActions_max) * 60000);// wait between each bulk action
+
 
                 }
-                // end unfollow people that dont follow back
-
-
-                core.GetStats(username, enableVoices);
-
-
-                if (enableVoices) C_voice_core.speak($"Let's take a short break.");
-
-                Thread.Sleep(new Random().Next(minutesBetweenBulkActions_min, minutesBetweenBulkActions_max) * 60000);// wait between each bulk action
-
-
+                /* end of MAIN LOOP */
             }
-            /* end of MAIN LOOP */
+            else {
+                throw new Exception("bot mode not implemented");
+            }
+
         }
 
  

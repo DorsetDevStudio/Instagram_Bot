@@ -68,7 +68,6 @@ namespace Instagram_Bot
             }
 
             WindowState = FormWindowState.Minimized;
-
             // save users' settings for next time. (only works if running fully installed via click once)
             textBoxUsername.Text = textBoxUsername.Text.Trim().ToLower();
             Properties.Settings.Default.username = textBoxUsername.Text;
@@ -78,11 +77,10 @@ namespace Instagram_Bot
             Properties.Settings.Default.sleepTimeSpan2_From = dateTimePicker3.Value;
             Properties.Settings.Default.sleepTimeSpan2_To = dateTimePicker4.Value;
             Properties.Settings.Default.banLength = (int)numericUpDownBanLength.Value;
-
             Properties.Settings.Default.Save();
-
             Application.DoEvents();
 
+            var selected_mode = checkBoxJustUnfollow.Checked ? C_bot_core.bot_mode.unfollow : C_bot_core.bot_mode.search_follow_comment_like;
             try
             {
                 int bot_id = 0;
@@ -91,7 +89,7 @@ namespace Instagram_Bot
                     bot_id++;
                     Tasks.Add(Task.Factory.StartNew(() =>
                     {
-                        new C_bot_core(bot_id, textBoxUsername.Text.Trim(), textBoxPassword.Text.Trim(), checkBoxStealthMode.Checked, !checkBoxDisableVoices.Checked, sleepTimes, (int)numericUpDownBanLength.Value);
+                        new C_bot_core(bot_id, selected_mode, textBoxUsername.Text.Trim(), textBoxPassword.Text.Trim(), checkBoxStealthMode.Checked, !checkBoxDisableVoices.Checked, sleepTimes, (int)numericUpDownBanLength.Value);
                     }));
                     Thread.Sleep(2000);// delay between launch each bot
                 }

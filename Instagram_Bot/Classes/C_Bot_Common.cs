@@ -249,7 +249,7 @@ namespace Instagram_Bot.Classes
         public void BulkUnfollow(string username, bool enableVoices, int banLength)
         {
             _IwebDriver.Navigate().GoToUrl($"https://www.instagram.com/{username}");
-            Thread.Sleep(4 * 1000); // wait a amount of time for page to change
+            Thread.Sleep(2 * 1000); // wait a amount of time for page to change
             foreach (var obj in _IwebDriver.FindElements(By.TagName("a")))
             {
                 if (obj.GetAttribute("href").Contains("following")
@@ -264,7 +264,7 @@ namespace Instagram_Bot.Classes
                             try
                             {
                                 obj2.Click();
-                                Thread.Sleep(1 * 1000); // wait a short amount of time between clicks
+                                Thread.Sleep(1 * 500); // wait a short amount of time between clicks
                                 // if unfollow failed dont keep trying
                                 if (obj2.Text.ToLower().Trim().Contains("following"))
                                 {
