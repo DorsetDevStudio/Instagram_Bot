@@ -139,7 +139,7 @@ namespace Instagram_Bot
                     core.BulkUnfollow(username, enableVoices, banLength);
                 }
             }
-            if (mode == bot_mode.unfollow)
+            if (mode == bot_mode.search_follow_comment_like)
             {
                 // loop forever, performing a new search and then following, liking and spamming the hell out of everyone.
                 while (true)
