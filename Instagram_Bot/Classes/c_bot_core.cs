@@ -247,7 +247,11 @@ namespace Instagram_Bot
                         {
                             core.LikePost(enableVoices, banLength, likingBannedUntil, instagram_post_user);
                         }
-                        core.BulkFollowBack(enableVoices, banLength, followingBannedUntil);
+
+                        
+                        // todo: test and perfect intercation with activity page
+                        // core.BulkFollowBack(enableVoices, banLength, followingBannedUntil);
+
                     }
                     // end unfollow people that dont follow back
                     core.GetStats(username, enableVoices);
