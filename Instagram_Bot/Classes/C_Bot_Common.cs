@@ -38,7 +38,7 @@ namespace Instagram_Bot.Classes
             }
 
 
-            Thread.Sleep(1 * 1000); // wait for page to change
+            Thread.Sleep(3 * 1000); // wait for page to change
             foreach (var link in _IwebDriver.FindElements(By.Name("a"))) // click switch accounts link
             {
                 if (link.Text.Contains("Switch accounts"))
@@ -48,11 +48,6 @@ namespace Instagram_Bot.Classes
                 }
             }
 
-
-
-
-
-
             // if (enableVoices) c_voice_core.speak($"let's connect to Instagram");
             if (password.Length < 4)
             {
@@ -61,14 +56,26 @@ namespace Instagram_Bot.Classes
             }
             else
             {
-   
+
+
+
+                Thread.Sleep(3 * 1000); // wait for page to change
+                foreach (var link in _IwebDriver.FindElements(By.Name("a"))) // click switch accounts link
+                {
+                    if (link.Text.Contains("Switch accounts"))
+                    {
+                        link.Click();
+                        Thread.Sleep(1 * 1000); // wait for page to change
+                    }
+                }
+
+
                 _IwebDriver.FindElement(By.Name("username")).SendKeys(username);
                 _IwebDriver.FindElement(By.Name("password")).SendKeys(password);
                 _IwebDriver.FindElement(By.TagName("form")).Submit();
                 Thread.Sleep(4 * 1000); // wait for page to change
                                         // end Log in to Instagram
             }
-
 
 
             if (_IwebDriver.PageSource.Contains("your password was incorrect"))
