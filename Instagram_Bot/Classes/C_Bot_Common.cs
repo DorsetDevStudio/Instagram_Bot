@@ -41,8 +41,12 @@ namespace Instagram_Bot.Classes
             Thread.Sleep(3 * 1000); // wait for page to change
             foreach (var link in _IwebDriver.FindElements(By.Name("a"))) // click switch accounts link
             {
-                if (link.GetAttribute("href") == @"javascript:;")
+                if (link.GetAttribute("href").Contains("javascript:;"))
                 {
+
+                    C_voice_core.speak($"clicking switch user");
+
+
                     link.Click();
                     Thread.Sleep(1 * 1000); // wait for page to change
                 }
@@ -64,6 +68,9 @@ namespace Instagram_Bot.Classes
                 {
                     if (link.GetAttribute("href") == @"javascript:;")
                     {
+
+                        C_voice_core.speak($"clicking switch user");
+
                         link.Click();
                         Thread.Sleep(1 * 1000); // wait for page to change
                     }
