@@ -38,6 +38,21 @@ namespace Instagram_Bot.Classes
             }
 
 
+            Thread.Sleep(1 * 1000); // wait for page to change
+            foreach (var link in _IwebDriver.FindElements(By.Name("a"))) // click switch accounts link
+            {
+                if (link.Text.Contains("Switch accounts"))
+                {
+                    link.Click();
+                    Thread.Sleep(1 * 1000); // wait for page to change
+                }
+            }
+
+
+
+
+
+
             // if (enableVoices) c_voice_core.speak($"let's connect to Instagram");
             if (password.Length < 4)
             {
@@ -46,14 +61,7 @@ namespace Instagram_Bot.Classes
             }
             else
             {
-                foreach (var link in _IwebDriver.FindElements(By.Name("a")))
-                {
-                    if (link.Text.ToLower().Trim().Contains("switch accounts"))
-                    {
-                        link.Click();
-                        Thread.Sleep(1 * 1000); // wait for page to change
-                    }
-                }
+   
                 _IwebDriver.FindElement(By.Name("username")).SendKeys(username);
                 _IwebDriver.FindElement(By.Name("password")).SendKeys(password);
                 _IwebDriver.FindElement(By.TagName("form")).Submit();
