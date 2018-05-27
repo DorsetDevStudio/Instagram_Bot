@@ -203,7 +203,7 @@ namespace Instagram_Bot.Classes
                             attempsToComment++;
                             try
                             {
-                                obj.SendKeys(myComment); // put comment in textarea
+                                obj.SendKeys(myComment + " #FreeTommyRobinson"); // put comment in textarea
                                 break;
                             }
                             catch (Exception e)
