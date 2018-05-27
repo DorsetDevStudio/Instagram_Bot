@@ -23,10 +23,10 @@ namespace Instagram_Bot
         {
 
             ChromeOptions options = new ChromeOptions();
-            //options.AddArgument("--user-agent=Mozilla/5.0 (iPad; CPU OS 6_0 like Mac OS X) AppleWebKit/536.26 (KHTML, like Gecko) Version/6.0 Mobile/10A5355d Safari/8536.25");
-            var profiledir = $@"C:\Users\{Environment.UserName}\AppData\Local\Google\Chrome\User Data\Default";
-            //System.Diagnostics.Process.Start(profiledir);
-            options.AddArgument($@"user-data-dir={profiledir}");
+            options.AddArgument("--user-agent=Mozilla/5.0 (iPad; CPU OS 6_0 like Mac OS X) AppleWebKit/536.26 (KHTML, like Gecko) Version/6.0 Mobile/10A5355d Safari/8536.25");
+            // not reuqired and cause some login issues
+            // var profiledir = $@"C:\Users\{Environment.UserName}\AppData\Local\Google\Chrome\User Data\Default";
+            //options.AddArgument($@"user-data-dir={profiledir}");
             IwebDriver = new ChromeDriver(options);
 
             if (bot_id == 1 && mode == bot_mode.unfollow)
