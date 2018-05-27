@@ -36,7 +36,7 @@ namespace Instagram_Bot
             var core = new C_Bot_Common(IwebDriver);
             var thingsToSearch = new List<string>()
             {
-                "freetommy","freetommyrobinson","UK","london","supporttommy","ourtommy"
+                "UK","london","dorset","bournemouth","britain","greatbritain","sun","tan","poole","luton","birmingham","liverpool","manchenter","scotland","england","ireland"
             };
             // add tags based of the current day
             if (DateTime.Now.ToString("dddd").ToLower() == "sunday")
