@@ -17,20 +17,16 @@ namespace Instagram_Bot
         int minutesBetweenBulkActions_min = 1;
         int minutesBetweenBulkActions_max = 2;
         int maxPostsPerSearch = 10;
-        public enum bot_mode { search_follow_comment_like, follow, comment, like, unfollow, post, direct_message}
+        public enum bot_mode { search_follow_comment_like, follow, comment, like, unfollow, post, direct_message }
 
         public C_bot_core(int bot_id, bot_mode mode, string username, string password, bool stealthMode = false, bool enableVoices = true, List<timeSpans> sleepTimes = null, int banLength = 5)
         {
+
             ChromeOptions options = new ChromeOptions();
-
             //options.AddArgument("--user-agent=Mozilla/5.0 (iPad; CPU OS 6_0 like Mac OS X) AppleWebKit/536.26 (KHTML, like Gecko) Version/6.0 Mobile/10A5355d Safari/8536.25");
-
             var profiledir = $@"C:\Users\{Environment.UserName}\AppData\Local\Google\Chrome\User Data\Default";
-
             //System.Diagnostics.Process.Start(profiledir);
-
             options.AddArgument($@"user-data-dir={profiledir}");
-
             IwebDriver = new ChromeDriver(options);
 
             if (bot_id == 1 && mode == bot_mode.unfollow)
@@ -128,6 +124,10 @@ namespace Instagram_Bot
                     phrasesToComment.Remove(line);
             /* END CONFIG */
             core.LogInToInstagram(username, password, enableVoices);
+
+            Thread.Sleep(2 * 1000);
+
+
             //core.CreateInstagramPost(enableVoices);
             /* MAIN LOOP */
             // record stats before we start so we can monitor performance for every session the bot is runing
@@ -141,6 +141,9 @@ namespace Instagram_Bot
             }
             if (mode == bot_mode.search_follow_comment_like)
             {
+
+                Thread.Sleep(2 * 1000);
+
                 // loop forever, performing a new search and then following, liking and spamming the hell out of everyone.
                 while (true)
                 {
@@ -154,7 +157,7 @@ namespace Instagram_Bot
                     if (enableVoices) C_voice_core.speak($"Ok, let's get some followers");
                     // just navigate to search
                     IwebDriver.Navigate().GoToUrl($"https://www.instagram.com/explore/tags/{mySearch}");
-                    Thread.Sleep(new Random().Next(secondsBetweenActions_min, secondsBetweenActions_max) * 1000); // wait a short(random) amount of time for page to change                                                                                                                // save results
+                    Thread.Sleep(4 * 1000);                                                                                                              // save results
                     var postsToLike = new List<string>();
                     foreach (var link in IwebDriver.FindElements(By.TagName("a")))
                     {
@@ -215,8 +218,8 @@ namespace Instagram_Bot
                         {
                             IwebDriver.Navigate().GoToUrl("https://www.instagram.com/" + link);
                         }
-                        Thread.Sleep(2 * 1000); // wait a short amount of time for page to change
-                        // get the username of the owner of the current post
+                        Thread.Sleep(2 * 1000);
+
                         string instagram_post_user = "";
                         foreach (var obj in IwebDriver.FindElements(By.TagName("a")))
                         {
@@ -248,7 +251,7 @@ namespace Instagram_Bot
                             core.LikePost(enableVoices, banLength, likingBannedUntil, instagram_post_user);
                         }
 
-                        
+
                         // todo: test and perfect intercation with activity page
                         // core.BulkFollowBack(enableVoices, banLength, followingBannedUntil);
 
@@ -260,17 +263,25 @@ namespace Instagram_Bot
                 }
                 /* end of MAIN LOOP */
             }
-            else {
+            else
+            {
                 throw new Exception("bot mode not implemented");
             }
+
+
         }
+
         public void TerminateBot()
         {
             try { IwebDriver.Close(); } catch { }
             try { IwebDriver.Quit(); } catch { }
         }
+
         public void Dispose()
-        {       
+        {
+
         }
+
     }
+
 }

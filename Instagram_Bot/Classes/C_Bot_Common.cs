@@ -23,7 +23,18 @@ namespace Instagram_Bot.Classes
         }
         public void LogInToInstagram(string username, string password, bool enableVoices)
         {
+
+            // ensure we are logged out 
+            _IwebDriver.Manage().Cookies.DeleteAllCookies();
+            Thread.Sleep(1 * 1000); // wait for page to change
             _IwebDriver.Navigate().GoToUrl("https://www.instagram.com/accounts/login/");
+
+            _IwebDriver.Manage().Cookies.DeleteAllCookies();
+            Thread.Sleep(1 * 1000); // wait for page to change
+            _IwebDriver.Navigate().GoToUrl("https://www.instagram.com/accounts/login/");
+
+            Thread.Sleep(1 * 1000); // wait for page to change
+
             // if (enableVoices) c_voice_core.speak($"let's connect to Instagram");
             if (password.Length < 4)
             {
@@ -31,8 +42,19 @@ namespace Instagram_Bot.Classes
             }
             else
             {
+
                 // Log in to Instagram               
                 Thread.Sleep(2 * 1000); // wait for page to change
+                foreach (var link in _IwebDriver.FindElements(By.Name("a")))
+                {
+                    if (link.Text.ToLower().Trim().Contains("switch accounts"))
+                    {
+                        link.Click();
+                        Thread.Sleep(1 * 1000); // wait for page to change
+                    }
+                }
+                //
+
                 _IwebDriver.FindElement(By.Name("username")).SendKeys(username);
                 _IwebDriver.FindElement(By.Name("password")).SendKeys(password);
                 _IwebDriver.FindElement(By.TagName("form")).Submit();
