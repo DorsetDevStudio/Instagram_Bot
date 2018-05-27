@@ -24,7 +24,7 @@ namespace Instagram_Bot.Classes
         public void LogInToInstagram(string username, string password, bool enableVoices)
         {
 
-            _IwebDriver.Navigate().GoToUrl("https://www.instagram.com/accounts/login/");
+            _IwebDriver.Navigate().GoToUrl("https://www.instagram.com/accounts/logout/");
             _IwebDriver.Manage().Cookies.DeleteAllCookies(); //logout
             Thread.Sleep(1 * 1000); // wait for page to change
             _IwebDriver.Navigate().GoToUrl("https://www.instagram.com/accounts/login/");
