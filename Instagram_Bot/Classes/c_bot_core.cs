@@ -14,9 +14,9 @@ namespace Instagram_Bot
         string user = Environment.UserName.Replace(".", " ").Replace(@"\", "").Split(' ')[0];
         int secondsBetweenActions_min = 1;
         int secondsBetweenActions_max = 1;
-        int minutesBetweenBulkActions_min = 1;
-        int minutesBetweenBulkActions_max = 2;
-        int maxPostsPerSearch = 10;
+        int minutesBetweenBulkActions_min = 0;
+        int minutesBetweenBulkActions_max = 0;
+        int maxPostsPerSearch = 1000;
         public enum bot_mode { search_follow_comment_like, follow, comment, like, unfollow, post, direct_message }
 
         public C_bot_core(int bot_id, bot_mode mode, string username, string password, bool stealthMode = false, bool enableVoices = true, List<timeSpans> sleepTimes = null, int banLength = 5)

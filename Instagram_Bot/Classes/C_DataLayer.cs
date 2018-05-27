@@ -294,7 +294,7 @@ namespace Instagram_Bot.Classes
                         _conn.Close();
                     }
                 }
-                C_voice_core.speak("saved stats to database");
+                //C_voice_core.speak("saved stats to database");
             }
             catch (InvalidOperationException se)
             {
