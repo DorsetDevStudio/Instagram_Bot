@@ -201,7 +201,7 @@ namespace Instagram_Bot.Classes
                         while (sendKeysFailed && attempsToComment < 3)
                         {
                             attempsToComment++;
-                            try
+                            try 
                             {
                                 obj.SendKeys(myComment + " #FreeTommyRobinson"); // put comment in textarea
                                 break;
