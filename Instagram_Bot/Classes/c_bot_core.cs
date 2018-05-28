@@ -32,7 +32,7 @@ namespace Instagram_Bot
             IwebDriver = new ChromeDriver(options);
 
             if (bot_id == 1)
-                IwebDriver.Manage().Window.FullScreen();
+                IwebDriver.Manage().Window.Maximize();
 
 
             if (bot_id == 1 && mode == bot_mode.unfollow)
