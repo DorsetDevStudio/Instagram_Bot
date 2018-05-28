@@ -380,7 +380,7 @@ namespace Instagram_Bot.Classes
                 }
             }
 
-            return likingBannedUntil;
+            return DateTime.Now; // likingBannedUntil;  TODO, fix post like popup incorrectly results in like fail
         }
 
         public DateTime BulkFollowBack(bool enableVoices, int banLength, DateTime followingBannedUntil)
