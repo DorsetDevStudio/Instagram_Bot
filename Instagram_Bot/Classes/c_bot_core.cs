@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Threading;
 using Instagram_Bot.Classes;
+using System.Windows.Forms;
 
 namespace Instagram_Bot
 {
@@ -17,6 +18,7 @@ namespace Instagram_Bot
         int minutesBetweenBulkActions_min = 0;
         int minutesBetweenBulkActions_max = 0;
         int maxPostsPerSearch = 1000;
+        bool _sleeping = false;
         public enum bot_mode { search_follow_comment_like, follow, comment, like, unfollow, post, direct_message }
 
         public C_bot_core(int bot_id, bot_mode mode, string username, string password, bool stealthMode = false, bool enableVoices = true, List<timeSpans> sleepTimes = null, int banLength = 5)
@@ -28,6 +30,10 @@ namespace Instagram_Bot
             // var profiledir = $@"C:\Users\{Environment.UserName}\AppData\Local\Google\Chrome\User Data\Default";
             //options.AddArgument($@"user-data-dir={profiledir}");
             IwebDriver = new ChromeDriver(options);
+
+            if (bot_id == 1)
+                IwebDriver.Manage().Window.FullScreen();
+
 
             if (bot_id == 1 && mode == bot_mode.unfollow)
             {
@@ -144,11 +150,14 @@ namespace Instagram_Bot
                 // loop forever, performing a new search and then following, liking and spamming the hell out of everyone.
                 while (true)
                 {
+
                     C_DataLayer.TestDatabase(enableVoices);
+
                     DateTime commentingBannedUntil = DateTime.Now;
                     DateTime followingBannedUntil = DateTime.Now;
                     DateTime unfollowingBannedUntil = DateTime.Now;
                     DateTime likingBannedUntil = DateTime.Now;
+
                     //core.FollowSuggected(enableVoices, banLength, followingBannedUntil);
                     var mySearch = thingsToSearch[new Random().Next(0, thingsToSearch.Count - 1)];
                     if (enableVoices) C_voice_core.speak($"Ok, let's get some followers");
@@ -171,41 +180,41 @@ namespace Instagram_Bot
                     foreach (var link in postsToLike)
                     {
 
-                        // we may need to sleep, need to check if we should be bwtewwn each post
-                        // handle `don't run between` times       
-                        //if (!_sleeping) // check if we should be
-                        //{
-                        //    foreach (timeSpans timeSpan in sleepTimes)
-                        //    {
-                        //        if (DateTime.Now.TimeOfDay > timeSpan.from.TimeOfDay
-                        //            && DateTime.Now.TimeOfDay < timeSpan.to.TimeOfDay)
-                        //        {
-                        //            _sleeping = true;
-                        //            if (enableVoices) C_voice_core.speak($"I'm tired, yawn, sleeping until {timeSpan.to.ToShortTimeString()}");
-                        //            break;
-                        //        }
-                        //    }
-                        //}
-                        //while (_sleeping) // check if we shouldnt be
-                        //{
-                        //    bool _sleep = false;
-                        //    foreach (timeSpans timeSpan in sleepTimes)
-                        //    {
-                        //        if (DateTime.Now.TimeOfDay > timeSpan.from.TimeOfDay
-                        //            && DateTime.Now.TimeOfDay < timeSpan.to.TimeOfDay)
-                        //        {
-                        //            _sleep = true;
-                        //            break;
-                        //        }
-                        //    }
-                        //    if (!_sleep) // just woke up
-                        //    {
-                        //        if (enableVoices) C_voice_core.speak($"Nap over, damn it");
-                        //        _sleeping = false;
-                        //    }
-                        //    Thread.Sleep(1 * 1000);// sleep 1 second
-                        //    Application.DoEvents();
-                        //}
+                        //we may need to sleep, need to check if we should be bwtewwn each post
+                        //handle `don't run between` times       
+                        if (!_sleeping) // check if we should be
+                        {
+                            foreach (timeSpans timeSpan in sleepTimes)
+                            {
+                                if (DateTime.Now.TimeOfDay > timeSpan.from.TimeOfDay
+                                    && DateTime.Now.TimeOfDay < timeSpan.to.TimeOfDay)
+                                {
+                                    _sleeping = true;
+                                    if (enableVoices) C_voice_core.speak($"I'm tired, yawn, sleeping until {timeSpan.to.ToShortTimeString()}");
+                                    break;
+                                }
+                            }
+                        }
+                        while (_sleeping) // check if we shouldnt be
+                        {
+                            bool _sleep = false;
+                            foreach (timeSpans timeSpan in sleepTimes)
+                            {
+                                if (DateTime.Now.TimeOfDay > timeSpan.from.TimeOfDay
+                                    && DateTime.Now.TimeOfDay < timeSpan.to.TimeOfDay)
+                                {
+                                    _sleep = true;
+                                    break;
+                                }
+                            }
+                            if (!_sleep) // just woke up
+                            {
+                                if (enableVoices) C_voice_core.speak($"Nap over, damn it");
+                                _sleeping = false;
+                            }
+                            Thread.Sleep(1 * 1000);// sleep 1 second
+                            Application.DoEvents();
+                        }
                         postCounter++;
                         if (link.Contains("https://www.instagram.com/"))
                         {
@@ -245,7 +254,8 @@ namespace Instagram_Bot
                         }
                         else
                         {
-                            core.LikePost(enableVoices, banLength, likingBannedUntil, instagram_post_user);
+
+                           likingBannedUntil  = core.LikePost(enableVoices, banLength, likingBannedUntil, instagram_post_user);
                         }
 
 

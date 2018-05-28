@@ -26,29 +26,20 @@ namespace Instagram_Bot.Classes
 
             _IwebDriver.Navigate().GoToUrl("https://www.instagram.com/accounts/logout/");
             _IwebDriver.Manage().Cookies.DeleteAllCookies(); //logout
-            Thread.Sleep(1 * 1000); // wait for page to change
             _IwebDriver.Navigate().GoToUrl("https://www.instagram.com/accounts/login/");
             Thread.Sleep(1 * 1000); // wait for page to change
 
-
             foreach (var button in _IwebDriver.FindElements( By.ClassName("coreSpriteDismissLarge") ) ) // dismiss cookie policy
             {
-                button.Click();
-                Thread.Sleep(1 * 1000); // wait for page to change          
+                button.Click();     
             }
 
-
-            Thread.Sleep(3 * 1000); // wait for page to change
             foreach (var link in _IwebDriver.FindElements(By.Name("a"))) // click switch accounts link
             {
                 if (link.GetAttribute("href").Contains("javascript:;"))
                 {
-
                     C_voice_core.speak($"clicking switch user");
-
-
                     link.Click();
-                    Thread.Sleep(1 * 1000); // wait for page to change
                 }
             }
 
@@ -60,28 +51,19 @@ namespace Instagram_Bot.Classes
             }
             else
             {
-
-
-
-                Thread.Sleep(3 * 1000); // wait for page to change
                 foreach (var link in _IwebDriver.FindElements(By.Name("a"))) // click switch accounts link
                 {
                     if (link.GetAttribute("href") == @"javascript:;")
                     {
-
                         C_voice_core.speak($"clicking switch user");
-
                         link.Click();
                         Thread.Sleep(1 * 1000); // wait for page to change
                     }
                 }
-
-
                 _IwebDriver.FindElement(By.Name("username")).SendKeys(username);
                 _IwebDriver.FindElement(By.Name("password")).SendKeys(password);
                 _IwebDriver.FindElement(By.TagName("form")).Submit();
-                Thread.Sleep(4 * 1000); // wait for page to change
-                                        // end Log in to Instagram
+                Thread.Sleep(3 * 1000); // wait for page to change
             }
 
 
@@ -375,8 +357,9 @@ namespace Instagram_Bot.Classes
             }
         }
 
-        public void LikePost(bool enableVoices, int banLength, DateTime likingBannedUntil, string instagram_post_user)
+        public DateTime LikePost(bool enableVoices, int banLength, DateTime likingBannedUntil, string instagram_post_user)
         {
+
             foreach (var obj in _IwebDriver.FindElements(By.TagName("a")))
             {
                 if (obj.Text.ToUpper().Contains("LIKE") && !obj.Text.ToUpper().Contains("UNLIKE"))
@@ -395,10 +378,14 @@ namespace Instagram_Bot.Classes
                     break;
                 }
             }
+
+            return likingBannedUntil;
         }
 
-        public void BulkFollowBack(bool enableVoices, int banLength, DateTime followingBannedUntil)
+        public DateTime BulkFollowBack(bool enableVoices, int banLength, DateTime followingBannedUntil)
         {
+           
+            
             // go to activity page and follow back anyone that followed us
             var minutesLeft = (followingBannedUntil - DateTime.Now).Minutes;
             var secondsLeft = (followingBannedUntil - DateTime.Now).Seconds;
@@ -429,6 +416,7 @@ namespace Instagram_Bot.Classes
                             if (!obj.Text.ToLower().Trim().Contains("following") && !obj.Text.ToLower().Trim().Contains("requested"))
                             {
                                 if (enableVoices) C_voice_core.speak($"following failed");
+                                followingBannedUntil = DateTime.Now.AddMinutes(banLength);
                                 break;
                             }
                         }
@@ -439,9 +427,14 @@ namespace Instagram_Bot.Classes
                     }
                 }
             }
+
+
+
+            return followingBannedUntil;
+
         }
 
-        public void FollowPostUser(bool enableVoices, int banLength, DateTime commentingBannedUntil, DateTime followingBannedUntil, string instagram_post_user)
+        public DateTime FollowPostUser(bool enableVoices, int banLength, DateTime commentingBannedUntil, DateTime followingBannedUntil, string instagram_post_user)
         {
             // FOLLOW
             foreach (var obj in _IwebDriver.FindElements(By.TagName("button")))
@@ -477,13 +470,15 @@ namespace Instagram_Bot.Classes
                     }
                     else
                     {
-                        commentingBannedUntil = DateTime.Now.AddMinutes(banLength);
-                        if (enableVoices) C_voice_core.speak($"following failed, I will stop following for {banLength} minutes.");
+                        followingBannedUntil = DateTime.Now.AddMinutes(banLength);
+                        if (enableVoices) C_voice_core.speak($"follow failed, I will stop following for {banLength} minutes.");
                     }
                     Thread.Sleep(2 * 1000); // wait and see it it worked, will change to following
                     break;
                 }
             }
+
+            return followingBannedUntil;
             // end FOLLOW
         }
 

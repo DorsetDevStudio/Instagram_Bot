@@ -142,7 +142,7 @@ namespace Instagram_Bot
             if(textBoxUsername.Text.Length==0)// first time user
                 notifyIcon1.ShowBalloonTip(5 * 1000, "Welcome to Instagram Bot", "To get started enter your Instagram login details and click Start.", ToolTipIcon.None);
 
-            MessageBox.Show("Please ensure your sound is turned up.","Instagram Bot is talking to you!");
+            //MessageBox.Show("Please ensure your sound is turned up.","Instagram Bot is talking to you!");
 
             C_voice_core.speak(
                 "Enter your Instagram username and password and then click start. If prompted by Instagram you should follow the security challenge and enter the pin.", 
