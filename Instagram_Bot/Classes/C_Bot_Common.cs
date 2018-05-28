@@ -332,7 +332,7 @@ namespace Instagram_Bot.Classes
             }
         }
 
-        public void FollowSuggested(bool enableVoices, int banLength, DateTime followingBannedUntil)
+        public DateTime FollowSuggested(bool enableVoices, int banLength, DateTime followingBannedUntil)
         {
             foreach (var obj in _IwebDriver.FindElements(By.TagName("button")))
             {
@@ -355,6 +355,7 @@ namespace Instagram_Bot.Classes
                     }
                 }
             }
+            return followingBannedUntil;
         }
 
         public DateTime LikePost(bool enableVoices, int banLength, DateTime likingBannedUntil, string instagram_post_user)
@@ -434,7 +435,7 @@ namespace Instagram_Bot.Classes
 
         }
 
-        public DateTime FollowPostUser(bool enableVoices, int banLength, DateTime commentingBannedUntil, DateTime followingBannedUntil, string instagram_post_user)
+        public DateTime FollowPostUser(bool enableVoices, int banLength, DateTime followingBannedUntil, string instagram_post_user)
         {
             // FOLLOW
             foreach (var obj in _IwebDriver.FindElements(By.TagName("button")))

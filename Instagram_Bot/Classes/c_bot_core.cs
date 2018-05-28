@@ -237,7 +237,7 @@ namespace Instagram_Bot
                         }
                         // testing new database functionality
                         new Classes.C_DataLayer().AddInstaUser(IU: new Classes.InstaUser() { username = instagram_post_user.Replace(" ", "_") });
-                        core.FollowPostUser(enableVoices, banLength, commentingBannedUntil, followingBannedUntil, instagram_post_user);
+                        followingBannedUntil = core.FollowPostUser(enableVoices, banLength, followingBannedUntil, instagram_post_user);
                         commentingBannedUntil = core.CommentOnPost(username, enableVoices, banLength, secondsBetweenActions_min, secondsBetweenActions_max, phrasesToComment, commentingBannedUntil, instagram_post_user);
                         var _likeBanminutesLeft = (likingBannedUntil - DateTime.Now).Minutes;
                         var _likeBanSecondsLeft = (likingBannedUntil - DateTime.Now).Seconds;
