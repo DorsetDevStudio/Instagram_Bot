@@ -59,6 +59,12 @@ namespace Instagram_Bot.Classes
                 IU.error = se.Message;
                 System.Windows.Forms.MessageBox.Show($"SQL Error: {se.Message}");
             }
+            catch (Exception se)
+            {
+                C_voice_core.speak($"SQL Error: {se.Message}");
+                IU.error = se.Message;
+                System.Windows.Forms.MessageBox.Show($"SQL Error: {se.Message}");
+            }
             return true;
         }
         // REMEBER spaces at end of each line in SQL to avoid SQL error
@@ -97,6 +103,12 @@ namespace Instagram_Bot.Classes
                 }
             }
             catch (InvalidOperationException se)
+            {
+                C_voice_core.speak($"SQL Error: {se.Message}");
+                IU.error = se.Message;
+                System.Windows.Forms.MessageBox.Show($"SQL Error: {se.Message}");
+            }
+            catch (Exception se)
             {
                 C_voice_core.speak($"SQL Error: {se.Message}");
                 IU.error = se.Message;
@@ -169,6 +181,11 @@ namespace Instagram_Bot.Classes
                 }
             }
             catch (InvalidOperationException se)
+            {
+                C_voice_core.speak($"SQL Error: {se.Message}");
+                System.Windows.Forms.MessageBox.Show($"SQL Error: {se.Message}");
+            }
+            catch (Exception se)
             {
                 C_voice_core.speak($"SQL Error: {se.Message}");
                 System.Windows.Forms.MessageBox.Show($"SQL Error: {se.Message}");
@@ -275,6 +292,11 @@ namespace Instagram_Bot.Classes
                 C_voice_core.speak($"SQL Error: {se.Message}");
                 System.Windows.Forms.MessageBox.Show($"SQL Error: {se.Message}");
             }
+            catch (Exception se)
+            {
+                C_voice_core.speak($"SQL Error: {se.Message}");
+                System.Windows.Forms.MessageBox.Show($"SQL Error: {se.Message}");
+            }
         }
         internal void SaveCurrentStats(int followers, int following, int posts)
         {
@@ -297,6 +319,11 @@ namespace Instagram_Bot.Classes
                 //C_voice_core.speak("saved stats to database");
             }
             catch (InvalidOperationException se)
+            {
+                C_voice_core.speak($"SQL Error: {se.Message}");
+                System.Windows.Forms.MessageBox.Show($"SQL Error: {se.Message}");
+            }
+            catch (Exception se)
             {
                 C_voice_core.speak($"SQL Error: {se.Message}");
                 System.Windows.Forms.MessageBox.Show($"SQL Error: {se.Message}");
