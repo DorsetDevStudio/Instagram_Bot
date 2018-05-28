@@ -373,13 +373,13 @@ namespace Instagram_Bot.Classes
                     if (enableVoices) C_voice_core.speak($"done");
                     new Classes.C_DataLayer().SaveInstaUser(IU: new Classes.InstaUser() { username = instagram_post_user.Replace(" ", "_"), date_last_liked = DateTime.Now });
                     Thread.Sleep(1 * 1000);
-                    if (obj.Text.ToUpper().Contains("LIKE") && !obj.Text.ToUpper().Contains("UNLIKE"))
-                    {
-                        // like failed, or another window popped up
-                        if (enableVoices) C_voice_core.speak($"like failed, I will stop liking for {banLength} minutes.");
-                        likingBannedUntil = DateTime.Now.AddMinutes(banLength);
-                    }
-                    break;
+                    //if (obj.Text.ToUpper().Contains("LIKE") && !obj.Text.ToUpper().Contains("UNLIKE"))
+                    //{
+                    //    // like failed, or another window popped up
+                    //    if (enableVoices) C_voice_core.speak($"like failed, I will stop liking for {banLength} minutes.");
+                    //    likingBannedUntil = DateTime.Now.AddMinutes(banLength);
+                    //}
+                    //break;
                 }
             }
 
