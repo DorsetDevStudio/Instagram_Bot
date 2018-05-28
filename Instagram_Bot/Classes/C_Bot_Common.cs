@@ -11,16 +11,19 @@ namespace Instagram_Bot.Classes
     {
 
         private IWebDriver _IwebDriver = null;
+
         string user = Environment.UserName.Replace(".", " ").Replace(@"\", "");
 
         public C_Bot_Common(IWebDriver iwebDriver)
         {
             _IwebDriver = iwebDriver;
         }
+
         public C_Bot_Common()
         {
             throw new Exception("You can't do that, use C_Bot_Common(IWebDriver iwebDriver)");
         }
+
         public void LogInToInstagram(string username, string password, bool enableVoices)
         {
 

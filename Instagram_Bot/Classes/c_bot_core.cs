@@ -147,9 +147,23 @@ namespace Instagram_Bot
 
                 Thread.Sleep(2 * 1000);
 
+                List<string> _tagsSearched = new List<string>();
+
                 // loop forever, performing a new search and then following, liking and spamming the hell out of everyone.
                 while (true)
                 {
+
+                    //core.FollowSuggected(enableVoices, banLength, followingBannedUntil);
+                    var mySearch = thingsToSearch[new Random().Next(0, thingsToSearch.Count - 1)];
+
+                    // once we've searched all tags , clear history and start again
+                    if (_tagsSearched.Count == thingsToSearch.Count)
+                        _tagsSearched.Clear();
+
+                    if (_tagsSearched.Contains(mySearch))
+                        continue;// dont repeat searchs
+
+                    _tagsSearched.Add(mySearch);
 
                     C_DataLayer.TestDatabase(enableVoices);
 
@@ -158,8 +172,7 @@ namespace Instagram_Bot
                     DateTime unfollowingBannedUntil = DateTime.Now;
                     DateTime likingBannedUntil = DateTime.Now;
 
-                    //core.FollowSuggected(enableVoices, banLength, followingBannedUntil);
-                    var mySearch = thingsToSearch[new Random().Next(0, thingsToSearch.Count - 1)];
+                 
                     if (enableVoices) C_voice_core.speak($"Ok, let's get some followers");
                     // just navigate to search
                     IwebDriver.Navigate().GoToUrl($"https://www.instagram.com/explore/tags/{mySearch}");
@@ -174,6 +187,11 @@ namespace Instagram_Bot
                         if (postsToLike.Count >= maxPostsPerSearch) // limit per search
                             break;
                     }
+
+
+                    if (postsToLike.Count == 0)
+                        continue;// go to next tag
+
                     if (enableVoices) C_voice_core.speak($"{postsToLike.Count} posts found");
                     int postCounter = 0;
                     // load results in turn and like/follow them
