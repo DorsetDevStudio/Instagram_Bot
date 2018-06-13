@@ -42,7 +42,7 @@ namespace Instagram_Bot
             var core = new C_Bot_Common(IwebDriver);
             var thingsToSearch = new List<string>()
             {
-                "UK","london","dorset","bournemouth","britain","greatbritain","sun","tan","poole","luton","birmingham","liverpool","manchenter","scotland","england","ireland"
+                "dj","traktor","serato","virtualdj","mixvibes","pioneerdj","UK","london","dorset","bournemouth","britain","greatbritain","sun","tan","birmingham","liverpool","manchenter","scotland","england","ireland"
             };
             // add tags based of the current day
             if (DateTime.Now.ToString("dddd").ToLower() == "sunday")
@@ -103,12 +103,12 @@ namespace Instagram_Bot
                 "Wish I could take #photos like yours! @" + username,
                 "It's #" + DateTime.Now.ToString("dddd") + " people @" + username,
                 "#Happy " + DateTime.Now.ToString("dddd") + " everybody :) from @" + username,
-                "I likes it! #FreeTommyRobinson",
-                "#nice :) #FreeTommyRobinson",
+                "I likes it! #djbigmoo",
+                "#nice :) #djbigmoo",
                 "#interesting, where is that? ",
                 "Perfection, you should be a #photographer!",
                 "#Perfection, you've missed your calling!",
-                "#Perfection, almost looks professional! #FreeTommyRobinson",
+                "#Perfection, almost looks professional! #djbigmoo",
                 "haha, interesting approach me thinks",
                 "Wish I could take #photos like yours!",
                 "It's #" + DateTime.Now.ToString("dddd") + " people",
