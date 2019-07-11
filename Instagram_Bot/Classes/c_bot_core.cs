@@ -180,10 +180,10 @@ namespace Instagram_Bot
                     var postsToLike = new List<string>();
                     foreach (var link in IwebDriver.FindElements(By.TagName("a")))
                     {
-                        if (link.GetAttribute("href").ToUpper().Contains($"TAGGED={mySearch}".ToUpper()))
-                        {
+                        //if (link.GetAttribute("href").ToUpper().StartsWith("/p/"))
+                        //{
                             postsToLike.Add(link.GetAttribute("href"));
-                        }
+                        //}
                         if (postsToLike.Count >= maxPostsPerSearch) // limit per search
                             break;
                     }
@@ -256,7 +256,12 @@ namespace Instagram_Bot
                         // testing new database functionality
                         new Classes.C_DataLayer().AddInstaUser(IU: new Classes.InstaUser() { username = instagram_post_user.Replace(" ", "_") });
                         followingBannedUntil = core.FollowPostUser(enableVoices, banLength, followingBannedUntil, instagram_post_user);
-                        commentingBannedUntil = core.CommentOnPost(username, enableVoices, banLength, secondsBetweenActions_min, secondsBetweenActions_max, phrasesToComment, commentingBannedUntil, instagram_post_user);
+
+
+                        // disabling comment function as cannot make it work at the moment.
+
+                        //commentingBannedUntil = core.CommentOnPost(username, enableVoices, banLength, secondsBetweenActions_min, secondsBetweenActions_max, phrasesToComment, commentingBannedUntil, instagram_post_user);
+
                         var _likeBanminutesLeft = (likingBannedUntil - DateTime.Now).Minutes;
                         var _likeBanSecondsLeft = (likingBannedUntil - DateTime.Now).Seconds;
                         if (_likeBanSecondsLeft > 0)
@@ -281,6 +286,9 @@ namespace Instagram_Bot
                         // core.BulkFollowBack(enableVoices, banLength, followingBannedUntil);
 
                     }
+
+
+
                     // end unfollow people that dont follow back
                     core.GetStats(username, enableVoices);
                     if (enableVoices) C_voice_core.speak($"Let's take a short break.");

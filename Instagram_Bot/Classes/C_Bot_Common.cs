@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Threading;
+using System.Windows.Forms;
 using OpenQA.Selenium;
 
 namespace Instagram_Bot.Classes
@@ -164,76 +165,114 @@ namespace Instagram_Bot.Classes
                 // {USERNAME} get's replaced with @USERNAME
                 // {DAY} get's replaced with today's day .g: MONDAY, TUESDAY etc..
                 var myComment = phrasesToComment[new Random().Next(0, phrasesToComment.Count - 1)].Replace("{USERNAME}", "@" + username.Replace("{DAY}", "@" + DateTime.Now.ToString("dddd")));
-                // click the comment icon so the comment textarea will work (REQUIRED)
-                foreach (var obj in _IwebDriver.FindElements(By.TagName("a")))
-                {
-                    if (obj.Text.ToUpper().Contains("COMMENT".ToUpper()))
-                    {
-                        obj.Click(); // click comment icon
-                        Thread.Sleep(new Random().Next(secondsBetweenActions_min, secondsBetweenActions_max) * 1000); // wait a short(random) amount of time for page to change
-                        break;
-                    }
-                }
+                //// click the comment icon so the comment textarea will work (REQUIRED)
+                //foreach (var obj in _IwebDriver.FindElements(By.TagName("a")))
+                //{
+                //    if (obj.Text.ToUpper().Contains("COMMENT".ToUpper()))
+                //    {
+                //        obj.Click(); // click comment icon
+                //        Thread.Sleep(new Random().Next(secondsBetweenActions_min, secondsBetweenActions_max) * 1000); // wait a short(random) amount of time for page to change
+                //        break;
+                //    }
+                //}
                 //TODO: posts with comments disabled cause the bot to stall
                 // make the comment
-                foreach (var obj in _IwebDriver.FindElements(By.TagName("textarea")))
-                {
-                    if (obj.GetAttribute("placeholder").ToUpper().Contains("COMMENT".ToUpper()))
-                    {
-                        if (enableVoices) C_voice_core.speak($"commenting");
-                        bool sendKeysFailed = true;// must start as true
-                        int attempsToComment = 0;
-                        while (sendKeysFailed && attempsToComment < 3)
-                        {
-                            attempsToComment++;
-                            try 
-                            {
-                                obj.SendKeys(myComment); // put comment in textarea
-                                break;
-                            }
-                            catch (Exception e)
-                            {
-                                if (e.Message.Contains("element not visible"))
-                                { // comments disbaled on post, nothing to wory about
 
-                                }
-                                else if (e.Message.Contains("character"))
-                                {
-                                    if (enableVoices) C_voice_core.speak($"The comment {myComment} contains an unsupported character, i'll remove it from the list.");
-                                    sendKeysFailed = true; // some characters are not supported by chrome driver (some emojis for example)
-                                    phrasesToComment.Remove(myComment); // remove offending comment
-                                }
-                                else
-                                {   // other unknown error, relay full error message but dont remove comment from list as it may be perfectly fine.
-                                    if (enableVoices) C_voice_core.speak($"error with a comment, the error was {e.Message}. The comment {myComment} will be removed from the list.");
-                                    sendKeysFailed = true; // some characters are not supported by chrome driver (some emojis for example)
-                                }
-                                if (phrasesToComment.Count == 0)
-                                {
-                                    break;
-                                }
-                                myComment = phrasesToComment[new Random().Next(0, phrasesToComment.Count - 1)]; // select another comments and try again
-                            }
-                        }
-                        Thread.Sleep(1 * 1000);// wait for comment to type
-                        _IwebDriver.FindElement(By.TagName("form")).Submit(); // Only one form on page, so submit it to comment.
-                        Thread.Sleep(3 * 1000); // wait a short(random) amount of time for page to change
-                        //TODO: posts with comments disabled cause the bot to stall, moving this here should fix it
-                        // check if comment failed, if yes remove that comment from our comments list
-                        if (_IwebDriver.PageSource.ToUpper().Contains("couldn't post comment".ToUpper()))
-                        {
-                            if (enableVoices) C_voice_core.speak($"comment failed, I will stop commenting for {banLength} minutes.");
-                            commentingBannedUntil = DateTime.Now.AddMinutes(banLength);
-                        }
-                        else
-                        {
-                            // commenting worked
-                            // testing new database functionality
-                            new Classes.C_DataLayer().SaveInstaUser(IU: new Classes.InstaUser() { username = instagram_post_user.Replace(" ", "_"), date_last_commented = DateTime.Now });
-                        }
-                        break;
-                    }
+                var box = _IwebDriver.FindElement(By.TagName("textarea"));
+                //box.Click();
+                Thread.Sleep(500);// wait for comment to type
+                box.SendKeys(myComment); // put comment in textarea
+                Thread.Sleep(1 * 1000);// wait for comment to type
+                _IwebDriver.FindElement(By.TagName("form")).Submit(); // Only one form on page, so submit it to comment.
+                
+
+                Thread.Sleep(3 * 1000); // wait a short(random) amount of time for page to change
+                                        //TODO: posts with comments disabled cause the bot to stall, moving this here should fix it
+                                        // check if comment failed, if yes remove that comment from our comments list
+                if (_IwebDriver.PageSource.ToUpper().Contains("couldn't post comment".ToUpper()))
+                {
+                    if (enableVoices) C_voice_core.speak($"comment failed, I will stop commenting for {banLength} minutes.");
+                    commentingBannedUntil = DateTime.Now.AddMinutes(banLength);
                 }
+                else
+                {
+                    // commenting worked
+                    // testing new database functionality
+                    new Classes.C_DataLayer().SaveInstaUser(IU: new Classes.InstaUser() { username = instagram_post_user.Replace(" ", "_"), date_last_commented = DateTime.Now });
+                }
+               
+
+
+                //foreach (var obj in _IwebDriver.FindElements(By.TagName("textarea")))
+                //{
+                //    if (obj.GetAttribute("placeholder").ToUpper().Contains("COMMENT".ToUpper()))
+                //    {
+                //        if (enableVoices) C_voice_core.speak($"commenting");
+
+                //        //obj.SendKeys(myComment); // put comment in textarea
+                //        obj.Click(); // click comment textarea
+                //        //obj.SendKeys(myComment); // put comment in textarea
+
+                //        Thread.Sleep(1 * 1000);
+
+                //        bool sendKeysFailed = true;// must start as true
+                //        int attempsToComment = 0;
+                //        while (sendKeysFailed && attempsToComment < 3)
+                //        {
+                //            attempsToComment++;
+                //            try 
+                //            {
+                //                obj.SendKeys(myComment); // put comment in textarea
+
+                //                break;
+                //            }
+                //            catch (Exception e)
+                //            {
+                //                if (e.Message.Contains("element not visible"))
+                //                { // comments disbaled on post, nothing to wory about
+
+                //                }
+                //                else if (e.Message.Contains("character"))
+                //                {
+                //                    if (enableVoices) C_voice_core.speak($"The comment {myComment} contains an unsupported character, i'll remove it from the list.");
+                //                    sendKeysFailed = true; // some characters are not supported by chrome driver (some emojis for example)
+                //                    phrasesToComment.Remove(myComment); // remove offending comment
+                //                }
+                //                else
+                //                {   // other unknown error, relay full error message but dont remove comment from list as it may be perfectly fine.
+                //                    if (enableVoices) C_voice_core.speak($"error with a comment, the error was {e.Message}. The comment {myComment} will be removed from the list.");
+                //                    sendKeysFailed = true; // some characters are not supported by chrome driver (some emojis for example)
+
+
+                //                    MessageBox.Show(e.Message);
+
+                //                }
+                //                if (phrasesToComment.Count == 0)
+                //                {
+                //                    break;
+                //                }
+                //                myComment = phrasesToComment[new Random().Next(0, phrasesToComment.Count - 1)]; // select another comments and try again
+                //            }
+                //        }
+                //        Thread.Sleep(1 * 1000);// wait for comment to type
+                //        _IwebDriver.FindElement(By.TagName("form")).Submit(); // Only one form on page, so submit it to comment.
+                //        Thread.Sleep(3 * 1000); // wait a short(random) amount of time for page to change
+                //        //TODO: posts with comments disabled cause the bot to stall, moving this here should fix it
+                //        // check if comment failed, if yes remove that comment from our comments list
+                //        if (_IwebDriver.PageSource.ToUpper().Contains("couldn't post comment".ToUpper()))
+                //        {
+                //            if (enableVoices) C_voice_core.speak($"comment failed, I will stop commenting for {banLength} minutes.");
+                //            commentingBannedUntil = DateTime.Now.AddMinutes(banLength);
+                //        }
+                //        else
+                //        {
+                //            // commenting worked
+                //            // testing new database functionality
+                //            new Classes.C_DataLayer().SaveInstaUser(IU: new Classes.InstaUser() { username = instagram_post_user.Replace(" ", "_"), date_last_commented = DateTime.Now });
+                //        }
+                //        break;
+                //    }
+                //}
             }
             // END COMMENTING
             return commentingBannedUntil;
